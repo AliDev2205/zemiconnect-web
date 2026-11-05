@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
-import PagePlaceholder from '@/components/layout/PagePlaceholder';
+import ChangePasswordForm from '@/features/auth/ChangePasswordForm';
 
-export const metadata: Metadata = { title: 'Changer le mot de passe provisoire' };
+export const metadata: Metadata = { title: 'Changer le mot de passe provisoire', robots: { index: false, follow: false } };
 
-export default function Page() {
-  return <PagePlaceholder title="Changer le mot de passe provisoire" />;
+// AU4.
+export default function ChangePasswordPage() {
+  return <ChangePasswordForm />;
 }

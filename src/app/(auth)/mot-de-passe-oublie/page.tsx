@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
-import PagePlaceholder from '@/components/layout/PagePlaceholder';
+import ForgotPasswordForm from '@/features/auth/ForgotPasswordForm';
 
-export const metadata: Metadata = { title: 'Mot de passe oublié' };
+export const metadata: Metadata = { title: 'Mot de passe oublié', robots: { index: false, follow: false } };
 
-export default function Page() {
-  return <PagePlaceholder title="Mot de passe oublié" />;
+// AU2.
+export default function ForgotPasswordPage() {
+  return <ForgotPasswordForm />;
 }
