@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+
+<html lang="fr"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600;700&amp;family=Manrope:wght@600;700&amp;family=Public+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "error": "#ba1a1a", "secondary-fixed": "#dbe4e8", "on-primary-fixed": "#001f2b", "tertiary-fixed-dim": "#f4bc80", "surface-variant": "#e1e2e4", "inverse-primary": "#99cee9", "on-tertiary-fixed-variant": "#643e0d", "on-secondary-fixed": "#141d20", "surface-tint": "#2e647c", "surface-container-high": "#e7e8ea", "on-primary-fixed-variant": "#0d4d63", "error-container": "#ffdad6", "primary-fixed-dim": "#99cee9", "tertiary": "#492a00", "surface-container-lowest": "#ffffff", "tertiary-container": "#653f0e", "primary": "#003548", "surface-dim": "#d9dadc", "tertiary-fixed": "#ffdcbb", "on-secondary": "#ffffff", "background": "#f8f9fb", "surface-bright": "#f8f9fb", "on-tertiary-container": "#e2ac71", "on-secondary-container": "#5b6468", "surface": "#f8f9fb", "secondary-container": "#d8e1e5", "on-error": "#ffffff", "on-tertiary": "#ffffff", "inverse-surface": "#2e3132", "surface-container": "#edeef0", "surface-container-low": "#f3f3f5", "primary-fixed": "#bfe8ff", "secondary-fixed-dim": "#bfc8cc", "on-tertiary-fixed": "#2b1700", "on-primary-container": "#89bdd8", "primary-container": "#0e4d64", "on-surface": "#191c1e", "on-primary": "#ffffff", "on-background": "#191c1e", "outline": "#71787d", "inverse-on-surface": "#f0f1f3", "secondary": "#576063", "surface-container-highest": "#e1e2e4", "outline-variant": "#c0c7cd", "on-surface-variant": "#40484c", "on-secondary-fixed-variant": "#3f484c", "on-error-container": "#93000a" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "gutter": "1rem", "space-md": "0.75rem", "space-sm": "0.5rem", "gutter-mobile": "0.75rem", "space-2xl": "2rem", "space-xs": "0.25rem", "margin-tablet": "1.5rem", "space-lg": "1rem", "margin": "1rem", "space-xl": "1.5rem" }, "fontFamily": { "label-sm": ["Public Sans"], "headline-lg": ["Manrope"], "body-lg-medium": ["Public Sans"], "body-lg": ["Public Sans"], "headline-md": ["Manrope"], "tabular-plate": ["JetBrains Mono"], "headline-sm": ["Manrope"], "label-md": ["Public Sans"], "tabular-code": ["JetBrains Mono"], "body-sm": ["Public Sans"], "body-sm-medium": ["Public Sans"] }, "fontSize": { "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "600" }], "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "600" }], "body-lg-medium": ["16px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "500" }], "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400" }], "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "tabular-plate": ["18px", { "lineHeight": "22px", "letterSpacing": "0.08em", "fontWeight": "700" }], "headline-sm": ["18px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "600" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "600" }], "tabular-code": ["15px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "600" }], "body-sm": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }], "body-sm-medium": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "500" }] } } } };</script></head><body class="bg-background font-body-sm text-on-surface antialiased"><aside class="fixed left-0 top-0 h-screen w-60 bg-primary-container z-50 flex flex-col justify-between py-space-lg select-none"><div class="flex flex-col"><div class="px-space-lg pb-space-xl flex items-center gap-space-md"><div class="w-10 h-10 rounded-xl bg-tertiary-fixed-dim flex items-center justify-center flex-shrink-0 text-primary"><span class="material-symbols-outlined text-[24px]">two_wheeler</span></div><div class="flex flex-col min-w-0"><span class="font-headline-sm text-headline-sm text-on-primary tracking-tight truncate leading-tight">ZemiConnect</span><span class="font-label-sm text-label-sm text-primary-fixed-dim uppercase tracking-wider truncate">Mairie de Parakou</span></div></div><nav class="flex flex-col gap-space-xs" data-active-classes="bg-surface-container-lowest/10 text-on-primary font-body-sm-medium relative before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-tertiary-fixed-dim"><a class="flex items-center gap-space-md px-space-lg py-space-md text-primary-fixed-dim hover:text-on-primary hover:bg-surface-container-lowest/5 transition-colors" data-path="tableau-de-bord" href="#"><span class="material-symbols-outlined text-[20px]">dashboard</span><span class="font-body-sm text-body-sm">Tableau de bord</span></a><a class="flex items-center gap-space-md px-space-lg py-space-md text-primary-fixed-dim hover:text-on-primary hover:bg-surface-container-lowest/5 transition-colors" data-path="conducteurs" href="#"><span class="material-symbols-outlined text-[20px]">badge</span><span class="font-body-sm text-body-sm">Conducteurs</span></a><a class="flex items-center gap-space-md px-space-lg py-space-md text-primary-fixed-dim hover:text-on-primary hover:bg-surface-container-lowest/5 transition-colors" data-path="motos" href="#"><span class="material-symbols-outlined text-[20px]">moped</span><span class="font-body-sm text-body-sm">Motos</span></a><a aria-current="page" class="flex items-center gap-space-md px-space-lg py-space-md transition-colors bg-surface-container-lowest/10 text-on-primary font-body-sm-medium relative before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-tertiary-fixed-dim" data-path="agents" href="#"><span class="material-symbols-outlined text-[20px]">shield_person</span><span class="font-body-sm text-body-sm">Agents</span></a><a class="flex items-center gap-space-md px-space-lg py-space-md text-primary-fixed-dim hover:text-on-primary hover:bg-surface-container-lowest/5 transition-colors" data-path="journaux" href="#"><span class="material-symbols-outlined text-[20px]">receipt_long</span><span class="font-body-sm text-body-sm">Journaux</span></a></nav></div><div class="flex flex-col gap-space-xs pt-space-lg border-t border-outline-variant/20 px-0"><nav class="flex flex-col gap-space-xs" data-active-classes="bg-surface-container-lowest/10 text-on-primary font-body-sm-medium"><a class="flex items-center gap-space-md px-space-lg py-space-md text-primary-fixed-dim hover:text-on-primary hover:bg-surface-container-lowest/5 transition-colors" data-path="mon-profil" href="#"><span class="material-symbols-outlined text-[20px]">account_circle</span><span class="font-body-sm text-body-sm">Mon profil</span></a><a class="flex items-center gap-space-md px-space-lg py-space-md text-primary-fixed-dim hover:text-error-container hover:bg-error/10 transition-colors" data-path="connexion" href="#"><span class="material-symbols-outlined text-[20px]">logout</span><span class="font-body-sm text-body-sm">Se déconnecter</span></a></nav></div></aside><div class="pl-60 min-h-screen flex flex-col"><header class="fixed top-0 left-60 right-0 h-16 bg-surface-container-lowest z-40 px-space-2xl flex items-center justify-between border-b border-outline-variant/30 shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex items-center gap-space-xl"><div class="flex items-center gap-space-sm"><div class="w-2 h-2 rounded-full bg-tertiary-fixed-dim"></div><span class="font-label-md text-label-md text-secondary uppercase tracking-wider">Service Actif · Réseau Parakou</span></div></div><div class="flex items-center gap-space-xl"><button aria-label="Notifications" class="relative p-space-sm text-secondary hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[22px]">notifications</span><span class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full ring-2 ring-surface-container-lowest"></span></button><div class="h-6 w-px bg-outline-variant/40"></div><div class="flex items-center gap-space-md"><div class="flex flex-col text-right"><span class="font-body-sm-medium text-body-sm-medium text-on-surface leading-tight">Awa SOUNON</span><span class="font-label-sm text-label-sm text-secondary leading-tight">Gestionnaire</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-16 flex-1 px-space-2xl py-space-2xl bg-background"><div class="flex flex-col w-full relative">
+<!-- En-tête de page & actions contextuelles -->
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md mb-space-2xl">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-sm mb-space-xs">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary">Régie Municipale des Transports</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="font-label-sm text-label-sm text-primary font-medium">Borough de Parakou</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight">Agents de contrôle et supervision</h1>
+<p class="font-body-sm text-body-sm text-secondary mt-1">Gestion des accès opérationnels de la Brigade Municipale et des postes de contrôle de Parakou.</p>
+</div>
+<div class="flex items-center gap-space-md flex-shrink-0">
+<button class="h-12 px-space-xl rounded-xl bg-surface-container-lowest text-secondary border border-outline-variant hover:bg-surface-container-low hover:text-on-surface font-body-sm-medium text-body-sm-medium flex items-center gap-space-sm transition-colors" type="button">
+<span class="material-symbols-outlined text-[20px]">file_download</span>
+<span>Exporter (CSV)</span>
+</button>
+<button class="h-12 px-space-xl rounded-xl bg-primary-container text-on-primary hover:bg-primary font-headline-sm text-body-sm-medium flex items-center gap-space-sm shadow-sm transition-colors" id="btn-open-drawer" type="button">
+<span class="material-symbols-outlined text-[20px]">person_add</span>
+<span>+ Nouvel agent</span>
+</button>
+</div>
+</div>
+<!-- Cartes d'indicateurs de synthèse -->
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-space-lg mb-space-2xl">
+<div class="bg-surface-container-lowest p-space-xl rounded-xl border border-outline-variant/60 flex flex-col justify-between">
+<div class="flex items-center justify-between mb-space-md">
+<span class="font-label-md text-label-md text-secondary uppercase tracking-wider">Effectif Référencé</span>
+<div class="w-9 h-9 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">groups</span>
+</div>
+</div>
+<div class="flex items-baseline gap-space-sm">
+<span class="font-headline-lg text-[32px] text-primary font-bold">28</span>
+<span class="font-label-sm text-label-sm text-secondary">Tous services</span>
+</div>
+<div class="mt-space-md pt-space-sm border-t border-outline-variant/30 flex items-center text-secondary font-label-sm text-label-sm">
+<span class="text-tertiary-container font-semibold">100%</span> répertoire municipal
+      </div>
+</div>
+<div class="bg-surface-container-lowest p-space-xl rounded-xl border border-outline-variant/60 flex flex-col justify-between">
+<div class="flex items-center justify-between mb-space-md">
+<span class="font-label-md text-label-md text-secondary uppercase tracking-wider">Actifs Terrain</span>
+<div class="w-9 h-9 rounded-lg bg-[#E8F5EE] flex items-center justify-center text-[#1E7B45]">
+<span class="material-symbols-outlined text-[20px]">verified_user</span>
+</div>
+</div>
+<div class="flex items-baseline gap-space-sm">
+<span class="font-headline-lg text-[32px] text-primary font-bold">22</span>
+<span class="font-label-sm text-label-sm text-[#1E7B45] font-semibold">En service ce jour</span>
+</div>
+<div class="mt-space-md pt-space-sm border-t border-outline-variant/30 flex items-center text-secondary font-label-sm text-label-sm">
+<span class="text-[#1E7B45] font-semibold">78.5%</span> du contingent total
+      </div>
+</div>
+<div class="bg-surface-container-lowest p-space-xl rounded-xl border border-outline-variant/60 flex flex-col justify-between">
+<div class="flex items-center justify-between mb-space-md">
+<span class="font-label-md text-label-md text-secondary uppercase tracking-wider">Comptes Désactivés</span>
+<div class="w-9 h-9 rounded-lg bg-error-container/60 flex items-center justify-center text-error">
+<span class="material-symbols-outlined text-[20px]">person_off</span>
+</div>
+</div>
+<div class="flex items-baseline gap-space-sm">
+<span class="font-headline-lg text-[32px] text-primary font-bold">4</span>
+<span class="font-label-sm text-label-sm text-secondary">Suspensions</span>
+</div>
+<div class="mt-space-md pt-space-sm border-t border-outline-variant/30 flex items-center text-secondary font-label-sm text-label-sm">
+<span>Accès révocables immédiatement</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-space-xl rounded-xl border border-outline-variant/60 flex flex-col justify-between">
+<div class="flex items-center justify-between mb-space-md">
+<span class="font-label-md text-label-md text-secondary uppercase tracking-wider">Comptes Archivés</span>
+<div class="w-9 h-9 rounded-lg bg-surface-container flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[20px]">archive</span>
+</div>
+</div>
+<div class="flex items-baseline gap-space-sm">
+<span class="font-headline-lg text-[32px] text-primary font-bold">2</span>
+<span class="font-label-sm text-label-sm text-secondary">Historique</span>
+</div>
+<div class="mt-space-md pt-space-sm border-t border-outline-variant/30 flex items-center text-secondary font-label-sm text-label-sm">
+<span>Anciennes affectations</span>
+</div>
+</div>
+</div>
+<!-- Barre d'outils et de filtrage opérationnel -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant/60 p-space-lg mb-space-lg flex flex-col md:flex-row gap-space-md items-stretch md:items-center justify-between">
+<div class="relative flex-1 max-w-md">
+<span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-secondary text-[20px]">search</span>
+<input class="w-full h-11 pl-10 pr-4 rounded-xl border border-outline-variant/80 bg-surface-container-lowest font-body-sm text-body-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-primary-container" placeholder="Rechercher par nom, matricule (ex : AG-042), email..." type="text"/>
+</div>
+<div class="flex flex-wrap items-center gap-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="font-label-sm text-label-sm text-secondary uppercase">Statut :</span>
+<select class="h-11 px-space-md rounded-xl border border-outline-variant/80 bg-surface-container-lowest font-body-sm text-body-sm text-on-surface focus:outline-none focus:border-primary-container">
+<option>Tous les statuts</option>
+<option>Actif</option>
+<option>Désactivé</option>
+<option>Archivé</option>
+</select>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="font-label-sm text-label-sm text-secondary uppercase">Structure :</span>
+<select class="h-11 px-space-md rounded-xl border border-outline-variant/80 bg-surface-container-lowest font-body-sm text-body-sm text-on-surface focus:outline-none focus:border-primary-container">
+<option>Toutes les structures</option>
+<option>Police Municipale</option>
+<option>Régie des Recettes</option>
+<option>Direction des Transports Urbains</option>
+</select>
+</div>
+<button class="h-11 w-11 rounded-xl border border-outline-variant/80 bg-surface-container-lowest text-secondary hover:text-on-surface flex items-center justify-center transition-colors" title="Réinitialiser filtres" type="button">
+<span class="material-symbols-outlined text-[20px]">restart_alt</span>
+</button>
+</div>
+</div>
+<!-- Tableau principal des données agents -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant/60 overflow-hidden shadow-sm">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant/60">
+<th class="py-space-md px-space-lg font-label-md text-label-md text-secondary uppercase tracking-wider">Nom et prénom</th>
+<th class="py-space-md px-space-lg font-label-md text-label-md text-secondary uppercase tracking-wider">Matricule</th>
+<th class="py-space-md px-space-lg font-label-md text-label-md text-secondary uppercase tracking-wider">Structure d'appartenance</th>
+<th class="py-space-md px-space-lg font-label-md text-label-md text-secondary uppercase tracking-wider">Email officiel</th>
+<th class="py-space-md px-space-lg font-label-md text-label-md text-secondary uppercase tracking-wider">Statut du compte</th>
+<th class="py-space-md px-space-lg font-label-md text-label-md text-secondary uppercase tracking-wider">Dernière connexion</th>
+<th class="py-space-md px-space-lg font-label-md text-label-md text-secondary uppercase tracking-wider text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/40 font-body-sm text-body-sm text-on-surface">
+<!-- Ligne 1 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-space-md px-space-lg">
+<div class="flex items-center gap-space-md">
+<div class="w-9 h-9 rounded-full bg-primary text-on-primary flex items-center justify-center font-headline-sm text-xs font-bold uppercase">BK</div>
+<div class="flex flex-col">
+<span class="font-body-sm-medium text-body-sm-medium text-on-surface">Bio KORA</span>
+<span class="font-label-sm text-label-sm text-secondary">Brigadier Titulaire</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-lg">
+<span class="font-tabular-code text-tabular-code font-bold bg-surface-container px-2 py-0.5 rounded border border-outline-variant/40 text-primary">AG-042</span>
+</td>
+<td class="py-space-md px-space-lg text-secondary">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-primary">local_police</span>
+<span class="text-on-surface">Police Municipale</span>
+<span class="text-secondary">(Brigade Urbaine)</span>
+</div>
+</td>
+<td class="py-space-md px-space-lg text-secondary font-tabular-code text-xs">bio.kora@mairie-parakou.bj</td>
+<td class="py-space-md px-space-lg">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-[#1E7B45] bg-surface-container-lowest text-[#1E7B45] font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">format_image_left</span>
+<span>Actif</span>
+</div>
+</td>
+<td class="py-space-md px-space-lg text-secondary">
+<div class="flex flex-col">
+<span class="text-on-surface font-body-sm-medium">Aujourd'hui</span>
+<span class="font-label-sm text-label-sm text-secondary">11:42</span>
+</div>
+</td>
+<td class="py-space-md px-space-lg text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-secondary hover:text-primary hover:bg-surface-container transition-colors" title="Modifier profil" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-secondary hover:text-primary hover:bg-surface-container transition-colors" title="Historique contrôles" type="button">
+<span class="material-symbols-outlined text-[18px]">history</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Ligne 2 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-space-md px-space-lg">
+<div class="flex items-center gap-space-md">
+<div class="w-9 h-9 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-headline-sm text-xs font-bold uppercase">CG</div>
+<div class="flex flex-col">
+<span class="font-body-sm-medium text-body-sm-medium text-on-surface">Chabi GOUNOU</span>
+<span class="font-label-sm text-label-sm text-secondary">Contrôleur Recettes</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-lg">
+<span class="font-tabular-code text-tabular-code font-bold bg-surface-container px-2 py-0.5 rounded border border-outline-variant/40 text-primary">AG-019</span>
+</td>
+<td class="py-space-md px-space-lg text-secondary">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-tertiary-container">payments</span>
+<span class="text-on-surface">Régie des Recettes</span>
+<span class="text-secondary">(Carrefour Hubert Maga)</span>
+</div>
+</td>
+<td class="py-space-md px-space-lg text-secondary font-tabular-code text-xs">chabi.gounou@mairie-parakou.bj</td>
+<td class="py-space-md px-space-lg">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-[#1E7B45] bg-surface-container-lowest text-[#1E7B45] font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">format_image_left</span>
+<span>Actif</span>
+</div>
+</td>
+<td class="py-space-md px-space-lg text-secondary">
+<div class="flex flex-col">
+<span class="text-on-surface font-body-sm-medium">Aujourd'hui</span>
+<span class="font-label-sm text-label-sm text-secondary">08:15</span>
+</div>
+</td>
+<td class="py-space-md px-space-lg text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-secondary hover:text-primary hover:bg-surface-container transition-colors" title="Modifier profil" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-secondary hover:text-primary hover:bg-surface-container transition-colors" title="Historique contrôles" type="button">
+<span class="material-symbols-outlined text-[18px]">history</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Ligne 3 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors bg-surface-container-low/20">
+<td class="py-space-md px-space-lg">
+<div class="flex items-center gap-space-md">
+<div class="w-9 h-9 rounded-full bg-outline-variant text-on-surface flex items-center justify-center font-headline-sm text-xs font-bold uppercase">FZ</div>
+<div class="flex flex-col">
+<span class="font-body-sm-medium text-body-sm-medium text-on-surface">Fatima ZAKARI</span>
+<span class="font-label-sm text-label-sm text-secondary">Superviseure Taxe Municipale</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-lg">
+<span class="font-tabular-code text-tabular-code font-bold bg-surface-container px-2 py-0.5 rounded border border-outline-variant/40 text-secondary">AG-033</span>
+</td>
+<td class="py-space-md px-space-lg text-secondary">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-secondary">commute</span>
+<span class="text-on-surface">Transports Urbains</span>
+<span class="text-secondary">(Direction)</span>
+</div>
+</td>
+<td class="py-space-md px-space-lg text-secondary font-tabular-code text-xs">fatima.zakari@mairie-parakou.bj</td>
+<td class="py-space-md px-space-lg">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-tertiary-fixed-dim bg-surface-container-lowest text-tertiary-container font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">pause_circle</span>
+<span>Désactivé</span>
+</div>
+</td>
+<td class="py-space-md px-space-lg text-secondary">
+<div class="flex flex-col">
+<span class="text-on-surface">Il y a 14 jours</span>
+<span class="font-label-sm text-label-sm text-secondary">Suspendu RH</span>
+</div>
+</td>
+<td class="py-space-md px-space-lg text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-secondary hover:text-primary hover:bg-surface-container transition-colors" title="Modifier profil" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-secondary hover:text-primary hover:bg-surface-container transition-colors" title="Réactiver" type="button">
+<span class="material-symbols-outlined text-[18px]">lock_reset</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Ligne 4 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-space-md px-space-lg">
+<div class="flex items-center gap-space-md">
+<div class="w-9 h-9 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-headline-sm text-xs font-bold uppercase">SG</div>
+<div class="flex flex-col">
+<span class="font-body-sm-medium text-body-sm-medium text-on-surface">Saliou GNANSOUNOU</span>
+<span class="font-label-sm text-label-sm text-secondary">Agent Patrouilleur</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-lg">
+<span class="font-tabular-code text-tabular-code font-bold bg-surface-container px-2 py-0.5 rounded border border-outline-variant/40 text-primary">AG-008</span>
+</td>
+<td class="py-space-md px-space-lg text-secondary">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-primary">local_police</span>
+<span class="text-on-surface">Police Municipale</span>
+<span class="text-secondary">(Secteur Titirou)</span>
+</div>
+</td>
+<td class="py-space-md px-space-lg text-secondary font-tabular-code text-xs">saliou.gnansounou@mairie-parakou.bj</td>
+<td class="py-space-md px-space-lg">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-[#1E7B45] bg-surface-container-lowest text-[#1E7B45] font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">format_image_left</span>
+<span>Actif</span>
+</div>
+</td>
+<td class="py-space-md px-space-lg text-secondary">
+<div class="flex flex-col">
+<span class="text-on-surface">Hier</span>
+<span class="font-label-sm text-label-sm text-secondary">17:30</span>
+</div>
+</td>
+<td class="py-space-md px-space-lg text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-secondary hover:text-primary hover:bg-surface-container transition-colors" title="Modifier profil" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-secondary hover:text-primary hover:bg-surface-container transition-colors" title="Historique contrôles" type="button">
+<span class="material-symbols-outlined text-[18px]">history</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Ligne 5 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors opacity-80">
+<td class="py-space-md px-space-lg">
+<div class="flex items-center gap-space-md">
+<div class="w-9 h-9 rounded-full bg-surface-variant text-secondary flex items-center justify-center font-headline-sm text-xs font-bold uppercase">IB</div>
+<div class="flex flex-col">
+<span class="font-body-sm-medium text-body-sm-medium text-on-surface">Imorou BABA</span>
+<span class="font-label-sm text-label-sm text-secondary">Ex-agent Recouvrement</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-lg">
+<span class="font-tabular-code text-tabular-code font-bold bg-surface-container px-2 py-0.5 rounded border border-outline-variant/40 text-secondary">AG-005</span>
+</td>
+<td class="py-space-md px-space-lg text-secondary">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-outline">location_city</span>
+<span class="text-on-surface">Antenne Municipale</span>
+<span class="text-secondary">(Albarika)</span>
+</div>
+</td>
+<td class="py-space-md px-space-lg text-secondary font-tabular-code text-xs">imorou.baba@mairie-parakou.bj</td>
+<td class="py-space-md px-space-lg">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-outline bg-surface-container-lowest text-secondary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">archive</span>
+<span>Archivé</span>
+</div>
+</td>
+<td class="py-space-md px-space-lg text-secondary">
+<div class="flex flex-col">
+<span class="text-on-surface">12/01/2026</span>
+<span class="font-label-sm text-label-sm text-secondary">Clôture dossier</span>
+</div>
+</td>
+<td class="py-space-md px-space-lg text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-secondary hover:text-primary hover:bg-surface-container transition-colors" title="Consulter journal" type="button">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination soignée -->
+<div class="px-space-xl py-space-md border-t border-outline-variant/40 bg-surface-container-lowest flex flex-col sm:flex-row items-center justify-between gap-space-md">
+<div class="font-body-sm text-body-sm text-secondary">
+        Affichage de <span class="font-body-sm-medium text-on-surface">1</span> à <span class="font-body-sm-medium text-on-surface">5</span> sur <span class="font-body-sm-medium text-on-surface">28</span> agents municipaux
+      </div>
+<div class="flex items-center gap-1">
+<button class="h-9 px-3 rounded-lg border border-outline-variant/60 text-outline cursor-not-allowed flex items-center gap-1 font-label-md text-label-md" disabled="" type="button">
+<span class="material-symbols-outlined text-[16px]">chevron_left</span>
+<span>Précédent</span>
+</button>
+<button class="h-9 w-9 rounded-lg bg-primary-container text-on-primary font-headline-sm text-label-md flex items-center justify-center" type="button">1</button>
+<button class="h-9 w-9 rounded-lg border border-outline-variant/60 text-secondary hover:bg-surface-container font-body-sm text-label-md flex items-center justify-center" type="button">2</button>
+<button class="h-9 w-9 rounded-lg border border-outline-variant/60 text-secondary hover:bg-surface-container font-body-sm text-label-md flex items-center justify-center" type="button">3</button>
+<button class="h-9 px-3 rounded-lg border border-outline-variant/60 text-secondary hover:bg-surface-container flex items-center gap-1 font-label-md text-label-md" type="button">
+<span>Suivant</span>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- OVERLAY DU DRAWER (visible par défaut comme requis) -->
+<div class="fixed inset-0 bg-[#13212B]/60 backdrop-blur-[2px] z-50 transition-opacity duration-300" id="drawer-backdrop"></div>
+<!-- DRAWER LATÉRAL (480px) OUVERT AU PREMIER PLAN -->
+<aside class="fixed right-0 top-0 bottom-0 w-full max-w-[480px] bg-surface-container-lowest z-50 shadow-2xl flex flex-col justify-between border-l border-outline-variant transform transition-transform duration-300 ease-in-out" id="drawer-panel">
+<!-- En-tête du Drawer -->
+<div class="px-space-xl py-space-lg border-b border-outline-variant/60 flex items-start justify-between bg-surface-container-lowest">
+<div class="flex flex-col pr-space-md">
+<div class="flex items-center gap-space-sm mb-1">
+<span class="w-2.5 h-2.5 rounded-full bg-tertiary-fixed-dim"></span>
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Habilitation Brigade</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-primary">Nouvel agent</h2>
+<p class="font-body-sm text-body-sm text-secondary mt-0.5">Création d'un compte agent de contrôle ou superviseur municipal.</p>
+</div>
+<button class="w-9 h-9 rounded-xl border border-outline-variant/60 text-secondary hover:text-on-surface hover:bg-surface-container flex items-center justify-center transition-colors" id="btn-close-drawer" type="button">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<!-- Corps du Formulaire défilable -->
+<div class="flex-1 overflow-y-auto px-space-xl py-space-xl flex flex-col gap-space-lg">
+<!-- Grille Nom / Prénom -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-on-surface-variant font-semibold">Nom de famille <span class="text-error">*</span></label>
+<input class="h-11 px-space-md rounded-xl border border-outline-variant bg-surface-container-lowest font-body-sm text-body-sm text-on-surface uppercase focus:outline-none focus:border-primary-container" placeholder="Ex : BIO KORA" type="text" value="BIO KORA"/>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-on-surface-variant font-semibold">Prénom(s) <span class="text-error">*</span></label>
+<input class="h-11 px-space-md rounded-xl border border-outline-variant bg-surface-container-lowest font-body-sm text-body-sm text-on-surface focus:outline-none focus:border-primary-container" placeholder="Ex : Rachid" type="text" value="Rachid"/>
+</div>
+</div>
+<!-- Email Professionnel -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-on-surface-variant font-semibold">Email professionnel <span class="text-error">*</span></label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-secondary text-[18px]">mail</span>
+<input class="w-full h-11 pl-10 pr-space-md rounded-xl border border-outline-variant bg-surface-container-lowest font-body-sm text-body-sm text-on-surface focus:outline-none focus:border-primary-container" placeholder="Ex : r.biokora@mairie-parakou.bj" type="email" value="r.biokora@mairie-parakou.bj"/>
+</div>
+</div>
+<!-- Téléphone de service -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-on-surface-variant font-semibold">Téléphone de service <span class="text-error">*</span></label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-secondary text-[18px]">call</span>
+<input class="w-full h-11 pl-10 pr-space-md rounded-xl border border-outline-variant bg-surface-container-lowest font-tabular-code text-body-sm text-on-surface focus:outline-none focus:border-primary-container" placeholder="+229 97 00 00 00" type="tel" value="+229 97 00 00 00"/>
+</div>
+</div>
+<!-- Matricule Agent -->
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<label class="font-label-md text-label-md text-on-surface-variant font-semibold">Matricule agent <span class="text-error">*</span></label>
+<span class="font-label-sm text-[10px] text-tertiary-container font-semibold uppercase">Nomenclature Parakou</span>
+</div>
+<div class="flex rounded-xl border border-outline-variant bg-surface-container-lowest overflow-hidden focus-within:border-primary-container">
+<span class="px-3.5 flex items-center bg-surface-container text-secondary font-tabular-code text-body-sm-medium border-r border-outline-variant">AG-</span>
+<input class="flex-1 h-11 px-space-md bg-transparent font-tabular-code text-body-sm-medium text-on-surface focus:outline-none" placeholder="045" type="text" value="045"/>
+</div>
+<span class="font-label-sm text-label-sm text-secondary">Généré automatiquement ou selon nomenclature municipale.</span>
+</div>
+<!-- Structure d'appartenance -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-on-surface-variant font-semibold">Structure d'appartenance <span class="text-error">*</span></label>
+<select class="h-11 px-space-md rounded-xl border border-outline-variant bg-surface-container-lowest font-body-sm text-body-sm text-on-surface focus:outline-none focus:border-primary-container">
+<option selected="">Police Municipale - Brigade Urbaine</option>
+<option>Régie des Recettes - Poste Carrefour Hubert Maga</option>
+<option>Direction des Transports Urbains</option>
+<option>Antenne Municipale Albarika</option>
+</select>
+</div>
+<!-- Rôle / Affectation -->
+<div class="flex flex-col gap-1.5">
+<label class="font-label-md text-label-md text-on-surface-variant font-semibold">Rôle / Affectation <span class="text-error">*</span></label>
+<select class="h-11 px-space-md rounded-xl border border-outline-variant bg-surface-container-lowest font-body-sm text-body-sm text-on-surface focus:outline-none focus:border-primary-container">
+<option selected="">Agent de contrôle terrain</option>
+<option>Chef de poste de péage urbain</option>
+<option>Superviseur brigade motorisée</option>
+<option>Opérateur de saisie &amp; amendes</option>
+</select>
+</div>
+<!-- Encart d'information opérationnelle -->
+<div class="rounded-xl p-space-md bg-[#E6EFF3] border border-outline-variant/80 flex items-start gap-space-sm text-primary">
+<span class="material-symbols-outlined text-[20px] text-primary-container flex-shrink-0 mt-0.5">info</span>
+<p class="font-body-sm text-xs text-primary leading-relaxed">
+          Un email d'invitation avec un mot de passe provisoire sera envoyé à l'adresse indiquée. L'agent devra obligatoirement le modifier lors de sa première connexion sur l'application mobile ou web.
+        </p>
+</div>
+</div>
+<!-- Pied du Drawer (Boutons fixés en bas) -->
+<div class="px-space-xl py-space-lg border-t border-outline-variant/60 bg-surface-container-low flex items-center justify-end gap-space-md">
+<button class="h-12 px-space-xl rounded-xl border border-outline-variant bg-surface-container-lowest text-secondary hover:text-on-surface font-body-sm-medium text-body-sm-medium transition-colors" id="btn-cancel-drawer" type="button">
+        Annuler
+      </button>
+<button class="h-12 px-space-xl rounded-xl bg-primary-container text-on-primary hover:bg-primary font-headline-sm text-body-sm-medium flex items-center gap-space-sm shadow-sm transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+<span>Créer l'agent</span>
+</button>
+</div>
+</aside>
+</div>
+<script>
+  // Gestion simple de l'ouverture/fermeture du drawer
+  const backdrop = document.getElementById('drawer-backdrop');
+  const panel = document.getElementById('drawer-panel');
+  const btnClose = document.getElementById('btn-close-drawer');
+  const btnCancel = document.getElementById('btn-cancel-drawer');
+  const btnOpen = document.getElementById('btn-open-drawer');
+
+  function closeDrawer() {
+    backdrop.classList.add('hidden');
+    panel.classList.add('translate-x-full');
+  }
+
+  function openDrawer() {
+    backdrop.classList.remove('hidden');
+    panel.classList.remove('translate-x-full');
+  }
+
+  if (btnClose) btnClose.addEventListener('click', closeDrawer);
+  if (btnCancel) btnCancel.addEventListener('click', closeDrawer);
+  if (backdrop) backdrop.addEventListener('click', closeDrawer);
+  if (btnOpen) btnOpen.addEventListener('click', openDrawer);
+</script></main></div></body></html>

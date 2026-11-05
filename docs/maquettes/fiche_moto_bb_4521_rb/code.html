@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+
+<html lang="fr"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600;700&amp;family=Manrope:wght@600;700&amp;family=Public+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"surface-dim":"#d9dadc","inverse-on-surface":"#f0f1f3","on-primary":"#ffffff","error-container":"#ffdad6","tertiary-fixed":"#ffdcbb","secondary-fixed":"#dbe4e8","surface-tint":"#2e647c","tertiary-fixed-dim":"#f4bc80","on-primary-fixed-variant":"#0d4d63","error":"#ba1a1a","outline-variant":"#c0c7cd","on-secondary-container":"#5b6468","on-background":"#191c1e","surface-container-lowest":"#ffffff","on-secondary-fixed":"#141d20","on-secondary-fixed-variant":"#3f484c","on-tertiary-container":"#e2ac71","on-primary-fixed":"#001f2b","inverse-primary":"#99cee9","primary-container":"#0e4d64","primary-fixed":"#bfe8ff","surface-variant":"#e1e2e4","on-error-container":"#93000a","secondary-fixed-dim":"#bfc8cc","surface-container":"#edeef0","surface-container-highest":"#e1e2e4","on-surface-variant":"#40484c","on-tertiary-fixed":"#2b1700","primary-fixed-dim":"#99cee9","tertiary":"#492a00","on-surface":"#191c1e","secondary-container":"#d8e1e5","surface-container-high":"#e7e8ea","on-tertiary-fixed-variant":"#643e0d","surface":"#f8f9fb","background":"#f8f9fb","secondary":"#576063","outline":"#71787d","tertiary-container":"#653f0e","inverse-surface":"#2e3132","surface-bright":"#f8f9fb","primary":"#003548","surface-container-low":"#f3f3f5","on-secondary":"#ffffff","on-tertiary":"#ffffff","on-primary-container":"#89bdd8","on-error":"#ffffff"},borderRadius:{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},spacing:{"space-xs":"0.25rem","margin":"1rem","space-xl":"1.5rem","gutter-mobile":"0.75rem","space-lg":"1rem","space-md":"0.75rem","space-2xl":"2rem","space-sm":"0.5rem","gutter":"1rem","margin-tablet":"1.5rem"},fontFamily:{"tabular-plate":["JetBrains Mono"],"headline-lg":["Manrope"],"label-md":["Public Sans"],"body-lg-medium":["Public Sans"],"body-sm":["Public Sans"],"headline-md":["Manrope"],"headline-sm":["Manrope"],"body-sm-medium":["Public Sans"],"label-sm":["Public Sans"],"tabular-code":["JetBrains Mono"],"body-lg":["Public Sans"]},fontSize:{"tabular-plate":["18px",{lineHeight:"22px",letterSpacing:"0.08em",fontWeight:"700"}],"headline-lg":["24px",{lineHeight:"32px",letterSpacing:"-0.02em",fontWeight:"600"}],"label-md":["12px",{lineHeight:"16px",letterSpacing:"0.04em",fontWeight:"600"}],"body-lg-medium":["16px",{lineHeight:"24px",letterSpacing:"0em",fontWeight:"500"}],"body-sm":["14px",{lineHeight:"20px",letterSpacing:"0em",fontWeight:"400"}],"headline-md":["20px",{lineHeight:"28px",letterSpacing:"-0.01em",fontWeight:"600"}],"headline-sm":["18px",{lineHeight:"24px",letterSpacing:"0em",fontWeight:"600"}],"body-sm-medium":["14px",{lineHeight:"20px",letterSpacing:"0em",fontWeight:"500"}],"label-sm":["11px",{lineHeight:"14px",letterSpacing:"0.05em",fontWeight:"600"}],"tabular-code":["15px",{lineHeight:"20px",letterSpacing:"0.02em",fontWeight:"600"}],"body-lg":["16px",{lineHeight:"24px",letterSpacing:"0em",fontWeight:"400"}]}}}};</script></head><body class="bg-surface font-body-sm text-on-surface"><aside class="fixed left-0 top-0 h-screen w-60 bg-primary-container z-50 flex flex-col justify-between select-none"><div class="flex flex-col"><div class="h-16 px-space-xl flex items-center gap-space-md border-b border-surface-variant/20"><div class="w-8 h-8 rounded-full bg-[#F4B400] flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-[#13212B] text-[20px]">two_wheeler</span></div><div class="flex flex-col min-w-0"><span class="font-headline-sm text-headline-sm text-on-primary truncate tracking-tight">ZemiConnect</span><span class="font-label-sm text-label-sm text-on-primary-container uppercase tracking-wider truncate">Mairie de Parakou</span></div></div><nav class="mt-space-lg flex flex-col px-space-xs gap-space-xs" data-active-classes="bg-white/10 text-on-primary font-body-sm-medium border-l-[3px] border-[#F4B400]"><a class="flex items-center gap-space-md px-space-lg py-space-md rounded-lg text-on-primary/80 hover:bg-white/5 hover:text-on-primary transition-colors" data-path="tableau-de-bord" href="#"><span class="material-symbols-outlined text-[20px]">dashboard</span><span class="font-body-sm text-body-sm">Tableau de bord</span></a><a class="flex items-center gap-space-md px-space-lg py-space-md rounded-lg text-on-primary/80 hover:bg-white/5 hover:text-on-primary transition-colors" data-path="conducteurs" href="#"><span class="material-symbols-outlined text-[20px]">badge</span><span class="font-body-sm text-body-sm">Conducteurs</span></a><a aria-current="page" class="flex items-center gap-space-md px-space-lg py-space-md rounded-lg transition-colors bg-white/10 text-on-primary font-body-sm-medium border-l-[3px] border-[#F4B400]" data-path="motos" href="#"><span class="material-symbols-outlined text-[20px]">two_wheeler</span><span class="font-body-sm text-body-sm">Motos</span></a><a class="flex items-center gap-space-md px-space-lg py-space-md rounded-lg text-on-primary/80 hover:bg-white/5 hover:text-on-primary transition-colors" data-path="agents" href="#"><span class="material-symbols-outlined text-[20px]">local_police</span><span class="font-body-sm text-body-sm">Agents</span></a><a class="flex items-center gap-space-md px-space-lg py-space-md rounded-lg text-on-primary/80 hover:bg-white/5 hover:text-on-primary transition-colors" data-path="journaux" href="#"><span class="material-symbols-outlined text-[20px]">receipt_long</span><span class="font-body-sm text-body-sm">Journaux</span></a></nav></div><div class="p-space-md border-t border-surface-variant/20 flex flex-col gap-space-xs"><a class="flex items-center gap-space-md px-space-lg py-space-md rounded-lg text-on-primary/80 hover:bg-white/5 hover:text-on-primary transition-colors" data-path="mon-profil" href="#"><span class="material-symbols-outlined text-[20px]">account_circle</span><span class="font-body-sm text-body-sm">Mon profil</span></a><a class="flex items-center gap-space-md px-space-lg py-space-md rounded-lg text-on-primary/80 hover:bg-white/5 hover:text-on-primary transition-colors" data-path="connexion" href="#"><span class="material-symbols-outlined text-[20px]">logout</span><span class="font-body-sm text-body-sm">Se déconnecter</span></a></div></aside><div class="pl-60 min-h-screen flex flex-col bg-surface"><header class="fixed top-0 left-60 right-0 h-16 bg-surface-container-lowest border-b border-surface-variant/40 z-40 px-space-2xl flex items-center justify-between"><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs px-space-sm py-space-xs rounded-full bg-[#E8F5EE] border border-[#1E7B45]/20"><span class="w-2 h-2 rounded-full bg-[#1E7B45]"></span><span class="font-label-sm text-label-sm text-[#1E7B45]">Service Actif · Réseau Parakou</span></div></div><div class="flex items-center gap-space-xl"><button class="relative p-space-sm text-on-surface-variant hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[22px]">notifications</span><span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#ba1a1a]"></span></button><div class="h-6 w-[1px] bg-outline-variant/60"></div><div class="flex items-center gap-space-md"><div class="text-right"><div class="font-body-sm-medium text-body-sm-medium text-on-surface">Awa SOUNON</div><div class="font-label-sm text-label-sm text-on-surface-variant">Gestionnaire</div></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="relative pt-16 bg-[#F7F9FA] p-space-2xl min-h-screen"><div class="flex flex-col w-full">
+<!-- Fil d'Ariane & Contexte Opérationnel -->
+<div class="flex items-center justify-between pb-space-lg">
+<nav aria-label="Fil d'Ariane" class="flex items-center gap-space-sm">
+<a class="flex items-center gap-space-xs font-body-sm-medium text-body-sm-medium text-secondary hover:text-primary transition-colors" data-path="motos" href="#">
+<span class="material-symbols-outlined text-[18px]">two_wheeler</span>
+<span>Motos</span>
+</a>
+<span class="text-outline-variant font-label-md select-none">/</span>
+<span class="font-tabular-code text-body-sm-medium text-primary bg-secondary-container/40 px-space-sm py-0.5 rounded-lg border border-outline-variant/40">
+        BB 4521 RB
+      </span>
+</nav>
+<div class="hidden sm:flex items-center gap-space-sm">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Arrondissement d'enregistrement :</span>
+<span class="font-body-sm-medium text-body-sm-medium text-on-surface">Titirou (Parakou)</span>
+</div>
+</div>
+<!-- En-tête Fiche Moto (Style Institutionnel Bénin / Brume Bleue) -->
+<section class="bg-[#E6EFF3] border border-[#CBD5E1] rounded-xl p-space-xl flex flex-col lg:flex-row lg:items-center justify-between gap-space-xl">
+<div class="flex flex-col gap-space-md">
+<!-- Plaque et Badges d'état -->
+<div class="flex flex-wrap items-center gap-space-md">
+<!-- Plaque d'immatriculation républicaine -->
+<div class="inline-flex items-center bg-surface-container-lowest border-2 border-on-surface rounded px-space-lg py-1 shadow-sm">
+<div class="flex items-center gap-space-xs pr-space-md border-r border-outline-variant/60 mr-space-md">
+<span class="w-2.5 h-2.5 rounded-full bg-[#1E7B45]"></span>
+<span class="font-label-sm text-label-sm font-bold text-on-surface tracking-widest">BJ</span>
+</div>
+<span class="font-tabular-plate text-tabular-plate text-on-surface tracking-widest select-all">BB 4521 RB</span>
+</div>
+<!-- Badges d'état doubles réglementaires -->
+<div class="flex items-center gap-space-xs">
+<!-- Statut Opérationnel Plein -->
+<span class="inline-flex items-center px-space-md py-1 rounded-full bg-[#E8F5EE] text-[#1E7B45] font-label-sm text-label-sm font-semibold tracking-wide">
+            Affectée
+          </span>
+<!-- Badge Conformité Légale (Contour + Bouclier) -->
+<span class="inline-flex items-center gap-1 px-space-md py-1 rounded-full bg-surface-container-lowest border border-[#1E7B45] text-[#1E7B45] font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[16px]">verified_user</span>
+            Assurance à jour
+          </span>
+</div>
+</div>
+<!-- Métadonnées Véhicule -->
+<div class="flex flex-wrap items-center gap-y-1 gap-x-space-md text-on-surface-variant font-body-sm text-body-sm">
+<span class="font-body-sm-medium text-on-surface">Bajaj Boxer CT 100</span>
+<span class="text-outline-variant select-none">·</span>
+<span class="inline-flex items-center gap-1.5">
+<span class="w-3 h-3 rounded-full bg-[#ba1a1a] inline-block border border-white"></span>
+<span>Couleur Rouge</span>
+</span>
+<span class="text-outline-variant select-none">·</span>
+<span>Année 2021</span>
+<span class="text-outline-variant select-none">·</span>
+<span>Châssis : <span class="font-tabular-code text-on-surface tracking-normal font-semibold">MD2A21AY5MWA39108</span></span>
+</div>
+</div>
+<!-- Actions Rapides -->
+<div class="flex items-center gap-space-md self-start lg:self-center shrink-0">
+<button class="inline-flex items-center gap-space-xs px-space-lg py-2.5 rounded-lg bg-surface-container-lowest border border-[#CBD5E1] text-primary hover:bg-white hover:border-primary transition-all font-body-sm-medium text-body-sm-medium" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+<span>Modifier</span>
+</button>
+<!-- Bouton Archiver Désactivé avec Tooltip Opérationnel -->
+<div class="relative group">
+<button aria-describedby="tooltip-archive" class="inline-flex items-center gap-space-xs px-space-lg py-2.5 rounded-lg bg-surface-container border border-outline-variant/40 text-outline cursor-not-allowed select-none font-body-sm-medium text-body-sm-medium" disabled="" type="button">
+<span class="material-symbols-outlined text-[18px]">lock</span>
+<span>Archiver</span>
+</button>
+<!-- Info-bulle d'avertissement -->
+<div class="absolute right-0 bottom-full mb-2 hidden group-hover:flex w-72 p-space-md bg-inverse-surface text-inverse-on-surface rounded-lg shadow-lg text-left z-50 flex-col gap-1 pointer-events-none" id="tooltip-archive" role="tooltip">
+<div class="flex items-center gap-1 text-[#F4B400] font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[15px]">info</span>
+<span>Action verrouillée</span>
+</div>
+<p class="font-label-sm text-label-sm text-surface-container-high leading-snug">
+            Clôturez d'abord l'affectation active du conducteur avant d'archiver.
+          </p>
+</div>
+</div>
+</div>
+</section>
+<!-- Grille 2 Cartes Principales (Conducteur & Assurance) -->
+<section class="grid grid-cols-1 lg:grid-cols-2 gap-space-xl mt-space-xl">
+<!-- 1. Carte Conducteur Actuel -->
+<article class="bg-surface-container-lowest border border-[#D9E1E5] rounded-xl flex flex-col justify-between overflow-hidden">
+<!-- En-tête bandeau réglementaire zémidjan -->
+<div class="h-1.5 w-full bg-[#F4B400]"></div>
+<div class="p-space-xl flex flex-col gap-space-lg">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary-container text-[20px]">person_pin</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Conducteur actuel</h2>
+</div>
+<span class="inline-flex items-center px-space-sm py-0.5 rounded bg-[#E8F5EE] text-[#1E7B45] font-label-sm text-label-sm font-semibold">
+            Affecté actif
+          </span>
+</div>
+<div class="flex items-start gap-space-lg bg-surface-container-low p-space-lg rounded-lg border border-surface-variant/50">
+<img class="w-14 h-14 rounded-lg object-cover border border-[#CBD5E1] shrink-0" data-alt="Portrait format passeport d'identité de Moussa ALASSANE, conducteur de moto-taxi zémidjan béninois portant une chemise jaune d'agrément, regardant vers l'objectif avec assurance, éclairage naturel clair et fond neutre de bureau municipal." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxI27jzmIaVUcJPRk2xmvY9hJoN1wGgj_Vg7GTN14i0jA77U4NccYuNEcnD0SUrQNSfAfliOsFMgWtvUXMuM1WWaTGklbVMRE5BKkQ3jm5STVdlRC6xHCPpGQPeXiLuBnyC3OwcHUjpw0CTPQHr3RvauXu1JkIIiBD3ztfjDxmx61MOCYJ0Bp5coI_DT8tGJG6JAlg2QH5pRcBd7jIQig7TYTJ0Gs7Tip-yoM2zoU"/>
+<div class="flex flex-col min-w-0">
+<a class="font-headline-sm text-headline-sm text-primary hover:underline truncate" href="#">
+              Moussa ALASSANE
+            </a>
+<div class="flex items-center gap-space-xs mt-0.5">
+<span class="font-label-sm text-label-sm text-secondary">Matricule :</span>
+<span class="font-tabular-code text-body-sm-medium text-on-surface bg-surface-container-lowest px-1.5 py-0.5 rounded border border-outline-variant/30">
+                ZC-482917
+              </span>
+</div>
+</div>
+</div>
+<!-- Détails de contact et localisation -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md text-body-sm font-body-sm">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-secondary">Téléphone officiel</span>
+<div class="flex items-center gap-space-xs mt-0.5 text-on-surface font-body-sm-medium">
+<span class="material-symbols-outlined text-[16px] text-primary">call</span>
+<span class="font-tabular-code">+229 97 45 12 80</span>
+</div>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-secondary">Arrondissement de rattachement</span>
+<div class="flex items-center gap-space-xs mt-0.5 text-on-surface font-body-sm-medium">
+<span class="material-symbols-outlined text-[16px] text-primary">location_city</span>
+<span class="truncate">1er Arrondissement (Titirou)</span>
+</div>
+</div>
+<div class="flex flex-col sm:col-span-2 pt-space-xs border-t border-surface-variant/40">
+<span class="font-label-sm text-label-sm text-secondary">Date de début d'affectation</span>
+<span class="font-body-sm-medium text-on-surface mt-0.5">Depuis le 14/03/2026</span>
+</div>
+</div>
+</div>
+<!-- Actions de la carte -->
+<div class="p-space-lg bg-surface-container-low/60 border-t border-[#D9E1E5] flex flex-wrap items-center justify-between gap-space-md">
+<button class="inline-flex items-center gap-space-xs px-space-md py-2 rounded-lg bg-surface-container-lowest border border-[#D9E1E5] text-primary hover:bg-white hover:border-primary transition-colors font-body-sm-medium text-body-sm-medium" type="button">
+<span class="material-symbols-outlined text-[18px]">badge</span>
+<span>Ouvrir la fiche conducteur</span>
+</button>
+<button class="inline-flex items-center gap-space-xs px-space-md py-2 rounded-lg bg-secondary-container/70 text-on-secondary-fixed-variant hover:bg-secondary-container transition-colors font-body-sm-medium text-body-sm-medium" type="button">
+<span class="material-symbols-outlined text-[18px]">swap_horiz</span>
+<span>Changer de conducteur</span>
+</button>
+</div>
+</article>
+<!-- 2. Carte Assurance Active -->
+<article class="bg-surface-container-lowest border border-[#D9E1E5] rounded-xl flex flex-col justify-between overflow-hidden">
+<!-- Bandeau neutre certifié -->
+<div class="h-1.5 w-full bg-primary-container"></div>
+<div class="p-space-xl flex flex-col gap-space-lg">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary-container text-[20px]">policy</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Assurance active</h2>
+</div>
+<span class="inline-flex items-center gap-1 px-space-sm py-0.5 rounded-full bg-[#E8F5EE] text-[#1E7B45] font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-[#1E7B45]"></span>
+            Valide
+          </span>
+</div>
+<div class="p-space-md rounded-lg bg-[#E6EFF3]/60 border border-[#CBD5E1]/60 flex items-center justify-between">
+<div>
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider block">Numéro de Contrat</span>
+<span class="font-tabular-code text-body-sm-medium text-primary font-bold">Police N° NSIA-BEN-2026-8819</span>
+</div>
+<span class="material-symbols-outlined text-primary-container text-[24px]">verified</span>
+</div>
+<!-- Informations détaillées en grille 2x2 -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-space-lg text-body-sm font-body-sm">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-secondary">Assureur</span>
+<span class="font-body-sm-medium text-on-surface mt-0.5">NSIA Bénin</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-secondary">Catégorie</span>
+<span class="font-body-sm-medium text-on-surface mt-0.5">RC Professionnelle Taxi-Moto</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-secondary">Date de début</span>
+<span class="font-tabular-code text-body-sm text-on-surface mt-0.5">15/01/2026</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-secondary">Date d'expiration</span>
+<span class="font-tabular-code text-body-sm-medium text-[#1E7B45] mt-0.5">14/01/2027</span>
+</div>
+</div>
+</div>
+<!-- Actions de la carte -->
+<div class="p-space-lg bg-surface-container-low/60 border-t border-[#D9E1E5] flex flex-wrap items-center justify-between gap-space-md">
+<a class="inline-flex items-center gap-space-xs text-primary hover:text-primary-container font-body-sm-medium text-body-sm-medium transition-colors" href="#">
+<span class="material-symbols-outlined text-[18px]">picture_as_pdf</span>
+<span>Voir le fichier (PDF)</span>
+</a>
+<button class="inline-flex items-center gap-space-xs px-space-lg py-2 rounded-lg bg-primary-container text-on-primary hover:bg-primary transition-colors font-body-sm-medium text-body-sm-medium" type="button">
+<span class="material-symbols-outlined text-[18px]">autorenew</span>
+<span>Renouveler</span>
+</button>
+</div>
+</article>
+</section>
+<!-- Section Inférieure : Tableaux d'Historique -->
+<section class="flex flex-col gap-space-xl mt-space-2xl">
+<!-- 1. Historique des Assurances -->
+<div class="bg-surface-container-lowest border border-[#E2E8F0] rounded-xl overflow-hidden">
+<div class="px-space-xl py-space-lg border-b border-[#E2E8F0] flex items-center justify-between bg-surface-container-low/40">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[20px]">history_edu</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Historique des assurances</h3>
+</div>
+<span class="font-label-sm text-label-sm text-secondary bg-surface-container px-space-sm py-0.5 rounded">
+          3 polices enregistrées
+        </span>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-[#E2E8F0] bg-surface-container-low text-secondary font-label-md text-label-md uppercase tracking-wider">
+<th class="py-space-md px-space-xl font-semibold" scope="col">Période de validité</th>
+<th class="py-space-md px-space-lg font-semibold" scope="col">Compagnie</th>
+<th class="py-space-md px-space-lg font-semibold" scope="col">N° de police</th>
+<th class="py-space-md px-space-lg font-semibold" scope="col">Statut</th>
+<th class="py-space-md px-space-xl font-semibold text-right" scope="col">Attestation</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-[#E2E8F0] font-body-sm text-body-sm text-on-surface">
+<!-- Ligne 1 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-space-md px-space-xl">
+<div class="font-tabular-code text-on-surface font-semibold">15/01/2026 au 14/01/2027</div>
+</td>
+<td class="py-space-md px-space-lg font-body-sm-medium">NSIA Bénin</td>
+<td class="py-space-md px-space-lg">
+<span class="font-tabular-code text-primary font-medium">NSIA-BEN-2026-8819</span>
+</td>
+<td class="py-space-md px-space-lg">
+<span class="inline-flex items-center gap-1 px-space-sm py-0.5 rounded-full bg-[#E8F5EE] text-[#1E7B45] font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-[#1E7B45]"></span>
+                  Valide
+                </span>
+</td>
+<td class="py-space-md px-space-xl text-right">
+<a class="inline-flex items-center gap-1 text-primary hover:underline font-body-sm-medium text-body-sm" href="#">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+                  Voir PDF
+                </a>
+</td>
+</tr>
+<!-- Ligne 2 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-space-md px-space-xl">
+<div class="font-tabular-code text-on-surface-variant">15/01/2025 au 14/01/2026</div>
+</td>
+<td class="py-space-md px-space-lg">NSIA Bénin</td>
+<td class="py-space-md px-space-lg">
+<span class="font-tabular-code text-on-surface-variant">NSIA-BEN-2025-4102</span>
+</td>
+<td class="py-space-md px-space-lg">
+<span class="inline-flex items-center px-space-sm py-0.5 rounded bg-surface-container-high text-secondary font-label-sm text-label-sm font-semibold">
+                  Archivée
+                </span>
+</td>
+<td class="py-space-md px-space-xl text-right">
+<a class="inline-flex items-center gap-1 text-secondary hover:text-primary hover:underline font-body-sm" href="#">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+                  Voir PDF
+                </a>
+</td>
+</tr>
+<!-- Ligne 3 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-space-md px-space-xl">
+<div class="font-tabular-code text-on-surface-variant">15/01/2024 au 14/01/2025</div>
+</td>
+<td class="py-space-md px-space-lg">Sanlam Bénin</td>
+<td class="py-space-md px-space-lg">
+<span class="font-tabular-code text-on-surface-variant">SNL-MOT-2024-991</span>
+</td>
+<td class="py-space-md px-space-lg">
+<span class="inline-flex items-center px-space-sm py-0.5 rounded bg-surface-container-high text-secondary font-label-sm text-label-sm font-semibold">
+                  Archivée
+                </span>
+</td>
+<td class="py-space-md px-space-xl text-right">
+<a class="inline-flex items-center gap-1 text-secondary hover:text-primary hover:underline font-body-sm" href="#">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+                  Voir PDF
+                </a>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- 2. Historique des Conducteurs -->
+<div class="bg-surface-container-lowest border border-[#E2E8F0] rounded-xl overflow-hidden">
+<div class="px-space-xl py-space-lg border-b border-[#E2E8F0] flex items-center justify-between bg-surface-container-low/40">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[20px]">manage_accounts</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Historique des conducteurs</h3>
+</div>
+<span class="font-label-sm text-label-sm text-secondary bg-surface-container px-space-sm py-0.5 rounded">
+          Cycle de vie de la moto
+        </span>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-[#E2E8F0] bg-surface-container-low text-secondary font-label-md text-label-md uppercase tracking-wider">
+<th class="py-space-md px-space-xl font-semibold" scope="col">Conducteur</th>
+<th class="py-space-md px-space-lg font-semibold" scope="col">Matricule</th>
+<th class="py-space-md px-space-lg font-semibold" scope="col">Période d'affectation</th>
+<th class="py-space-md px-space-lg font-semibold" scope="col">Motif de clôture / fin</th>
+<th class="py-space-md px-space-xl font-semibold text-right" scope="col">Statut</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-[#E2E8F0] font-body-sm text-body-sm text-on-surface">
+<!-- Ligne 1 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-space-md px-space-xl font-body-sm-medium">
+<a class="text-primary hover:underline" href="#">Moussa ALASSANE</a>
+</td>
+<td class="py-space-md px-space-lg">
+<span class="font-tabular-code text-on-surface font-semibold bg-surface-container-low px-1.5 py-0.5 rounded">
+                  ZC-482917
+                </span>
+</td>
+<td class="py-space-md px-space-lg">
+<div class="font-tabular-code text-on-surface font-medium">Du 14/03/2026 à aujourd'hui</div>
+</td>
+<td class="py-space-md px-space-lg text-on-surface-variant">
+                Affectation active
+              </td>
+<td class="py-space-md px-space-xl text-right">
+<span class="inline-flex items-center px-space-sm py-0.5 rounded bg-[#E8F5EE] text-[#1E7B45] font-label-sm text-label-sm font-semibold">
+                  Actif
+                </span>
+</td>
+</tr>
+<!-- Ligne 2 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-space-md px-space-xl text-on-surface-variant font-body-sm-medium">
+                Bio KORA <span class="font-label-sm text-secondary font-normal">(usager)</span>
+</td>
+<td class="py-space-md px-space-lg">
+<span class="font-tabular-code text-secondary bg-surface-container-low px-1.5 py-0.5 rounded">
+                  ZC-391024
+                </span>
+</td>
+<td class="py-space-md px-space-lg">
+<div class="font-tabular-code text-secondary">Du 01/02/2025 au 10/03/2026</div>
+</td>
+<td class="py-space-md px-space-lg text-secondary">
+                Changement de véhicule
+              </td>
+<td class="py-space-md px-space-xl text-right">
+<span class="inline-flex items-center px-space-sm py-0.5 rounded bg-surface-container-high text-secondary font-label-sm text-label-sm font-semibold">
+                  Clôturée
+                </span>
+</td>
+</tr>
+<!-- Ligne 3 -->
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-space-md px-space-xl text-on-surface-variant font-body-sm-medium">
+                Saliou OROU
+              </td>
+<td class="py-space-md px-space-lg">
+<span class="font-tabular-code text-secondary bg-surface-container-low px-1.5 py-0.5 rounded">
+                  ZC-104921
+                </span>
+</td>
+<td class="py-space-md px-space-lg">
+<div class="font-tabular-code text-secondary">Du 10/06/2023 au 15/01/2025</div>
+</td>
+<td class="py-space-md px-space-lg text-secondary">
+                Restitution au propriétaire
+              </td>
+<td class="py-space-md px-space-xl text-right">
+<span class="inline-flex items-center px-space-sm py-0.5 rounded bg-surface-container-high text-secondary font-label-sm text-label-sm font-semibold">
+                  Clôturée
+                </span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+</div></main></div></body></html>

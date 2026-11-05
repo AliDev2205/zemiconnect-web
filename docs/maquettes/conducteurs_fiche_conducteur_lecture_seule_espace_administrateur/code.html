@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+
+<html lang="fr"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600;700&amp;family=Manrope:wght@600;700&amp;family=Public+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "surface-variant": "#e1e2e4", "tertiary": "#492a00", "surface": "#f8f9fb", "primary": "#003548", "surface-dim": "#d9dadc", "on-error": "#ffffff", "on-secondary-container": "#5b6468", "surface-tint": "#2e647c", "error-container": "#ffdad6", "tertiary-fixed": "#ffdcbb", "outline": "#71787d", "on-background": "#191c1e", "secondary": "#576063", "on-tertiary-fixed": "#2b1700", "secondary-fixed-dim": "#bfc8cc", "on-error-container": "#93000a", "on-primary-fixed-variant": "#0d4d63", "secondary-fixed": "#dbe4e8", "on-surface-variant": "#40484c", "inverse-on-surface": "#f0f1f3", "on-tertiary-container": "#e2ac71", "surface-container-low": "#f3f3f5", "inverse-surface": "#2e3132", "on-tertiary-fixed-variant": "#643e0d", "on-secondary-fixed-variant": "#3f484c", "primary-container": "#0e4d64", "on-secondary": "#ffffff", "secondary-container": "#d8e1e5", "surface-container": "#edeef0", "outline-variant": "#c0c7cd", "tertiary-fixed-dim": "#f4bc80", "inverse-primary": "#99cee9", "surface-container-lowest": "#ffffff", "on-primary-fixed": "#001f2b", "on-primary": "#ffffff", "primary-fixed": "#bfe8ff", "primary-fixed-dim": "#99cee9", "error": "#ba1a1a", "on-secondary-fixed": "#141d20", "on-primary-container": "#89bdd8", "on-tertiary": "#ffffff", "on-surface": "#191c1e", "surface-container-high": "#e7e8ea", "background": "#f8f9fb", "surface-container-highest": "#e1e2e4", "tertiary-container": "#653f0e", "surface-bright": "#f8f9fb" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "margin": "1rem", "space-md": "0.75rem", "margin-tablet": "1.5rem", "space-lg": "1rem", "gutter-mobile": "0.75rem", "space-2xl": "2rem", "space-sm": "0.5rem", "gutter": "1rem", "space-xl": "1.5rem", "space-xs": "0.25rem" }, "fontFamily": { "headline-sm": [ "Manrope" ], "headline-lg": [ "Manrope" ], "body-lg": [ "Public Sans" ], "body-lg-medium": [ "Public Sans" ], "tabular-plate": [ "JetBrains Mono" ], "tabular-code": [ "JetBrains Mono" ], "body-sm": [ "Public Sans" ], "label-md": [ "Public Sans" ], "body-sm-medium": [ "Public Sans" ], "label-sm": [ "Public Sans" ], "headline-md": [ "Manrope" ] }, "fontSize": { "headline-sm": [ "18px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "600" } ], "headline-lg": [ "24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "600" } ], "body-lg": [ "16px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400" } ], "body-lg-medium": [ "16px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "500" } ], "tabular-plate": [ "18px", { "lineHeight": "22px", "letterSpacing": "0.08em", "fontWeight": "700" } ], "tabular-code": [ "15px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "600" } ], "body-sm": [ "14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" } ], "label-md": [ "12px", { "lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "600" } ], "body-sm-medium": [ "14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "500" } ], "label-sm": [ "11px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "600" } ], "headline-md": [ "20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" } ] } } } };</script></head><body class="bg-background font-body-sm text-on-surface antialiased"><aside class="fixed left-0 top-0 h-screen w-60 bg-primary-container text-on-primary z-50 flex flex-col justify-between select-none"><div class="flex flex-col"><div class="h-16 px-space-xl flex items-center gap-space-md border-b border-white/10"><div class="w-8 h-8 rounded-xl bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed font-headline-sm text-headline-sm">Z</div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-on-primary leading-none tracking-tight">ZemiConnect</span><span class="font-label-sm text-label-sm text-on-primary/70 uppercase tracking-wider mt-0.5">Administration</span></div></div><nav class="flex flex-col py-space-md gap-0.5" data-active-classes="bg-white/10 text-on-primary border-l-4 border-tertiary-fixed font-body-sm-medium pl-3"><a class="flex items-center gap-space-md px-space-lg py-space-sm text-on-primary/80 hover:bg-white/5 hover:text-on-primary font-body-sm transition-colors" data-path="tableau-de-bord" href="#"><span class="material-symbols-outlined text-[20px]">dashboard</span><span>Tableau de bord</span></a><a class="flex items-center gap-space-md px-space-lg py-space-sm text-on-primary/80 hover:bg-white/5 hover:text-on-primary font-body-sm transition-colors" data-path="gestionnaires" href="#"><span class="material-symbols-outlined text-[20px]">badge</span><span>Gestionnaires</span></a><a aria-current="page" class="flex items-center gap-space-md px-space-lg py-space-sm transition-colors bg-white/10 text-on-primary border-l-4 border-tertiary-fixed font-body-sm-medium pl-3" data-path="conducteurs" href="#"><span class="material-symbols-outlined text-[20px]">id_card</span><span>Conducteurs</span></a><a class="flex items-center gap-space-md px-space-lg py-space-sm text-on-primary/80 hover:bg-white/5 hover:text-on-primary font-body-sm transition-colors" data-path="motos" href="#"><span class="material-symbols-outlined text-[20px]">two_wheeler</span><span>Motos</span></a><a class="flex items-center gap-space-md px-space-lg py-space-sm text-on-primary/80 hover:bg-white/5 hover:text-on-primary font-body-sm transition-colors" data-path="agents" href="#"><span class="material-symbols-outlined text-[20px]">shield_person</span><span>Agents</span></a><a class="flex items-center gap-space-md px-space-lg py-space-sm text-on-primary/80 hover:bg-white/5 hover:text-on-primary font-body-sm transition-colors" data-path="journaux" href="#"><span class="material-symbols-outlined text-[20px]">receipt_long</span><span>Journaux</span></a><a class="flex items-center gap-space-md px-space-lg py-space-sm text-on-primary/80 hover:bg-white/5 hover:text-on-primary font-body-sm transition-colors" data-path="parametres" href="#"><span class="material-symbols-outlined text-[20px]">settings</span><span>Paramètres</span></a></nav></div><div class="p-space-md border-t border-white/10 flex flex-col gap-0.5"><a class="flex items-center gap-space-md px-space-lg py-space-sm text-on-primary/80 hover:bg-white/5 hover:text-on-primary font-body-sm rounded-lg transition-colors" data-path="mon-profil" href="#"><span class="material-symbols-outlined text-[20px]">account_circle</span><span>Mon profil</span></a><a class="flex items-center gap-space-md px-space-lg py-space-sm text-on-primary/80 hover:bg-white/5 hover:text-on-primary font-body-sm rounded-lg transition-colors" data-path="se-deconnecter" href="#"><span class="material-symbols-outlined text-[20px]">logout</span><span>Se déconnecter</span></a></div></aside><div class="pl-60"><header class="fixed top-0 left-60 right-0 h-16 bg-surface-container-lowest border-b border-outline-variant z-40 px-space-2xl flex items-center justify-between"><div class="flex items-center gap-space-md text-on-surface-variant font-label-md text-label-md"><span class="hover:text-on-surface cursor-pointer">Mairie de Parakou</span><span class="text-outline">/</span><span class="hover:text-on-surface cursor-pointer">Direction des Transports</span><span class="text-outline">/</span><span class="text-primary font-body-sm-medium">Espace Régulation</span></div><div class="flex items-center gap-space-xl"><div class="flex items-center gap-space-xs px-space-md py-1 bg-surface-container rounded-full"><span class="w-2 h-2 rounded-full bg-emerald-600"></span><span class="font-label-sm text-label-sm text-on-surface-variant">Service actif · Réseau Parakou</span></div><button class="w-9 h-9 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[22px]">notifications</span></button><div class="h-6 w-px bg-outline-variant"></div><div class="flex items-center gap-space-md"><div class="text-right"><div class="font-body-sm-medium text-body-sm-medium text-on-surface leading-tight">Kofi DOSSOU</div><div class="font-label-sm text-label-sm text-secondary leading-tight">Administrateur</div></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary font-label-md text-label-md"><span class="font-bold">KD</span></div></div></div></header><main class="w-full pt-16 bg-background min-h-screen"><div class="p-space-2xl"><div class="flex flex-col w-full">
+<!-- Fil d'Ariane & Lien de retour hiérarchique -->
+<div class="flex items-center justify-between mb-space-lg">
+<a class="inline-flex items-center gap-space-xs text-primary font-body-sm-medium hover:text-primary-container transition-colors group" href="#">
+<span class="material-symbols-outlined text-[18px] group-hover:-translate-x-0.5 transition-transform">arrow_back</span>
+<span>Retour à la liste des conducteurs</span>
+</a>
+<div class="inline-flex items-center gap-space-xs font-tabular-code text-label-sm text-secondary bg-surface-container px-space-md py-1 rounded-lg">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span>DOSSIER-MUNICIPAL : BJ-PK-2026-ZC482</span>
+</div>
+</div>
+<!-- 1. Bandeau supérieur d'avertissement réglementaire en lecture seule -->
+<div class="mb-space-xl p-space-lg bg-[#E8F2F6] rounded-xl flex items-start gap-space-lg shadow-sm">
+<div class="w-10 h-10 rounded-lg bg-[#0E4D64]/10 text-primary-container flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[22px]">visibility</span>
+</div>
+<div class="flex flex-col gap-0.5">
+<div class="font-headline-sm text-body-lg-medium text-primary leading-tight">
+        Consultation en lecture seule — Espace Administration
+      </div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+        Vous consultez ce dossier en mode supervision. Conformément aux règles d'attribution de la Mairie de Parakou, les modifications, validations et suspensions sont réservées aux gestionnaires de régie habilités.
+      </p>
+</div>
+</div>
+<!-- 2. En-tête de la fiche conducteur -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden mb-space-xl">
+<!-- Bandeau jaune d'agrément Zémidjan de Parakou -->
+<div class="h-2 w-full bg-[#F4B400]"></div>
+<div class="p-space-xl flex flex-col lg:flex-row lg:items-center justify-between gap-space-xl">
+<div class="flex flex-col sm:flex-row items-start sm:items-center gap-space-xl">
+<!-- Photo Conducteur -->
+<div class="relative shrink-0">
+<img class="w-24 h-24 sm:w-28 sm:h-28 rounded-xl object-cover shadow-sm bg-surface-container" data-alt="Portrait format passeport d'un conducteur de taxi-moto béninois nommé Moussa ALASSANE, environ 38 ans, portant un polo jaune réglementaire et une casquette officielle zémidjan de la ville de Parakou, regard direct et professionnel, fond neutre administratif, lumière naturelle douce d'Afrique de l'Ouest" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAFRIqvg_-905NtFLb1cOl8dRb9W0l_j-nKG7ztiHbctzEPOhdUHCbR_B0J3wC_lK4IMLDtwszQ2HnxCh4MUF5Fy1JgsZe4qKC6sO20RM7gaFGVuUKN18XfySKEakKgu2h1ciJJSZYxYG6laMBwFYOhIz5dhsqUeM0qyzu2HcqE8ZteBc6lilpXE8i7h-6ByMzdXhCAtTvM_GrRif7ACI2Itmk1MAEf1KjKk7xwsSE"/>
+<div class="absolute -bottom-2 -right-2 bg-primary text-on-primary font-tabular-code text-[11px] font-bold px-2 py-0.5 rounded shadow-sm">
+            ZC
+          </div>
+</div>
+<!-- Détails d'identité administrative -->
+<div class="flex flex-col gap-1.5">
+<div class="flex flex-wrap items-center gap-space-md">
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">
+              Moussa ALASSANE
+            </h1>
+<span class="font-tabular-code text-tabular-code px-space-md py-0.5 bg-surface-container text-on-surface-variant font-bold rounded">
+              ZC-482917
+            </span>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-x-space-xl gap-y-1 mt-1 text-on-surface-variant">
+<div class="flex items-center gap-space-xs font-body-sm">
+<span class="material-symbols-outlined text-[18px] text-secondary">two_wheeler</span>
+<span class="font-body-sm-medium text-on-surface">Moto :</span>
+<span class="font-tabular-plate text-[14px] text-primary px-1.5 py-0.5 bg-surface-container-high rounded">BB 4521 RB</span>
+<span class="text-secondary text-label-sm">(Bajaj Boxer 100 rouge)</span>
+</div>
+<div class="flex items-center gap-space-xs font-body-sm">
+<span class="material-symbols-outlined text-[18px] text-secondary">phone_iphone</span>
+<span class="font-body-sm-medium text-on-surface">Téléphone :</span>
+<span class="font-tabular-code text-body-sm text-on-surface">+229 97 00 00 00</span>
+</div>
+<div class="flex items-center gap-space-xs font-body-sm sm:col-span-2">
+<span class="material-symbols-outlined text-[18px] text-secondary">location_on</span>
+<span class="font-body-sm-medium text-on-surface">Arrondissement :</span>
+<span class="text-on-surface">1er Arrondissement — Gare Centrale Parakou</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Badges de statut & validité (Stricte lecture seule, aucun bouton) -->
+<div class="flex flex-col sm:flex-row lg:flex-col items-start lg:items-end gap-space-md pt-space-lg lg:pt-0 border-t lg:border-t-0 border-surface-container shrink-0">
+<div class="flex items-center gap-space-sm">
+<!-- Badge Statut Opérationnel (Plein) -->
+<span class="inline-flex items-center gap-1.5 px-3 py-1 bg-[#E8F5EE] text-[#1E7B45] rounded-full font-label-md text-label-md">
+<span class="w-2 h-2 rounded-full bg-[#1E7B45] animate-pulse"></span>
+            Statut : Actif
+          </span>
+<!-- Badge Conformité Légale (Contour) -->
+<span class="inline-flex items-center gap-1 px-2.5 py-1 bg-surface-container-lowest text-[#1E7B45] ring-1 ring-[#1E7B45] rounded-full font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px]">verified_user</span>
+            Conforme
+          </span>
+</div>
+<div class="flex flex-col items-start lg:items-end text-right">
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider">Validité Droit Taxi Communal</span>
+<div class="font-tabular-code text-body-sm-medium text-primary flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-[16px] text-[#1E7B45]">event_available</span>
+            Valable jusqu'au 31/12/2026
+          </div>
+</div>
+</div>
+</div>
+</div>
+<!-- 3. Barre d'onglets de navigation de la fiche -->
+<div class="flex items-center gap-space-xs bg-surface-container-low p-1.5 rounded-xl mb-space-xl overflow-x-auto select-none">
+<button class="px-space-lg py-2.5 rounded-lg text-secondary hover:text-on-surface font-body-sm transition-colors whitespace-nowrap flex items-center gap-space-xs" type="button">
+<span class="material-symbols-outlined text-[18px]">person</span>
+<span>Identité &amp; État civil</span>
+</button>
+<button class="px-space-lg py-2.5 rounded-lg text-secondary hover:text-on-surface font-body-sm transition-colors whitespace-nowrap flex items-center gap-space-xs" type="button">
+<span class="material-symbols-outlined text-[18px]">moped</span>
+<span>Moto (BB 4521 RB)</span>
+</button>
+<!-- Onglet Actif -->
+<button class="px-space-lg py-2.5 rounded-lg bg-surface-container-lowest text-primary font-headline-sm text-body-sm-medium shadow-sm whitespace-nowrap flex items-center gap-space-sm relative" type="button">
+<span class="material-symbols-outlined text-[18px] text-primary-container">folder_shared</span>
+<span>Documents réglementaires</span>
+<span class="w-5 h-5 rounded-full bg-primary-container text-on-primary text-[11px] font-bold flex items-center justify-center">4</span>
+</button>
+<button class="px-space-lg py-2.5 rounded-lg text-secondary hover:text-on-surface font-body-sm transition-colors whitespace-nowrap flex items-center gap-space-xs" type="button">
+<span class="material-symbols-outlined text-[18px]">qr_code_2</span>
+<span>QR Code &amp; Badge</span>
+</button>
+<button class="px-space-lg py-2.5 rounded-lg text-secondary hover:text-on-surface font-body-sm transition-colors whitespace-nowrap flex items-center gap-space-xs" type="button">
+<span class="material-symbols-outlined text-[18px]">history</span>
+<span>Historique &amp; Audit</span>
+</button>
+</div>
+<!-- 4. Contenu de l'onglet actif : Grille des documents officiels déposés et validés -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-xl mb-space-2xl">
+<!-- CARTE 1 : Permis de conduire -->
+<div class="bg-surface-container-lowest rounded-xl p-space-xl flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow">
+<div>
+<div class="flex items-start justify-between gap-space-md mb-space-lg">
+<div class="flex items-center gap-space-md">
+<div class="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined text-[26px]">badge</span>
+</div>
+<div>
+<h2 class="font-headline-sm text-body-lg-medium text-on-surface leading-snug">Permis de conduire</h2>
+<span class="font-label-sm text-label-sm text-secondary">Catégorie A (Motocyclettes)</span>
+</div>
+</div>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 bg-[#E8F5EE] text-[#1E7B45] rounded-full font-label-md text-label-md">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+            Valide
+          </span>
+</div>
+<div class="bg-surface-container-low rounded-lg p-space-md mb-space-lg space-y-2">
+<div class="flex items-center justify-between text-body-sm">
+<span class="text-secondary font-body-sm">N° document :</span>
+<span class="font-tabular-code text-body-sm-medium text-on-surface">PERM-BJ-2018-84912</span>
+</div>
+<div class="flex items-center justify-between text-body-sm">
+<span class="text-secondary font-body-sm">Délivrance :</span>
+<span class="font-tabular-code text-on-surface">14/05/2018</span>
+</div>
+<div class="flex items-center justify-between text-body-sm">
+<span class="text-secondary font-body-sm">Expiration :</span>
+<span class="font-tabular-code text-body-sm-medium text-primary">13/05/2028</span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm text-secondary font-label-sm mb-space-lg">
+<span class="material-symbols-outlined text-[16px] text-outline">description</span>
+<span class="truncate font-tabular-code">permis_conduire_moussa_alassane.pdf</span>
+<span class="shrink-0 text-outline">· 1.8 Mo</span>
+</div>
+</div>
+<!-- Action unique : Consultation fichier en lecture seule -->
+<div class="pt-space-md border-t border-surface-container flex items-center justify-between">
+<span class="font-label-sm text-outline">Validé le 12/01/2024 par A. SOUNON</span>
+<button class="inline-flex items-center gap-1.5 px-space-md py-2 rounded-lg bg-[#E6EFF3] text-[#0E4D64] hover:bg-[#d8e6ec] font-body-sm-medium text-body-sm transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+<span>Voir le fichier</span>
+</button>
+</div>
+</div>
+<!-- CARTE 2 : Attestation de droit de taxi communal -->
+<div class="bg-surface-container-lowest rounded-xl p-space-xl flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow">
+<div>
+<div class="flex items-start justify-between gap-space-md mb-space-lg">
+<div class="flex items-center gap-space-md">
+<div class="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined text-[26px]">local_taxi</span>
+</div>
+<div>
+<h2 class="font-headline-sm text-body-lg-medium text-on-surface leading-snug">Droit de taxi communal</h2>
+<span class="font-label-sm text-label-sm text-secondary">Mairie de Parakou · Exercice 2026</span>
+</div>
+</div>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 bg-[#E8F5EE] text-[#1E7B45] rounded-full font-label-md text-label-md">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+            Valide
+          </span>
+</div>
+<div class="bg-surface-container-low rounded-lg p-space-md mb-space-lg space-y-2">
+<div class="flex items-center justify-between text-body-sm">
+<span class="text-secondary font-body-sm">N° d'agrément :</span>
+<span class="font-tabular-code text-body-sm-medium text-on-surface">DT-PK-2026-0412</span>
+</div>
+<div class="flex items-center justify-between text-body-sm">
+<span class="text-secondary font-body-sm">Période validité :</span>
+<span class="font-tabular-code text-body-sm-medium text-primary">01/01/2026 au 31/12/2026</span>
+</div>
+<div class="flex items-center justify-between text-body-sm">
+<span class="text-secondary font-body-sm">Quittance Trésor :</span>
+<span class="font-tabular-code text-on-surface">N° TR-8921-PK</span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm text-secondary font-label-sm mb-space-lg">
+<span class="material-symbols-outlined text-[16px] text-outline">description</span>
+<span class="truncate font-tabular-code">quittance_droit_taxi_2026.pdf</span>
+<span class="shrink-0 text-outline">· 920 Ko</span>
+</div>
+</div>
+<!-- Action unique -->
+<div class="pt-space-md border-t border-surface-container flex items-center justify-between">
+<span class="font-label-sm text-outline">Validé le 02/01/2026 par A. SOUNON</span>
+<button class="inline-flex items-center gap-1.5 px-space-md py-2 rounded-lg bg-[#E6EFF3] text-[#0E4D64] hover:bg-[#d8e6ec] font-body-sm-medium text-body-sm transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+<span>Voir le fichier</span>
+</button>
+</div>
+</div>
+<!-- CARTE 3 : Attestation d'assurance moto -->
+<div class="bg-surface-container-lowest rounded-xl p-space-xl flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow">
+<div>
+<div class="flex items-start justify-between gap-space-md mb-space-lg">
+<div class="flex items-center gap-space-md">
+<div class="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined text-[26px]">security</span>
+</div>
+<div>
+<h2 class="font-headline-sm text-body-lg-medium text-on-surface leading-snug">Attestation d'assurance</h2>
+<span class="font-label-sm text-label-sm text-secondary">NSIA Assurances Bénin</span>
+</div>
+</div>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 bg-[#E8F5EE] text-[#1E7B45] rounded-full font-label-md text-label-md">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+            Valide
+          </span>
+</div>
+<div class="bg-surface-container-low rounded-lg p-space-md mb-space-lg space-y-2">
+<div class="flex items-center justify-between text-body-sm">
+<span class="text-secondary font-body-sm">Police N° :</span>
+<span class="font-tabular-code text-body-sm-medium text-on-surface">POL-MOTO-48912</span>
+</div>
+<div class="flex items-center justify-between text-body-sm">
+<span class="text-secondary font-body-sm">Couverture :</span>
+<span class="text-on-surface font-body-sm">Tiers &amp; Passager transporté</span>
+</div>
+<div class="flex items-center justify-between text-body-sm">
+<span class="text-secondary font-body-sm">Échéance :</span>
+<span class="font-tabular-code text-body-sm-medium text-primary">15/10/2026</span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm text-secondary font-label-sm mb-space-lg">
+<span class="material-symbols-outlined text-[16px] text-outline">description</span>
+<span class="truncate font-tabular-code">attestation_assurance_nsia_2026.pdf</span>
+<span class="shrink-0 text-outline">· 1.2 Mo</span>
+</div>
+</div>
+<!-- Action unique -->
+<div class="pt-space-md border-t border-surface-container flex items-center justify-between">
+<span class="font-label-sm text-outline">Contrôle de police régulier</span>
+<button class="inline-flex items-center gap-1.5 px-space-md py-2 rounded-lg bg-[#E6EFF3] text-[#0E4D64] hover:bg-[#d8e6ec] font-body-sm-medium text-body-sm transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+<span>Voir le fichier</span>
+</button>
+</div>
+</div>
+<!-- CARTE 4 : Certificat de résidence & Pièce d'identité (CIP) -->
+<div class="bg-surface-container-lowest rounded-xl p-space-xl flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow">
+<div>
+<div class="flex items-start justify-between gap-space-md mb-space-lg">
+<div class="flex items-center gap-space-md">
+<div class="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined text-[26px]">fingerprint</span>
+</div>
+<div>
+<h2 class="font-headline-sm text-body-lg-medium text-on-surface leading-snug">Résidence &amp; Identité (CIP)</h2>
+<span class="font-label-sm text-label-sm text-secondary">Registre National ANIP Bénin</span>
+</div>
+</div>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 bg-[#E8F5EE] text-[#1E7B45] rounded-full font-label-md text-label-md">
+<span class="material-symbols-outlined text-[14px]">verified</span>
+            Conforme
+          </span>
+</div>
+<div class="bg-surface-container-low rounded-lg p-space-md mb-space-lg space-y-2">
+<div class="flex items-center justify-between text-body-sm">
+<span class="text-secondary font-body-sm">N° NPI / CIP :</span>
+<span class="font-tabular-code text-body-sm-medium text-on-surface">1084 9284 1928 4910</span>
+</div>
+<div class="flex items-center justify-between text-body-sm">
+<span class="text-secondary font-body-sm">Délivré par :</span>
+<span class="text-on-surface font-body-sm">Agence Nationale d'Identification</span>
+</div>
+<div class="flex items-center justify-between text-body-sm">
+<span class="text-secondary font-body-sm">Domicile légal :</span>
+<span class="text-on-surface font-body-sm">Parakou, Quartier Albarika</span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm text-secondary font-label-sm mb-space-lg">
+<span class="material-symbols-outlined text-[16px] text-outline">image</span>
+<span class="truncate font-tabular-code">piece_identite_cip_alassane.jpg</span>
+<span class="shrink-0 text-outline">· 2.4 Mo</span>
+</div>
+</div>
+<!-- Action unique -->
+<div class="pt-space-md border-t border-surface-container flex items-center justify-between">
+<span class="font-label-sm text-outline">Empreintes biométriques vérifiées</span>
+<button class="inline-flex items-center gap-1.5 px-space-md py-2 rounded-lg bg-[#E6EFF3] text-[#0E4D64] hover:bg-[#d8e6ec] font-body-sm-medium text-body-sm transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+<span>Voir le fichier</span>
+</button>
+</div>
+</div>
+</div>
+<!-- 5. Cartouche récapitulatif de traçabilité en bas -->
+<div class="bg-surface-container-low rounded-xl p-space-lg flex flex-col sm:flex-row items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md">
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-secondary shrink-0">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+        Dossier audité et validé par <span class="font-body-sm-medium text-on-surface">Awa SOUNON</span> (Gestionnaire de régie) le <span class="font-tabular-code">02/01/2026 à 09:14</span>. Prochaine échéance de contrôle annuel : <span class="font-tabular-code font-bold text-primary">31/12/2026</span>.
+      </p>
+</div>
+<div class="flex items-center gap-space-xs text-secondary font-label-sm whitespace-nowrap self-end sm:self-center">
+<span class="material-symbols-outlined text-[16px]">lock</span>
+<span>Registre scellé</span>
+</div>
+</div>
+</div></div></main></div></body></html>
