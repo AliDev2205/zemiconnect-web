@@ -70,7 +70,29 @@ src/
 - Avec `NEXT_PUBLIC_API_MOCK=true`, chaque service renvoie une réponse **de même forme** que l'API (`{ status, message, data }`, pagination Laravel), y compris les erreurs (404, 422) construites comme des erreurs axios. Pages et hooks ne voient pas la différence.
 - Le mode fictif fonctionne aussi côté serveur (`/v/[token]`, `/recherche`).
 - En développement, un sélecteur de rôle (barre supérieure) bascule entre administrateur, gestionnaire et agent. Sans choix, le rôle est administrateur.
-- Jetons QR de démonstration : `/v/demo-moussa` (Moussa ALASSANE, ZC-482917, BB 4521 RB), `/v/demo-ibrahim`, `/v/demo-rachidi` ; `/v/demo-revoque` donne « QR non valide ».
+- La session fictive (utilisateur connecté) est gardée dans le `localStorage` du navigateur ; la déconnexion l'efface.
+
+### Comptes de démonstration
+
+Mot de passe commun : `demo-zc-2026`.
+
+| Email | Cas |
+| --- | --- |
+| `kofi.dossou@zemiconnect.exemple` | administrateur → `/administration` |
+| `aicha.toko@zemiconnect.exemple` | gestionnaire → `/gestion` |
+| `bachirou.sanni@zemiconnect.exemple` | agent → `/agent` |
+| `florent.agbo@zemiconnect.exemple` | agent avec mot de passe provisoire → `/changer-mot-de-passe` |
+| `sylvain.hounkpatin@zemiconnect.exemple` | compte désactivé |
+| `bloque@zemiconnect.exemple` | blocage temporaire (429, 15 minutes) |
+
+Tout autre email ou mot de passe donne « Email ou mot de passe incorrect ».
+
+### Données publiques de démonstration
+
+- QR : `/v/demo-moussa` (actif, avec photo et structure gestionnaire), `/v/demo-ibrahim` (actif, sans photo), `/v/demo-rachidi` (suspendu).
+- QR non valide (404) : `/v/demo-revoque` (révoqué), `/v/demo-archive` (conducteur archivé), tout autre jeton.
+- Numéros : `ZC-482917`, `ZC-305611`, `ZC-771204` ; `ZC-000000` → « Numéro introuvable » ; `TROP` → 429 ; `HORS-LIGNE` → erreur réseau.
+- Réinitialisation : `/reinitialisation?token=demo&email=aicha.toko@zemiconnect.exemple` ; `token=expire` → « Lien expiré ou déjà utilisé ».
 
 ## Conventions reprises de HealthBook
 
@@ -95,3 +117,16 @@ src/
 - **Police** : Inter via `next/font/google` (demandé). Le DESIGN.md des maquettes cite Manrope/Public Sans.
 - **Endpoints** supposés (`/auth/me`, `/drivers`, `/public/drivers/qr/{token}`, `/controls/search`…) : à aligner sur l'API quand elle existera, dans les seuls fichiers de `lib/api/services/`.
 - Le numéro ZemiConnect n'a aucune validation de format. Les dates d'expiration absentes restent `null`.
+
+## Lot 1 : espace public et authentification
+
+- **Profil public** : `PublicDriverProfile` ne contient que photo, nom, numéro, statut (actif ou suspendu), moto (immatriculation, marque, couleur) et structure gestionnaire. Un conducteur en attente ou archivé donne la même réponse 404 qu'un QR inconnu ou révoqué.
+- **Vrai 404** : `notFound()` dans `/v/[token]` et `/recherche`, sans `loading.tsx` au-dessus (une réponse streamée garderait le code 200). Écrans : `(public)/not-found.tsx` (QR non valide) et `(public)/recherche/not-found.tsx` (numéro introuvable).
+- **PU1** : la recherche est faite par `/recherche` (serveur) ; le formulaire navigue dans une transition (bouton en chargement, champ verrouillé). Une erreur 429 ou réseau réaffiche PU1 avec le message.
+- **Pages publiques légères** : React Query et les toasts (`AppProviders`) ne sont montés que dans les layouts connectés et `(auth)` ; liens publics sans préchargement ; Inter en `latin`, graisses 400 et 600 (`font-bold` ramené à 600).
+- **`retour`** (`/connexion?retour=…`) : accepté seulement s'il s'agit d'un chemin interne de l'espace du rôle (`lib/auth/redirect.ts`), sinon ignoré.
+- **Mot de passe provisoire** : indice `zc_mdp_provisoire` ; `proxy.ts` et `AuthGuard` ramènent vers AU4 (confort, l'API reste juge).
+- **Règles du mot de passe** : un seul schéma Zod, `lib/validation/password.ts` (10 caractères, une lettre, un chiffre : proposition technique), réutilisé par AU3, AU4 et les futurs profils.
+- **Contrat supposé de `/auth/login`** : 422 identifiants incorrects, 403 compte désactivé, 429 avec `Retry-After` en secondes. `remember` est envoyé pour « Rester connecté ».
+- **Composants ajoutés** : `ui/Checkbox` et `ui/Alert` (messages en ligne des formulaires).
+- **Captures** : `docs/captures/lot-1/` (360 px) et `docs/captures/lot-1/ordinateur/` (1440 px).
