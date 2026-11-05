@@ -1,57 +1,39 @@
 import type { Metadata } from 'next';
-import { SearchX } from 'lucide-react';
-import PagePlaceholder from '@/components/layout/PagePlaceholder';
-import Card from '@/components/ui/Card';
-import ErrorState from '@/components/ui/ErrorState';
-import { toApiError } from '@/lib/api/errors';
+import { notFound, redirect } from 'next/navigation';
+import { lookupPublicProfile } from '@/features/public/lookup';
+import PublicDriverProfileView from '@/features/public/PublicDriverProfileView';
+import PublicHome from '@/features/public/PublicHome';
 import { publicService } from '@/lib/api/services/public/public';
-import type { PublicDriverProfile } from '@/types/driver';
+import { normalizeZcNumber } from '@/lib/utils/format';
 
-// PU2 par numéro (?numero=). Même principe que /v/[token] : serveur, no-store.
-// Le numéro est transmis tel quel : son format n'est pas encore arrêté.
+// PU2 par numéro (?numero=). Même principe que /v/[token] : serveur, no-store,
+// vrai 404 (PU3, recherche/not-found.tsx). Recherche exacte sur le numéro
+// normalisé, sans validation de format (format non arrêté).
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'Recherche par numéro',
+  title: 'Vérification du conducteur',
   robots: { index: false, follow: false },
 };
 
 export default async function PublicSearchPage({ searchParams }: { searchParams: Promise<{ numero?: string | string[] }> }) {
   const { numero: raw } = await searchParams;
-  const numero = (Array.isArray(raw) ? raw[0] : raw)?.trim() ?? '';
+  const numero = normalizeZcNumber((Array.isArray(raw) ? raw[0] : raw) ?? '');
 
-  if (!numero) {
-    return <PagePlaceholder title="Recherche par numéro" code="PU2" />;
-  }
+  if (!numero) redirect('/');
 
-  let profile: PublicDriverProfile | null = null;
-  let errorStatus: number | null = null;
-  let errorMessage = '';
-  try {
-    profile = await publicService.getByNumber(numero);
-  } catch (error) {
-    const apiError = toApiError(error);
-    errorStatus = apiError.status;
-    errorMessage = apiError.message;
-  }
+  const result = await lookupPublicProfile(() => publicService.getByNumber(numero));
 
-  if (!profile) {
-    return (
-      <Card padded={false}>
-        {errorStatus === 404 ? (
-          <ErrorState icon={<SearchX size={24} />} title="Numéro introuvable" message={`Aucun conducteur ne correspond au numéro « ${numero} ».`} />
-        ) : (
-          <ErrorState title="Vérification impossible" message={errorMessage} />
-        )}
-      </Card>
-    );
-  }
+  if (result.kind === 'not_found') notFound();
+
+  // 429, réseau… : retour à PU1 avec le message et la saisie conservée.
+  if (result.kind === 'error') return <PublicHome defaultValue={numero} error={result.message} />;
 
   return (
-    <PagePlaceholder
-      title="Profil du conducteur"
-      code="PU2"
-      subtitle={`${profile.first_name} ${profile.last_name} · ${profile.zc_number}`}
+    <PublicDriverProfileView
+      profile={result.profile}
+      verifiedAt={new Date()}
+      agentHref={`/connexion?retour=${encodeURIComponent(`/agent/recherche?numero=${encodeURIComponent(numero)}`)}`}
     />
   );
 }

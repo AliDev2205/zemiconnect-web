@@ -1,58 +1,55 @@
 import type { Metadata } from 'next';
-import { QrCode } from 'lucide-react';
-import PagePlaceholder from '@/components/layout/PagePlaceholder';
-import ErrorState from '@/components/ui/ErrorState';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import { buttonClasses } from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
-import { toApiError } from '@/lib/api/errors';
+import ErrorState from '@/components/ui/ErrorState';
+import { lookupPublicProfile } from '@/features/public/lookup';
+import PublicDriverProfileView from '@/features/public/PublicDriverProfileView';
 import { publicService } from '@/lib/api/services/public/public';
-import type { PublicDriverProfile } from '@/types/driver';
 
 // PU2 via QR. Composant serveur, rendu à chaque requête (no-store) : le statut
 // d'un conducteur (suspendu, QR révoqué) doit être exact au moment du scan.
 // publicService passe par une instance axios sans cookie (pas de fetch, donc
 // pas de cache de données Next) ; le mode fictif est géré par le service.
+// Aucun loading.tsx au-dessus de cette page : la réponse n'est pas streamée,
+// donc notFound() renvoie un vrai code HTTP 404 (PU3, (public)/not-found.tsx).
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'Profil du conducteur',
+  title: 'Vérification du conducteur',
   robots: { index: false, follow: false },
 };
 
 export default async function PublicProfilePage({ params }: { params: Promise<{ token: string }> }) {
   const { token } = await params;
+  const result = await lookupPublicProfile(() => publicService.getByToken(token));
 
-  let profile: PublicDriverProfile | null = null;
-  let errorStatus: number | null = null;
-  let errorMessage = '';
-  try {
-    profile = await publicService.getByToken(token);
-  } catch (error) {
-    const apiError = toApiError(error);
-    errorStatus = apiError.status;
-    errorMessage = apiError.message;
-  }
+  if (result.kind === 'not_found') notFound();
 
-  if (!profile) {
+  if (result.kind === 'error') {
     return (
-      <Card padded={false}>
-        {errorStatus === 404 ? (
+      <div className="mx-auto w-full max-w-xl px-4 py-6 sm:py-10">
+        <Card padded={false}>
           <ErrorState
-            icon={<QrCode size={24} />}
-            title="QR non valide"
-            message="Ce QR ne correspond à aucun conducteur actif. Il a peut-être été révoqué."
+            title="Vérification impossible"
+            message={result.message}
+            action={
+              <Link href={`/v/${encodeURIComponent(token)}`} className={buttonClasses({ variant: 'outline' })}>
+                Réessayer
+              </Link>
+            }
           />
-        ) : (
-          <ErrorState title="Vérification impossible" message={errorMessage} />
-        )}
-      </Card>
+        </Card>
+      </div>
     );
   }
 
   return (
-    <PagePlaceholder
-      title="Profil du conducteur"
-      code="PU2"
-      subtitle={`${profile.first_name} ${profile.last_name} · ${profile.zc_number}`}
+    <PublicDriverProfileView
+      profile={result.profile}
+      verifiedAt={new Date()}
+      agentHref={`/connexion?retour=${encodeURIComponent(`/agent/conducteur/${encodeURIComponent(token)}`)}`}
     />
   );
 }
