@@ -2,6 +2,7 @@ import type { Document } from '@/types/document';
 import type { Driver, PublicDriverProfile } from '@/types/driver';
 import type { Motorcycle } from '@/types/motorcycle';
 import type { QrCode } from '@/types/qr';
+import { normalizeZcNumber } from '@/lib/utils/format';
 import { MOCK_DOMAIN } from './users';
 
 // Données fictives. Les dates d'expiration à null sont volontaires : un
@@ -85,10 +86,12 @@ export const mockDrivers: Driver[] = [
     first_name: 'Moussa',
     last_name: 'ALASSANE',
     phone: '+229 01 96 12 34 56',
-    photo_url: null,
+    // Photo fictive locale (public/mocks/), pour illustrer next/image.
+    photo_url: '/mocks/moussa-alassane.jpg',
     status: 'actif',
     compliance: 'conforme',
     motorcycle: motorcycle('mot-1'),
+    managing_structure: 'Coopérative des zémidjans de Parakou-Centre (fictive)',
     documents: [
       doc('doc-d1-i', 'piece_identite', 'driver', 'drv-1', '2031-05-20', 'valide'),
       doc('doc-d1-p', 'permis', 'driver', 'drv-1', null, 'valide'),
@@ -107,6 +110,7 @@ export const mockDrivers: Driver[] = [
     status: 'actif',
     compliance: 'expire_bientot',
     motorcycle: motorcycle('mot-2'),
+    managing_structure: 'Coopérative des zémidjans de Parakou-Centre (fictive)',
     documents: [
       doc('doc-d2-i', 'piece_identite', 'driver', 'drv-2', '2029-01-10', 'valide'),
       doc('doc-d2-p', 'permis', 'driver', 'drv-2', null, 'valide'),
@@ -125,6 +129,8 @@ export const mockDrivers: Driver[] = [
     status: 'suspendu',
     compliance: 'non_conforme',
     motorcycle: motorcycle('mot-3'),
+    // Non renseignée : la ligne n'apparaît pas sur le profil public.
+    managing_structure: null,
     documents: [
       doc('doc-d3-i', 'piece_identite', 'driver', 'drv-3', '2028-07-02', 'valide'),
       doc('doc-d3-p', 'permis', 'driver', 'drv-3', null, 'manquant'),
@@ -143,6 +149,7 @@ export const mockDrivers: Driver[] = [
     status: 'en_attente',
     compliance: 'non_conforme',
     motorcycle: null,
+    managing_structure: null,
     documents: [
       doc('doc-d4-i', 'piece_identite', 'driver', 'drv-4', '2030-02-14', 'valide'),
       doc('doc-d4-p', 'permis', 'driver', 'drv-4', null, 'manquant'),
@@ -161,6 +168,7 @@ export const mockDrivers: Driver[] = [
     status: 'archive',
     compliance: 'non_conforme',
     motorcycle: null,
+    managing_structure: null,
     documents: [],
     created_at: '2026-03-20T09:00:00Z',
     updated_at: '2026-07-01T09:00:00Z',
@@ -196,6 +204,17 @@ export const mockQrCodes: QrCode[] = [
     revoked_at: null,
   },
   {
+    // QR encore actif d'un conducteur archivé : la page publique répond comme
+    // pour un QR inconnu (aucun indice, aucune donnée personnelle).
+    id: 'qr-5',
+    driver_id: 'drv-5',
+    token: 'demo-archive',
+    public_url: `https://${MOCK_DOMAIN}/v/demo-archive`,
+    status: 'actif',
+    issued_at: '2026-03-21T09:00:00Z',
+    revoked_at: null,
+  },
+  {
     id: 'qr-1-old',
     driver_id: 'drv-1',
     token: 'demo-revoque',
@@ -206,22 +225,25 @@ export const mockQrCodes: QrCode[] = [
   },
 ];
 
-export function toPublicProfile(driver: Driver): PublicDriverProfile {
+// Projection publique, champ par champ (jamais de spread : aucun champ privé
+// ne doit passer). null pour un conducteur en attente ou archivé, que l'API
+// publique traite comme introuvable.
+export function toPublicProfile(driver: Driver): PublicDriverProfile | null {
+  if (driver.status !== 'actif' && driver.status !== 'suspendu') return null;
   return {
     zc_number: driver.zc_number,
     first_name: driver.first_name,
     last_name: driver.last_name,
     photo_url: driver.photo_url,
     status: driver.status,
-    compliance: driver.compliance,
     motorcycle: driver.motorcycle
       ? {
           plate_number: driver.motorcycle.plate_number,
           brand: driver.motorcycle.brand,
-          model: driver.motorcycle.model,
           color: driver.motorcycle.color,
         }
       : null,
+    managing_structure: driver.managing_structure,
   };
 }
 
@@ -232,6 +254,4 @@ export function findDriverByActiveToken(token: string): Driver | null {
 }
 
 // Comparaison sans casse ni espaces : le format du numéro n'est pas arrêté.
-export function normalizeLookup(value: string): string {
-  return value.replace(/\s+/g, '').toUpperCase();
-}
+export const normalizeLookup = normalizeZcNumber;

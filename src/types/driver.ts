@@ -17,6 +17,8 @@ export interface Driver {
   status: DriverStatus;
   compliance: ComplianceStatus;
   motorcycle: Motorcycle | null;
+  // Structure gestionnaire (association, coopérative…), facultative.
+  managing_structure: string | null;
   documents: Document[];
   created_at: string;
   updated_at: string;
@@ -30,13 +32,20 @@ export interface DriverFilters {
   compliance?: ComplianceStatus;
 }
 
-// Vue publique (PU2) : uniquement ce qu'un passager a le droit de voir.
+// Statuts visibles par un passager. En attente et archivé ne sont jamais
+// renvoyés par l'API publique : ils donnent la même réponse 404 qu'un QR inconnu.
+export type PublicDriverStatus = Extract<DriverStatus, 'actif' | 'suspendu'>;
+
+// Vue publique (PU2) : UNIQUEMENT ce qu'un passager a le droit de voir.
+// Volontairement absents : identifiant interne, téléphone, adresse, date de
+// naissance, documents, conformité. Ne pas les ajouter.
 export interface PublicDriverProfile {
   zc_number: string;
   first_name: string;
   last_name: string;
   photo_url: string | null;
-  status: DriverStatus;
-  compliance: ComplianceStatus;
-  motorcycle: { plate_number: string; brand: string | null; model: string | null; color: string | null } | null;
+  status: PublicDriverStatus;
+  motorcycle: { plate_number: string; brand: string | null; color: string | null } | null;
+  // Structure qui gère le conducteur, si elle est renseignée.
+  managing_structure: string | null;
 }

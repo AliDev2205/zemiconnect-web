@@ -6,7 +6,7 @@ import { Loader2 } from 'lucide-react';
 import ErrorState from '@/components/ui/ErrorState';
 import { useMe } from '@/hooks/queries/useAuth';
 import { toApiError } from '@/lib/api/errors';
-import { setRoleHint } from '@/lib/auth/session';
+import { setSessionHints } from '@/lib/auth/session';
 import { getHomeRouteForRole, ROLE_SPACE, Space } from '@/lib/constants';
 
 interface Props {
@@ -28,9 +28,9 @@ export default function AuthGuard({ space, children }: Props) {
   const mustChangePassword = data?.user.must_change_password ?? false;
 
   useEffect(() => {
-    // Garde l'indice de rôle de proxy.ts aligné sur /auth/me.
-    if (role) setRoleHint(role);
-  }, [role]);
+    // Garde les indices de proxy.ts alignés sur /auth/me.
+    if (data) setSessionHints(data);
+  }, [data]);
 
   useEffect(() => {
     if (!role) return;

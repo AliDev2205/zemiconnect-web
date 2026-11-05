@@ -2,9 +2,21 @@ import { AxiosError } from 'axios';
 import type { FieldValues, Path, UseFormSetError } from 'react-hook-form';
 
 export interface ApiError {
+  // null : aucune réponse (réseau coupé, serveur injoignable).
   status: number | null;
   message: string;
   errors?: Record<string, string[]>;
+  // 429 : délai indiqué par l'en-tête Retry-After, en secondes.
+  retryAfterSeconds?: number;
+}
+
+export const NETWORK_ERROR_MESSAGE = 'Connexion impossible, vérifiez votre réseau.';
+
+// « dans 1 minute », « dans 15 minutes » (arrondi au-dessus, au moins 1).
+export function retryAfterMinutesLabel(seconds: number | undefined): string | null {
+  if (!seconds || seconds <= 0) return null;
+  const minutes = Math.max(1, Math.ceil(seconds / 60));
+  return `${minutes} minute${minutes > 1 ? 's' : ''}`;
 }
 
 const DEFAULT_MESSAGES: Record<number, string> = {
@@ -18,7 +30,7 @@ const DEFAULT_MESSAGES: Record<number, string> = {
 export function toApiError(error: unknown): ApiError {
   if (error instanceof AxiosError) {
     if (!error.response) {
-      return { status: null, message: 'Impossible de contacter le serveur. Vérifiez votre connexion.' };
+      return { status: null, message: NETWORK_ERROR_MESSAGE };
     }
 
     const status = error.response.status;
@@ -32,11 +44,12 @@ export function toApiError(error: unknown): ApiError {
 
     if (status === 429) {
       const retryAfter = Number(error.response.headers?.['retry-after']);
+      const retryAfterSeconds = Number.isFinite(retryAfter) && retryAfter > 0 ? retryAfter : undefined;
+      const delay = retryAfterMinutesLabel(retryAfterSeconds);
       return {
         status,
-        message: Number.isFinite(retryAfter) && retryAfter > 0
-          ? `Trop de tentatives. Réessayez dans ${retryAfter} s.`
-          : DEFAULT_MESSAGES[429],
+        message: delay ? `Trop de tentatives. Réessayez dans ${delay}.` : DEFAULT_MESSAGES[429],
+        retryAfterSeconds,
       };
     }
 

@@ -21,18 +21,30 @@ export async function mockResponse<T>(payload: T, message = 'OK'): Promise<{ dat
 }
 
 // Erreur fictive de même forme qu'une erreur axios : toApiError la traite comme une vraie.
-export async function mockError(status: number, message: string, errors?: Record<string, string[]>): Promise<never> {
+// `responseHeaders` : par exemple { 'retry-after': '900' } pour un 429.
+export async function mockError(
+  status: number,
+  message: string,
+  errors?: Record<string, string[]>,
+  responseHeaders: Record<string, string> = {},
+): Promise<never> {
   await wait(MOCK_DELAY_MS);
   const headers = new AxiosHeaders();
   const config = { headers };
   const response: AxiosResponse = {
     status,
     statusText: message,
-    headers: {},
+    headers: responseHeaders,
     config,
     data: { status: 'error', message, errors },
   };
   throw new AxiosError(message, String(status), config, null, response);
+}
+
+// Erreur réseau fictive (aucune réponse), comme une coupure de connexion.
+export async function mockNetworkError(): Promise<never> {
+  await wait(MOCK_DELAY_MS);
+  throw new AxiosError('Network Error', AxiosError.ERR_NETWORK, { headers: new AxiosHeaders() }, null, undefined);
 }
 
 export function paginate<T>(items: T[], page = 1, perPage = 15): Paginated<T> {

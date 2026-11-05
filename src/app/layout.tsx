@@ -1,13 +1,14 @@
 import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
-import QueryProvider from '@/components/providers/QueryProvider';
-import ToastContainer from '@/components/ui/Toast';
 import { APP_NAME } from '@/lib/constants';
 import './globals.css';
 
+// Deux graisses seulement (400 et 600) pour alléger les pages publiques.
+// font-bold et font-extrabold sont ramenés à 600 dans globals.css.
 const inter = Inter({
   variable: '--font-inter',
   subsets: ['latin'],
+  weight: ['400', '600'],
   display: 'swap',
 });
 
@@ -29,10 +30,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="fr" className={`${inter.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col" suppressHydrationWarning>
-        <QueryProvider>
-          {children}
-          <ToastContainer />
-        </QueryProvider>
+        {/* React Query et les toasts sont montés par les layouts qui s'en servent (AppProviders). */}
+        {children}
       </body>
     </html>
   );

@@ -3,6 +3,11 @@ import type { Me, Role, User } from '@/types/user';
 
 export const MOCK_DOMAIN = 'zemiconnect.exemple';
 
+// Mot de passe commun à tous les comptes de démonstration (mode fictif).
+export const MOCK_PASSWORD = 'demo-zc-2026';
+// Adresse qui simule le blocage temporaire après trop d'essais (429).
+export const MOCK_LOCKED_EMAIL = `bloque@${MOCK_DOMAIN}`;
+
 export const mockUsers: User[] = [
   {
     id: 'usr-admin-1',

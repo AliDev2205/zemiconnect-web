@@ -35,6 +35,10 @@
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 
+  /* Inter n'est chargée qu'en 400 et 600 : pas de gras synthétique du navigateur. */
+  --font-weight-bold: 600;
+  --font-weight-extrabold: 600;
+
   --width-sidebar: 240px;
 }
 

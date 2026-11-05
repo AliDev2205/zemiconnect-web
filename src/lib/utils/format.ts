@@ -20,6 +20,23 @@ export function formatDate(value: string | null | undefined): string {
   return date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
 }
 
+// Numéro ZemiConnect saisi : espaces retirés, majuscules. AUCUNE validation de
+// format (le format du numéro n'est pas arrêté) : la recherche reste exacte.
+export function normalizeZcNumber(value: string): string {
+  return value.replace(/\s+/g, '').toUpperCase();
+}
+
+// Heure de Cotonou / Parakou (UTC+1, sans heure d'été).
+export const BENIN_TIME_ZONE = 'Africa/Porto-Novo';
+
+// « Vérifié le 05/11/2026 à 10:42 », en heure locale du Bénin quel que soit le
+// fuseau du serveur ou du téléphone.
+export function formatVerifiedAt(date: Date): string {
+  const day = date.toLocaleDateString('fr-FR', { timeZone: BENIN_TIME_ZONE, day: '2-digit', month: '2-digit', year: 'numeric' });
+  const time = date.toLocaleTimeString('fr-FR', { timeZone: BENIN_TIME_ZONE, hour: '2-digit', minute: '2-digit' });
+  return `Vérifié le ${day} à ${time}`;
+}
+
 export function formatDateTime(value: string | null | undefined): string {
   if (!value) return '—';
   const date = new Date(value);

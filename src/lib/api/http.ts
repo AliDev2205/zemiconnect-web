@@ -1,6 +1,6 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { rawHttp } from '@/lib/api/raw';
-import { clearRoleHint } from '@/lib/auth/session';
+import { clearSessionHints } from '@/lib/auth/session';
 import { isPublicPath } from '@/lib/constants';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000';
@@ -51,7 +51,7 @@ http.interceptors.request.use(async (config) => {
 });
 
 function redirectToLogin(): void {
-  clearRoleHint();
+  clearSessionHints();
   if (typeof window === 'undefined') return;
   const { pathname } = window.location;
   // Les pages publiques et d'authentification ne redirigent jamais.
