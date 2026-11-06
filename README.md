@@ -22,6 +22,7 @@ npm run build
 | --- | --- |
 | `NEXT_PUBLIC_API_URL` | URL de l'API Laravel, sans `/api/v1` (ex. `http://localhost:8000`). |
 | `NEXT_PUBLIC_API_MOCK` | `true` : les services renvoient les données de `src/mocks/` au lieu d'appeler l'API. |
+| `NEXT_PUBLIC_PUBLIC_URL` | Origine des QR imprimés (`<origine>/v/<jeton>`). Le scanner agent refuse toute autre origine. |
 
 ## Structure
 
@@ -94,6 +95,26 @@ Tout autre email ou mot de passe donne « Email ou mot de passe incorrect ».
 - Numéros : `ZC-482917`, `ZC-305611`, `ZC-771204` ; `ZC-000000` → « Numéro introuvable » ; `TROP` → 429 ; `HORS-LIGNE` → erreur réseau.
 - Réinitialisation : `/reinitialisation?token=demo&email=aicha.toko@zemiconnect.exemple` ; `token=expire` → « Lien expiré ou déjà utilisé ».
 
+### Données agent de démonstration (lot 2)
+
+Connexion : `bachirou.sanni@zemiconnect.exemple`. Fiches `/agent/conducteur/<jeton>` :
+
+| Jeton | Cas |
+| --- | --- |
+| `demo-moussa` | actif, conforme (permis sans date d'expiration) |
+| `demo-ibrahim` | actif, expire bientôt (assurance de la moto au 12/11/2026) |
+| `demo-kassim` | actif, non conforme (droit de taxi manquant) |
+| `demo-rachidi` | suspendu, non conforme |
+| `demo-sans-moto` | actif, aucune moto affectée |
+| `demo-sans-date` | actif, conforme, documents sans date d'expiration |
+| `demo-revoque`, tout jeton inconnu | QR non valide |
+| `demo-acces-refuse` | 403, accès refusé |
+| `demo-desactive` | compte désactivé : déconnexion, puis message sur `/connexion` |
+| `demo-session-expiree` | 401 : `/connexion`, puis retour sur la fiche |
+| `demo-reseau` | réseau indisponible |
+
+Recherche (`/agent/recherche?q=`) : numéro ou immatriculation, par exemple `ZC-559013` ou `BB 4521 RB` ; `ZC-000000` → aucun résultat ; `HORS-LIGNE` → réseau.
+
 ## Conventions reprises de HealthBook
 
 - Racine `src/`, alias `@/*`, `tsconfig` strict et ESLint (`next/core-web-vitals` + `next/typescript`) identiques ; pas de Prettier (HealthBook n'en a pas).
@@ -130,3 +151,13 @@ Tout autre email ou mot de passe donne « Email ou mot de passe incorrect ».
 - **Contrat supposé de `/auth/login`** : 422 identifiants incorrects, 403 compte désactivé, 429 avec `Retry-After` en secondes. `remember` est envoyé pour « Rester connecté ».
 - **Composants ajoutés** : `ui/Checkbox` et `ui/Alert` (messages en ligne des formulaires).
 - **Captures** : `docs/captures/lot-1/` (360 px) et `docs/captures/lot-1/ordinateur/` (1440 px).
+
+## Lot 2 : espace agent
+
+- **Contexte** : téléphone d'entrée de gamme, dehors, en plein soleil. Textes agrandis, contrastes forts, cibles tactiles d'au moins 48 px (vérifiées à 360 px).
+- **Scanner (AG2)** : `qr-scanner` (nimiq), chargé en import dynamique sur `/agent/scanner` seulement (Web Worker, BarcodeDetector quand il existe). Seuls les QR `NEXT_PUBLIC_PUBLIC_URL/v/<jeton>` sont acceptés (`lib/qr/parseQr.ts`) ; l'URL lue n'est jamais ouverte. Caméra libérée en quittant la page. `qr-scanner` masque la cause d'un échec : le refus de caméra est retrouvé par l'API des permissions et un appel direct.
+- **Fiche (AG3)** : type `DriverControl` (`src/types/control.ts`), sans URL de fichier. Conformité et validités viennent de l'API ; le front construit seulement la phrase de synthèse (`features/agent/verdict.ts`) sur permis, droit de taxi et assurance de la moto actuelle. Pièce d'identité hors verdict, document sans date d'expiration non bloquant. Chaque ouverture est une nouvelle consultation (aucun cache).
+- **États (AG4)** : un seul composant, `features/agent/AgentState.tsx`. Session perdue : `lib/auth/sessionFailure.ts`, appelé par l'intercepteur axios et par le cache React Query (ce qui couvre le mode fictif). 401 → `/connexion?motif=session&retour=…` ; 403 `{ code: 'account_disabled' }` (contrat supposé) → déconnexion et `/connexion?motif=desactive`.
+- **Profil (AG5)** : `PUT /auth/profile` (supposé) pour nom, prénom et téléphone ; email en lecture seule ; carte `features/auth/PasswordCard.tsx`, réutilisable par les autres profils.
+- **Dépendance ajoutée** : `qr-scanner` (demandée, légère, worker et BarcodeDetector).
+- **Captures** : `docs/captures/lot-2/` (360 px).
