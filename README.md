@@ -91,7 +91,7 @@ Tout autre email ou mot de passe donne « Email ou mot de passe incorrect ».
 ### Données publiques de démonstration
 
 - QR : `/v/demo-moussa` (actif, avec photo et structure gestionnaire), `/v/demo-ibrahim` (actif, sans photo), `/v/demo-rachidi` (suspendu).
-- QR non valide (404) : `/v/demo-revoque` (révoqué), `/v/demo-archive` (conducteur archivé), tout autre jeton.
+- QR non valide (404) : `/v/demo-revoque` (révoqué), `/v/demo-archive` (conducteur archivé, QR révoqué à l’archivage), tout autre jeton.
 - Numéros : `ZC-482917`, `ZC-305611`, `ZC-771204` ; `ZC-000000` → « Numéro introuvable » ; `TROP` → 429 ; `HORS-LIGNE` → erreur réseau.
 - Réinitialisation : `/reinitialisation?token=demo&email=aicha.toko@zemiconnect.exemple` ; `token=expire` → « Lien expiré ou déjà utilisé ».
 
@@ -102,7 +102,7 @@ Connexion : `bachirou.sanni@zemiconnect.exemple`. Fiches `/agent/conducteur/<jet
 | Jeton | Cas |
 | --- | --- |
 | `demo-moussa` | actif, conforme (permis sans date d'expiration) |
-| `demo-ibrahim` | actif, expire bientôt (assurance de la moto au 12/11/2026) |
+| `demo-ibrahim` | actif, expire bientôt (assurance de la moto dans 7 jours) |
 | `demo-kassim` | actif, non conforme (droit de taxi manquant) |
 | `demo-rachidi` | suspendu, non conforme |
 | `demo-sans-moto` | actif, aucune moto affectée |
@@ -161,3 +161,41 @@ Recherche (`/agent/recherche?q=`) : numéro ou immatriculation, par exemple `ZC-
 - **Profil (AG5)** : `PUT /auth/profile` (supposé) pour nom, prénom et téléphone ; email en lecture seule ; carte `features/auth/PasswordCard.tsx`, réutilisable par les autres profils.
 - **Dépendance ajoutée** : `qr-scanner` (demandée, légère, worker et BarcodeDetector).
 - **Captures** : `docs/captures/lot-2/` (360 px).
+
+## Lot 3 : espace gestion
+
+### Partie A : conducteurs (GE1 à GE4)
+
+- **Lecture seule** : les écrans de `features/` (tableau de bord, liste, fiche et ses onglets) prennent `readOnly`. Vrai : aucun bouton d'écriture n'est rendu (ni grisé, ni désactivé). Un dossier archivé est traité de la même façon. L'administration (lot 4) réutilise ces composants.
+- **Pas de suppression** : on archive (motif, QR révoqué, affectation clôturée).
+- **Confirmations** : `ConfirmDialog` (motif obligatoire pour suspendre, archiver, régénérer, révoquer). Sur une erreur, bandeau en haut de la modale, saisie conservée ; une 422 sur `reason` s'affiche sous le champ.
+- **Statut et conformité séparés** : la conformité (permis, droit de taxi, assurance de la moto actuelle ; « expire bientôt » = 30 jours ; sans date d'expiration = valide) vient de l'API. En mode fictif, `mocks/compliance.ts` la calcule. Un document expiré ne suspend jamais.
+- **Fichiers** : PDF, JPG ou PNG, 5 Mo (`lib/files.ts`, proposition technique) ; contrôle client de confort. « Voir le fichier » demande une URL temporaire à l'API (`GET /documents/{id}/file`) ; aucun chemin public permanent.
+- **Numéro ZemiConnect** : attribué à la validation (« En attente » avant), sans validation de format.
+- **GE2** : filtres dans l'URL (`?q=&statut=&conformite=&du=&au=&page=`) ; un choix crée une entrée d'historique, la frappe dans la recherche la remplace. Cartes sous 768 px.
+- **GE3** : dossier créé En attente à la fin de l'étape Identité, reprise par `?reprendre=<id>&etape=0..4`. Recadrage carré par `react-easy-crop` (import dynamique) ; photo par caméra (getUserMedia) ou fichier.
+- **QR et badge** : PDF, PNG et SVG produits par l'API (`/drivers/{id}/badge.pdf`, `/drivers/{id}/qr-codes/active.png|svg`) ; en mode fictif, fichiers d'exemple de `public/mocks/`.
+- **Coque** : sous 768 px, la barre latérale s'ouvre par le bouton « Menu ».
+- **Dépendance ajoutée** : `react-easy-crop` (demandée, recadrage de la photo).
+- Endpoints supposés : en tête de chaque fichier de `lib/api/services/` (drivers, documents, motorcycles, qr, dashboard).
+
+### Données de démonstration (gestion)
+
+Connexion : `aicha.toko@zemiconnect.exemple`. Les modifications restent en mémoire jusqu'au rechargement de la page.
+
+| Dossier | Cas |
+| --- | --- |
+| Moussa ALASSANE (`drv-1`) | actif, conforme ; historique de documents, d'affectations et de QR |
+| Ibrahim SALIFOU (`drv-2`) | actif, expire bientôt (assurance dans 7 jours) |
+| Rachidi BIO (`drv-3`) | suspendu, non conforme (permis manquant, documents expirés) |
+| Saka GOUNOU (`drv-4`) | en attente, **incomplet** (ni photo, ni permis, ni moto) |
+| Fousséni TANKO (`drv-9`) | en attente, complet : prêt à valider |
+| Issa YAROU (`drv-5`) | archivé |
+| Kassim ORÉ, Gildas KOUAGOU, Yacoubou BANI | actifs : droit de taxi manquant, sans moto, documents sans date d'expiration |
+
+Déclencheurs du mode fictif :
+- `?demo=vide` sur `/gestion` ou `/gestion/conducteurs` : premier lancement, registre vide.
+- Moto `BB 1234 RB` : affichée libre mais refusée (« Cette moto est déjà affectée à un autre conducteur »), comme en cas de concurrence.
+- Motif contenant `ERREUR-DEMO` : erreur serveur (bandeau dans la modale) ; `REFUS-DEMO` : erreur 422 sous le champ Motif.
+
+Captures : `docs/captures/lot-3/` (1440 px) et `docs/captures/lot-3/768/`.
