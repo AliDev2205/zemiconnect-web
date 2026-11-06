@@ -199,3 +199,13 @@ Déclencheurs du mode fictif :
 - Motif contenant `ERREUR-DEMO` : erreur serveur (bandeau dans la modale) ; `REFUS-DEMO` : erreur 422 sous le champ Motif.
 
 Captures : `docs/captures/lot-3/` (1440 px) et `docs/captures/lot-3/768/`.
+
+### Partie B : motos, agents, journaux, profil (GE5 à GE9)
+
+- **GE5 Motos** : filtres dans l'URL (`?q=&sans_conducteur=1&page=`), statut déduit de l'affectation (Affectée, Sans conducteur, Archivée), « Nouvelle moto » dans un Drawer. Cartes sous 768 px.
+- **GE6 Fiche moto** : « Modifier » (Drawer), conducteur actuel avec lien, assurance actuelle (« Renouveler », « Voir le fichier »), historiques des assurances et des conducteurs. « Archiver » est **inactif** tant que la moto est affectée, avec la raison « Changez d'abord la moto du conducteur ». Archivée : consultable, sans action.
+- **GE7 Agents** : matricule et structure ajoutés au compte (`User.matricule`, `User.structure`). « Nouvel agent » : Drawer avec la mention de l'email d'invitation. Fiche dans un Drawer : modifier, désactiver (« L'agent sera déconnecté immédiatement »), réactiver, archiver, envoyer un lien de réinitialisation. Unicité supposée de l'email et du matricule (422).
+- **GE8 Journaux** : lecture seule ; onglets « Journal d'audit » et « Consultations des agents », filtres période, utilisateur, type d'action (ou canal), conducteur. Détail d'une action dans un Drawer (avant / après, motif, IP). La prop `withConnections` ajoute l'onglet « Connexions » (lot 4).
+- **GE9 Mon profil** : même écran que AG5 (`features/profile/ProfileScreen`, `layout="desktop"`), colonne de 640 px.
+- Composants réutilisés : `MotorcycleFields` (choix de moto, création, modification), `DocumentModal` (fiche conducteur et fiche moto), `ChangesTable` (fiche conducteur et journaux).
+- Données de démonstration : agents Bachirou SANNI (actif), Florent AGBO (invitation en cours), Chantal SEIDOU (désactivée), Ousmane ADAM (archivé) ; motos sans conducteur `BB 9042 RB`, `BB 7710 RB`.
