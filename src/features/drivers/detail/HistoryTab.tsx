@@ -10,7 +10,7 @@ import Tabs from '@/components/ui/Tabs';
 import { useDriverHistory } from '@/hooks/queries/useDrivers';
 import { toApiError } from '@/lib/api/errors';
 import { formatDateTime } from '@/lib/utils/format';
-import { AUDIT_ACTION_LABELS, DOCUMENT_FULL_LABELS, DRIVER_STATUS_LABELS } from '@/lib/utils/labels';
+import { ACCOUNT_STATUS_LABELS, AUDIT_ACTION_LABELS, DOCUMENT_FULL_LABELS, DRIVER_STATUS_LABELS } from '@/lib/utils/labels';
 import type { Driver } from '@/types/driver';
 import type { AuditAction, LogEntry } from '@/types/log';
 
@@ -34,6 +34,16 @@ const ICONS: Partial<Record<AuditAction, typeof Pencil>> = {
 
 // Libellés des champs dans le tableau avant / après.
 const FIELD_LABELS: Record<string, string> = {
+  account_status: 'Statut du compte',
+  email: 'Email',
+  matricule: 'Matricule',
+  structure: 'Structure',
+  plate_number: 'Immatriculation',
+  brand: 'Marque',
+  model: 'Modèle',
+  color: 'Couleur',
+  year: 'Année',
+  chassis_number: 'N° de châssis',
   last_name: 'Nom',
   first_name: 'Prénom',
   birth_date: 'Date de naissance',
@@ -46,7 +56,7 @@ const FIELD_LABELS: Record<string, string> = {
 };
 
 const display = (key: string, value: unknown) =>
-  value === null || value === undefined || value === '' ? '—' : key === 'status' ? (DRIVER_STATUS_LABELS[value as keyof typeof DRIVER_STATUS_LABELS] ?? String(value)) : String(value);
+  value === null || value === undefined || value === '' ? '—' : key === 'status' ? (DRIVER_STATUS_LABELS[value as keyof typeof DRIVER_STATUS_LABELS] ?? String(value)) : key === 'account_status' ? (ACCOUNT_STATUS_LABELS[value as keyof typeof ACCOUNT_STATUS_LABELS] ?? String(value)) : String(value);
 
 type Filter = 'tout' | 'audit' | 'consultation';
 
@@ -120,29 +130,7 @@ function TimelineItem({ entry }: { entry: LogEntry }) {
             {formatDateTime(entry.created_at)}
           </time>
         </header>
-        {changes.length > 0 && (
-          <table className="w-full max-w-xl text-sm">
-            <thead>
-              <tr className="text-left text-xs text-muted uppercase">
-                <th className="py-1 pr-3 font-semibold">Champ</th>
-                <th className="py-1 pr-3 font-semibold">Avant</th>
-                <th className="py-1 font-semibold" aria-label="Après" />
-              </tr>
-            </thead>
-            <tbody>
-              {changes.map((key) => (
-                <tr key={key} className="border-t border-border">
-                  <td className="py-1 pr-3 text-muted">{FIELD_LABELS[key] ?? key}</td>
-                  <td className="py-1 pr-3 text-muted line-through">{display(key, entry.old_values?.[key])}</td>
-                  <td className="flex items-center gap-1.5 py-1 font-semibold text-foreground">
-                    <ArrowRight size={14} aria-hidden />
-                    {display(key, entry.new_values?.[key])}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+        {changes.length > 0 && <ChangesTable entry={entry} />}
         {entry.reason && (
           <p className="rounded-field bg-background px-3 py-2 text-sm text-foreground">
             <span className="font-semibold">Motif : </span>
@@ -151,5 +139,34 @@ function TimelineItem({ entry }: { entry: LogEntry }) {
         )}
       </article>
     </li>
+  );
+}
+
+// Tableau avant / après d'une entrée du journal (fiche, journaux GE8).
+export function ChangesTable({ entry }: { entry: Pick<LogEntry, 'old_values' | 'new_values'> }) {
+  const changes = Object.keys({ ...(entry.old_values ?? {}), ...(entry.new_values ?? {}) });
+  if (changes.length === 0) return null;
+  return (
+    <table className="w-full max-w-xl text-sm">
+      <thead>
+        <tr className="text-left text-xs text-muted uppercase">
+          <th className="py-1 pr-3 font-semibold">Champ</th>
+          <th className="py-1 pr-3 font-semibold">Avant</th>
+          <th className="py-1 font-semibold">Après</th>
+        </tr>
+      </thead>
+      <tbody>
+        {changes.map((key) => (
+          <tr key={key} className="border-t border-border">
+            <td className="py-1 pr-3 text-muted">{FIELD_LABELS[key] ?? key}</td>
+            <td className="py-1 pr-3 text-muted line-through">{display(key, entry.old_values?.[key])}</td>
+            <td className="flex items-center gap-1.5 py-1 font-semibold text-foreground">
+              <ArrowRight size={14} aria-hidden />
+              {display(key, entry.new_values?.[key])}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
   );
 }

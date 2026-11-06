@@ -92,7 +92,7 @@ export default function DriverDetailScreen({ id, readOnly = false, basePath, ini
       <Tabs tabs={DRIVER_TABS.map((item) => ({ ...item }))} value={tab} onChange={changeTab} ariaLabel="Sections de la fiche" />
       <div role="tabpanel">
         {tab === 'identite' && <IdentityTab driver={data} readOnly={locked} basePath={basePath} />}
-        {tab === 'moto' && <MotorcycleTab driver={data} readOnly={locked} />}
+        {tab === 'moto' && <MotorcycleTab driver={data} readOnly={locked} motorcyclesPath={basePath.replace(/\/conducteurs$/, '/motos')} />}
         {tab === 'documents' && <DocumentsTab driver={data} readOnly={locked} />}
         {tab === 'qr' && <QrTab driver={data} readOnly={locked} highlightBadge={justValidated} />}
         {tab === 'historique' && <HistoryTab driver={data} />}

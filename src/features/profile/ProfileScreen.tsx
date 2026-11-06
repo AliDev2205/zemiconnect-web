@@ -29,8 +29,14 @@ const schema = z.object({
 type Input = z.input<typeof schema>;
 type Output = z.output<typeof schema>;
 
-// AG5 : une colonne. Informations, mot de passe, déconnexion.
-export default function AgentProfileScreen() {
+interface Props {
+  // mobile : agent (AG5), gros caractères ; desktop : gestion et administration
+  // (GE9), colonne de 640 px. Même contenu dans les deux cas.
+  layout?: 'mobile' | 'desktop';
+}
+
+// Mon profil : informations, mot de passe, déconnexion, sur une colonne.
+export default function ProfileScreen({ layout = 'mobile' }: Props) {
   const me = useMe();
   const logout = useLogout();
 
@@ -43,8 +49,8 @@ export default function AgentProfileScreen() {
   }
 
   return (
-    <div className="flex flex-col gap-5">
-      <h1 className="text-2xl font-bold text-foreground">Mon profil</h1>
+    <div className={layout === 'desktop' ? 'flex w-full max-w-[640px] flex-col gap-5' : 'flex flex-col gap-5'}>
+      <h1 className={layout === 'desktop' ? 'text-2xl font-semibold tracking-tight text-foreground' : 'text-2xl font-bold text-foreground'}>Mon profil</h1>
       {me.isPending ? <ProfileSkeleton /> : <ProfileForm key={me.data.user.id} user={me.data.user} />}
       <PasswordCard />
       <Button variant="outline" size="lg" fullWidth leftIcon={<LogOut size={20} />} isLoading={logout.isPending} onClick={() => logout.mutate()}>
@@ -53,6 +59,13 @@ export default function AgentProfileScreen() {
     </div>
   );
 }
+
+// Qui peut changer l'email d'un compte, selon son rôle.
+const EMAIL_CONTACT: Record<User['role'], string> = {
+  agent: 'Contactez votre gestionnaire.',
+  gestionnaire: "Contactez l'administrateur.",
+  admin: 'Contactez un autre administrateur.',
+};
 
 function ProfileForm({ user }: { user: User }) {
   const update = useUpdateProfile();
@@ -71,7 +84,7 @@ function ProfileForm({ user }: { user: User }) {
   const otherError = update.isError && toApiError(update.error).status !== 422 ? toApiError(update.error).message : null;
 
   return (
-    <Card title="Mes informations">
+    <Card title="Informations">
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
         <fieldset disabled={update.isPending} className="flex flex-col gap-4">
           {otherError && <Alert tone="danger">{otherError}</Alert>}
@@ -92,7 +105,7 @@ function ProfileForm({ user }: { user: User }) {
             inputSize="lg"
             value={user.email}
             readOnly
-            helperText="L'email ne peut pas être modifié ici. Contactez votre gestionnaire."
+            helperText={`L'email ne peut pas être modifié ici. ${EMAIL_CONTACT[user.role]}`}
             className="[&_input]:text-muted"
           />
           <Button type="submit" size="lg" fullWidth isLoading={update.isPending} leftIcon={<Save size={20} />}>
@@ -106,7 +119,7 @@ function ProfileForm({ user }: { user: User }) {
 
 function ProfileSkeleton() {
   return (
-    <Card title="Mes informations">
+    <Card title="Informations">
       <div className="flex flex-col gap-4" role="status">
         <span className="sr-only">Chargement…</span>
         {[0, 1, 2, 3].map((index) => (

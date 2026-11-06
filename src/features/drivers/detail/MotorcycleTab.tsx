@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -26,9 +27,11 @@ import MotorcyclePicker from '../forms/MotorcyclePicker';
 interface Props {
   driver: Driver;
   readOnly: boolean;
+  // Racine des fiches moto (/gestion/motos ou /administration/motos).
+  motorcyclesPath: string;
 }
 
-export default function MotorcycleTab({ driver, readOnly }: Props) {
+export default function MotorcycleTab({ driver, readOnly, motorcyclesPath }: Props) {
   const [changing, setChanging] = useState(false);
   const assignments = useDriverAssignments(driver.id);
   const moto = driver.motorcycle;
@@ -69,6 +72,9 @@ export default function MotorcycleTab({ driver, readOnly }: Props) {
                 <dt className="text-muted">N° de châssis</dt>
                 <dd className="tabular">{moto.chassis_number ?? '—'}</dd>
               </dl>
+              <Link href={`${motorcyclesPath}/${moto.id}`} className="text-sm font-semibold text-primary hover:underline">
+                Ouvrir la fiche de la moto
+              </Link>
             </div>
             <section aria-labelledby="assurance-moto" className="flex flex-col gap-2 rounded-card border border-border p-4">
               <h3 id="assurance-moto" className="flex items-center justify-between gap-2 text-sm font-semibold text-foreground">

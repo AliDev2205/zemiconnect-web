@@ -1,43 +1,17 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { Bike, Check, Plus, X } from 'lucide-react';
 import Alert from '@/components/ui/Alert';
 import Button from '@/components/ui/Button';
-import { SearchInput, TextInput } from '@/components/ui/Input';
+import { SearchInput } from '@/components/ui/Input';
 import Skeleton from '@/components/ui/Skeleton';
 import ValidityPill from '@/components/ui/ValidityPill';
 import { useCreateMotorcycle, useMotorcycles } from '@/hooks/queries/useMotorcycles';
 import { formErrorBanner, toApiError } from '@/lib/api/errors';
 import { formatDate } from '@/lib/utils/format';
-import type { Motorcycle, MotorcyclePayload } from '@/types/motorcycle';
-
-const thisYear = new Date().getFullYear();
-
-const motorcycleSchema = z.object({
-  plate_number: z.string().trim().min(1, "Saisissez l'immatriculation.").max(20, '20 caractères au plus.'),
-  brand: z.string().trim().min(1, 'Saisissez la marque.').max(40, '40 caractères au plus.'),
-  model: z.string().trim().max(60, '60 caractères au plus.'),
-  color: z.string().trim().max(30, '30 caractères au plus.'),
-  year: z
-    .string()
-    .trim()
-    .refine((value) => value === '' || (/^\d{4}$/.test(value) && Number(value) >= 1980 && Number(value) <= thisYear + 1), `Année entre 1980 et ${thisYear + 1}.`),
-  chassis_number: z.string().trim().max(40, '40 caractères au plus.'),
-});
-type MotoInput = z.input<typeof motorcycleSchema>;
-
-const toPayload = (values: MotoInput): MotorcyclePayload => ({
-  plate_number: values.plate_number.trim().toUpperCase(),
-  brand: values.brand.trim(),
-  model: values.model.trim() || null,
-  color: values.color.trim() || null,
-  year: values.year ? Number(values.year) : null,
-  chassis_number: values.chassis_number.trim() || null,
-});
+import MotorcycleFields, { toMotorcyclePayload, useMotorcycleForm } from '@/features/motorcycles/MotorcycleFields';
+import type { Motorcycle } from '@/types/motorcycle';
 
 interface Props {
   selected: Motorcycle | null;
@@ -132,17 +106,13 @@ export function MotorcycleSummary({ moto }: { moto: Motorcycle }) {
 function CreateMotorcycle({ onCancel, onCreated }: { onCancel: () => void; onCreated: (moto: Motorcycle) => void }) {
   const create = useCreateMotorcycle();
   const [banner, setBanner] = useState<string | null>(null);
-  const { register, handleSubmit, setError, formState } = useForm<MotoInput>({
-    resolver: zodResolver(motorcycleSchema),
-    defaultValues: { plate_number: '', brand: '', model: '', color: '', year: '', chassis_number: '' },
-  });
-  const errors = formState.errors;
+  const { register, handleSubmit, setError, formState } = useMotorcycleForm();
 
   // Sous-formulaire sans <form> imbriqué (il vit parfois dans un autre formulaire).
   const submit = handleSubmit(async (values) => {
     setBanner(null);
     try {
-      onCreated(await create.mutateAsync(toPayload(values)));
+      onCreated(await create.mutateAsync(toMotorcyclePayload(values)));
     } catch (error) {
       setBanner(formErrorBanner(error, setError));
     }
@@ -152,14 +122,7 @@ function CreateMotorcycle({ onCancel, onCreated }: { onCancel: () => void; onCre
     <fieldset disabled={create.isPending} className="flex flex-col gap-4 rounded-card border border-border p-4">
       <legend className="px-1 text-sm font-semibold text-foreground">Nouvelle moto</legend>
       {banner && <Alert tone="danger">{banner}</Alert>}
-      <div className="grid gap-4 sm:grid-cols-2">
-        <TextInput label="Immatriculation" required className="[&_input]:uppercase" error={errors.plate_number?.message} {...register('plate_number')} />
-        <TextInput label="Marque" required error={errors.brand?.message} {...register('brand')} />
-        <TextInput label="Modèle" error={errors.model?.message} {...register('model')} />
-        <TextInput label="Couleur" error={errors.color?.message} {...register('color')} />
-        <TextInput label="Année" inputMode="numeric" error={errors.year?.message} {...register('year')} />
-        <TextInput label="Numéro de châssis" className="[&_input]:uppercase" error={errors.chassis_number?.message} {...register('chassis_number')} />
-      </div>
+      <MotorcycleFields register={register} errors={formState.errors} />
       <div className="flex justify-end gap-2">
         <Button variant="outline" onClick={onCancel}>
           Annuler

@@ -1,8 +1,14 @@
+import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import { MotorcycleListScreen } from '@/features/motorcycles';
 
 export const metadata: Metadata = { title: 'Motos' };
 
+// GE5. Suspense : les filtres sont lus dans l'URL (useSearchParams).
 export default function Page() {
-  return <MotorcycleListScreen readOnly basePath="/administration/motos" />;
+  return (
+    <Suspense>
+      <MotorcycleListScreen readOnly basePath="/administration/motos" />
+    </Suspense>
+  );
 }

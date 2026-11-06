@@ -3,6 +3,7 @@ import { LogsScreen } from '@/features/logs';
 
 export const metadata: Metadata = { title: 'Journaux' };
 
+// Même écran que la gestion ; l'onglet « Connexions » sera branché au lot 4.
 export default function Page() {
-  return <LogsScreen readOnly />;
+  return <LogsScreen basePath="/administration" />;
 }
