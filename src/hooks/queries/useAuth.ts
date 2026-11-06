@@ -5,6 +5,7 @@ import {
   ChangePasswordPayload,
   ForgotPasswordPayload,
   LoginPayload,
+  ProfilePayload,
   ResetPasswordPayload,
 } from '@/lib/api/services/auth/auth';
 import { getPostLoginRoute } from '@/lib/auth/redirect';
@@ -76,6 +77,20 @@ export function useResetPassword() {
   return useMutation({
     mutationFn: (payload: ResetPasswordPayload) => authService.resetPassword(payload),
     meta: { toast: false },
+  });
+}
+
+// AG5 et profils : nom, prénom, téléphone. Met à jour /auth/me en cache.
+export function useUpdateProfile() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: ProfilePayload) => authService.updateProfile(payload),
+    // Les erreurs 422 sont reportées sur les champs ; le succès passe par un toast.
+    meta: { toast: false },
+    onSuccess: (me) => {
+      queryClient.setQueryData(authKeys.me, me);
+      toast.success('Profil enregistré.');
+    },
   });
 }
 

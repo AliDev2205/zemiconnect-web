@@ -8,6 +8,17 @@ export interface ApiError {
   errors?: Record<string, string[]>;
   // 429 : délai indiqué par l'en-tête Retry-After, en secondes.
   retryAfterSeconds?: number;
+  // Code métier facultatif renvoyé par l'API (ex. ACCOUNT_DISABLED_CODE).
+  code?: string;
+}
+
+// Contrat supposé : 403 { code: 'account_disabled' } quand le compte est
+// désactivé pendant une session (à confirmer avec l'API).
+export const ACCOUNT_DISABLED_CODE = 'account_disabled';
+
+export function isAccountDisabledError(error: unknown): boolean {
+  const apiError = toApiError(error);
+  return apiError.status === 403 && apiError.code === ACCOUNT_DISABLED_CODE;
 }
 
 export const NETWORK_ERROR_MESSAGE = 'Connexion impossible, vérifiez votre réseau.';
@@ -34,7 +45,7 @@ export function toApiError(error: unknown): ApiError {
     }
 
     const status = error.response.status;
-    const data = error.response.data as { message?: string; errors?: Record<string, string[]> } | undefined;
+    const data = error.response.data as { message?: string; errors?: Record<string, string[]>; code?: string } | undefined;
 
     // 422 : erreurs de validation Laravel champ par champ. Le message les
     // détaille pour le toast ; `errors` sert au report sur les champs (applyApiErrorsToForm).
@@ -57,6 +68,7 @@ export function toApiError(error: unknown): ApiError {
       status,
       message: data?.message ?? DEFAULT_MESSAGES[status] ?? 'Une erreur est survenue.',
       errors: data?.errors,
+      code: data?.code,
     };
   }
 

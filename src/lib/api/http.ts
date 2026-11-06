@@ -1,7 +1,6 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { rawHttp } from '@/lib/api/raw';
-import { clearSessionHints } from '@/lib/auth/session';
-import { isPublicPath } from '@/lib/constants';
+import { handleSessionFailure } from '@/lib/auth/sessionFailure';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000';
 
@@ -50,15 +49,6 @@ http.interceptors.request.use(async (config) => {
   return config;
 });
 
-function redirectToLogin(): void {
-  clearSessionHints();
-  if (typeof window === 'undefined') return;
-  const { pathname } = window.location;
-  // Les pages publiques et d'authentification ne redirigent jamais.
-  if (isPublicPath(pathname)) return;
-  window.location.href = '/connexion';
-}
-
 http.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
@@ -75,9 +65,9 @@ http.interceptors.response.use(
     }
 
     // 401 : pas de rafraîchissement de jeton avec Sanctum, la session est perdue.
-    if (status === 401) {
-      redirectToLogin();
-    }
+    // 403 compte désactivé : déconnexion immédiate. Retour à /connexion (avec
+    // `retour` pour un 401), jamais depuis une page publique.
+    handleSessionFailure(error);
 
     // 403, 422, 429… : normalisés par toApiError (lib/api/errors.ts) là où ils sont affichés.
     return Promise.reject(error);

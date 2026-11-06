@@ -13,6 +13,9 @@ export interface Driver {
   first_name: string;
   last_name: string;
   phone: string | null;
+  address: string | null;
+  birth_date: string | null;
+  driver_identifier: string | null;
   photo_url: string | null;
   status: DriverStatus;
   compliance: ComplianceStatus;

@@ -11,6 +11,7 @@ import Checkbox from '@/components/ui/Checkbox';
 import { PasswordInput, TextInput } from '@/components/ui/Input';
 import { useLogin } from '@/hooks/queries/useAuth';
 import { NETWORK_ERROR_MESSAGE, retryAfterMinutesLabel, toApiError } from '@/lib/api/errors';
+import type { LoginReason } from '@/lib/auth/sessionFailure';
 import AuthCard from './AuthCard';
 
 const schema = z.object({
@@ -44,10 +45,12 @@ interface Props {
   retour?: string;
   // Arrivée depuis AU3 après une réinitialisation réussie.
   resetDone?: boolean;
+  // Arrivée après une session perdue (handleSessionFailure).
+  reason?: LoginReason;
 }
 
 // AU1. La redirection (rôle, `retour` validé, AU4) est faite par useLogin.
-export default function LoginForm({ retour, resetDone }: Props) {
+export default function LoginForm({ retour, resetDone, reason }: Props) {
   const login = useLogin({ retour });
   const { register, handleSubmit, formState } = useForm<Input, unknown, Output>({
     resolver: zodResolver(schema),
@@ -61,6 +64,12 @@ export default function LoginForm({ retour, resetDone }: Props) {
     <AuthCard title="Connexion" description="Espace professionnel : agents de contrôle, gestionnaires et administrateurs.">
       {resetDone && !login.isError && (
         <Alert tone="success">Mot de passe réinitialisé. Vous pouvez vous connecter avec le nouveau.</Alert>
+      )}
+      {!login.isError && reason === 'desactive' && (
+        <Alert tone="danger">Ce compte est désactivé. Contactez votre gestionnaire.</Alert>
+      )}
+      {!login.isError && reason === 'session' && (
+        <Alert tone="info">Votre session a expiré. Reconnectez-vous pour reprendre là où vous étiez.</Alert>
       )}
       {login.isError && <Alert tone="danger">{loginErrorMessage(login.error)}</Alert>}
 

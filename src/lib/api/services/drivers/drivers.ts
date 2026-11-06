@@ -1,6 +1,6 @@
 import { http } from '@/lib/api/http';
 import { isMockMode, matchesSearch, mockError, mockResponse, paginate } from '@/lib/api/mock';
-import { findDriverByActiveToken, mockDrivers, normalizeLookup } from '@/mocks/drivers';
+import { mockDrivers } from '@/mocks/drivers';
 import type { ApiResponse, Paginated } from '@/types/api';
 import type { Driver, DriverFilters } from '@/types/driver';
 
@@ -14,11 +14,6 @@ export interface DriverPayload {
 export interface DriverStatusPayload {
   status: Driver['status'];
   reason?: string;
-}
-
-export interface DriverLookup {
-  // Numéro ZemiConnect ou immatriculation, transmis tel quel (format non arrêté).
-  query: string;
 }
 
 export const driversService = {
@@ -70,31 +65,6 @@ export const driversService = {
       return driver ? (await mockResponse({ ...driver, status: payload.status })).data.data : mockError(404, 'Conducteur introuvable.');
     }
     const { data } = await http.patch<ApiResponse<Driver>>(`/drivers/${id}/status`, payload);
-    return data.data;
-  },
-
-  // Contrôle agent (AG3) par QR : vue complète, journalisée côté API.
-  controlByToken: async (token: string): Promise<Driver> => {
-    if (isMockMode()) {
-      const driver = findDriverByActiveToken(token);
-      return driver ? (await mockResponse(driver)).data.data : mockError(404, 'QR non valide ou révoqué.');
-    }
-    const { data } = await http.get<ApiResponse<Driver>>(`/controls/qr/${encodeURIComponent(token)}`);
-    return data.data;
-  },
-
-  // Contrôle agent (AG3) par numéro ZemiConnect ou immatriculation.
-  controlSearch: async ({ query }: DriverLookup): Promise<Driver> => {
-    if (isMockMode()) {
-      const needle = normalizeLookup(query);
-      const driver = mockDrivers.find(
-        (item) =>
-          normalizeLookup(item.zc_number) === needle ||
-          (item.motorcycle && normalizeLookup(item.motorcycle.plate_number) === needle),
-      );
-      return driver ? (await mockResponse(driver)).data.data : mockError(404, 'Aucun conducteur ne correspond.');
-    }
-    const { data } = await http.get<ApiResponse<Driver>>('/controls/search', { params: { q: query } });
     return data.data;
   },
 };

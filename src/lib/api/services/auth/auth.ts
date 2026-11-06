@@ -30,6 +30,13 @@ export interface ChangePasswordPayload {
   password_confirmation: string;
 }
 
+// Champs modifiables par l'utilisateur lui-même (AG5 et profils). L'email ne l'est pas.
+export interface ProfilePayload {
+  first_name: string;
+  last_name: string;
+  phone: string | null;
+}
+
 // Jeton de réinitialisation du mode fictif qui simule un lien expiré.
 export const MOCK_EXPIRED_RESET_TOKEN = 'expire';
 
@@ -110,6 +117,18 @@ export const authService = {
       return;
     }
     await http.post('/auth/reset-password', payload);
+  },
+
+  // Mode fictif : la modification reste en mémoire jusqu'au rechargement de la page.
+  updateProfile: async (payload: ProfilePayload): Promise<Me> => {
+    if (isMockMode()) {
+      const me = currentMockMe();
+      const user = mockUsers.find((candidate) => candidate.id === me.user.id);
+      if (user) Object.assign(user, payload);
+      return (await mockResponse({ ...me, user: { ...me.user, ...payload } })).data.data;
+    }
+    const { data } = await http.put<ApiResponse<Me>>('/auth/profile', payload);
+    return data.data;
   },
 
   changePassword: async (payload: ChangePasswordPayload): Promise<void> => {

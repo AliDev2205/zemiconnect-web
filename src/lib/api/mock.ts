@@ -27,6 +27,8 @@ export async function mockError(
   message: string,
   errors?: Record<string, string[]>,
   responseHeaders: Record<string, string> = {},
+  // Champs supplémentaires du corps de réponse (ex. { code: 'account_disabled' }).
+  extra: Record<string, unknown> = {},
 ): Promise<never> {
   await wait(MOCK_DELAY_MS);
   const headers = new AxiosHeaders();
@@ -36,7 +38,7 @@ export async function mockError(
     statusText: message,
     headers: responseHeaders,
     config,
-    data: { status: 'error', message, errors },
+    data: { status: 'error', message, errors, ...extra },
   };
   throw new AxiosError(message, String(status), config, null, response);
 }

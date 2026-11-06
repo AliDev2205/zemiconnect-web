@@ -1,5 +1,6 @@
-import { MutationCache, QueryClient } from '@tanstack/react-query';
+import { MutationCache, QueryCache, QueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
+import { handleSessionFailure } from '@/lib/auth/sessionFailure';
 import { mutationToastHandlers } from '@/lib/toast/mutationBridge';
 
 function shouldRetry(failureCount: number, error: unknown): boolean {
@@ -16,7 +17,17 @@ function shouldRetry(failureCount: number, error: unknown): boolean {
 
 export function createQueryClient(): QueryClient {
   return new QueryClient({
-    mutationCache: new MutationCache(mutationToastHandlers),
+    // Session perdue (401) ou compte désactivé : retour à /connexion. Doublon
+    // volontaire avec l'intercepteur axios, pour couvrir le mode fictif ;
+    // handleSessionFailure est idempotente.
+    queryCache: new QueryCache({ onError: (error) => handleSessionFailure(error) }),
+    mutationCache: new MutationCache({
+      ...mutationToastHandlers,
+      onError: (error, variables, context, mutation, mutationContext) => {
+        if (handleSessionFailure(error)) return;
+        mutationToastHandlers.onError?.(error, variables, context, mutation, mutationContext);
+      },
+    }),
     defaultOptions: {
       queries: {
         staleTime: 30 * 1000,

@@ -6,6 +6,8 @@ export interface Motorcycle {
   brand: string | null;
   model: string | null;
   color: string | null;
+  year: number | null;
+  chassis_number: string | null;
   // Conducteur actuellement rattaché, s'il y en a un.
   driver_id: string | null;
   driver_name: string | null;
