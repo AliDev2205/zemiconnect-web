@@ -1,5 +1,5 @@
 import { http } from '@/lib/api/http';
-import { isMockMode, runMock } from '@/lib/api/mock';
+import { isMockMode, runMock, runMockWrite } from '@/lib/api/mock';
 import { gestionStore } from '@/mocks/gestion';
 import type { ApiResponse } from '@/types/api';
 import type { QrCode, QrFileFormat } from '@/types/qr';
@@ -31,13 +31,13 @@ export const qrService = {
   },
 
   regenerate: async (driverId: string, payload: QrReasonPayload): Promise<QrCode> => {
-    if (isMockMode()) return runMock(() => gestionStore.regenerateQr(driverId, payload.reason));
+    if (isMockMode()) return runMockWrite(() => gestionStore.regenerateQr(driverId, payload.reason));
     const { data } = await http.post<ApiResponse<QrCode>>(`/drivers/${driverId}/qr-codes/regenerate`, payload);
     return data.data;
   },
 
   revoke: async (driverId: string, payload: QrReasonPayload): Promise<QrCode> => {
-    if (isMockMode()) return runMock(() => gestionStore.revokeQr(driverId, payload.reason));
+    if (isMockMode()) return runMockWrite(() => gestionStore.revokeQr(driverId, payload.reason));
     const { data } = await http.post<ApiResponse<QrCode>>(`/drivers/${driverId}/qr-codes/revoke`, payload);
     return data.data;
   },

@@ -1,6 +1,7 @@
 import { ensureCsrfCookie, http } from '@/lib/api/http';
 import { isMockMode, mockError, mockResponse } from '@/lib/api/mock';
 import { getRoleHint } from '@/lib/auth/session';
+import { pushLog } from '@/mocks/logs';
 import { readMockSession, writeMockSession } from '@/mocks/session';
 import { MOCK_LOCKED_EMAIL, MOCK_PASSWORD, MOCK_ROLE_PERMISSIONS, mockMeForRole, mockUsers } from '@/mocks/users';
 import type { ApiResponse } from '@/types/api';
@@ -66,14 +67,32 @@ export const authService = {
   login: async (payload: LoginPayload): Promise<Me> => {
     if (isMockMode()) {
       const email = payload.email.trim().toLowerCase();
+      const user = mockUsers.find((candidate) => candidate.email === email);
+      // Chaque tentative est inscrite au journal des connexions (comme l'API).
+      const record = (result: 'reussie' | 'echouee' | 'bloquee') =>
+        pushLog({
+          action: 'auth.login',
+          actor_name: user ? `${user.first_name} ${user.last_name}` : null,
+          actor_role: user?.role ?? null,
+          resource_type: null,
+          login_email: email,
+          login_result: result,
+          ip_address: '127.0.0.1',
+          user_agent: typeof navigator === 'undefined' ? null : navigator.userAgent.slice(0, 80),
+        });
       if (email === MOCK_LOCKED_EMAIL) {
+        record('bloquee');
         return mockError(429, 'Too Many Attempts.', undefined, { 'retry-after': '900' });
       }
-      const user = mockUsers.find((candidate) => candidate.email === email);
       if (!user || payload.password !== MOCK_PASSWORD) {
+        record('echouee');
         return mockError(422, 'Identifiants incorrects.', { email: ['Identifiants incorrects.'] });
       }
-      if (user.account_status !== 'actif') return mockError(403, 'Ce compte est désactivé.');
+      if (user.account_status !== 'actif') {
+        record('echouee');
+        return mockError(403, 'Ce compte est désactivé.');
+      }
+      record('reussie');
       writeMockSession({ userId: user.id, passwordChanged: false });
       return (await mockResponse(mockMeForUser(user, false))).data.data;
     }

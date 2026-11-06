@@ -6,6 +6,8 @@ import type { QrCode } from '@/types/qr';
 import { normalizeZcNumber } from '@/lib/utils/format';
 import { atDaysAgo, computeCompliance, computeValidity, inDays } from './compliance';
 import { MOCK_DOMAIN } from './users';
+import { DEFAULT_MOCK_SETTINGS } from './settings';
+import type { AppSettings } from '@/types/dashboard';
 
 /*
  * Données fictives, en mémoire. Les dates sont RELATIVES au jour courant
@@ -103,7 +105,6 @@ function driver(seed: Seed): Driver {
     compliance: 'non_conforme',
     motorcycle: null,
     assignment_started_at: motoId ? atDaysAgo(startedDaysAgo) : null,
-    managing_structure: null,
     documents: [],
     validated_at: rest.status === 'en_attente' ? null : atDaysAgo(startedDaysAgo),
     archived_at: null,
@@ -117,8 +118,6 @@ function driver(seed: Seed): Driver {
 
 const d = (driverId: string, type: DocumentType, expiresAt: string | null, extra?: Partial<Document>) =>
   makeDocument(`doc-${driverId}-${type}`, type, { type: 'driver', id: driverId }, expiresAt, extra);
-
-const STRUCTURE = 'Coopérative des zémidjans de Parakou-Centre (fictive)';
 
 export const mockDrivers: Driver[] = [
   // Actif, conforme ; permis sans date d'expiration (non bloquant).
@@ -136,7 +135,6 @@ export const mockDrivers: Driver[] = [
     status: 'actif',
     moto: 'mot-1',
     startedDaysAgo: 240,
-    managing_structure: STRUCTURE,
     documents: [d('drv-1', 'piece_identite', inDays(1660)), d('drv-1', 'permis', null), d('drv-1', 'droit_taxi', inDays(146))],
   }),
   // Actif, expire bientôt : assurance de la moto dans 7 jours.
@@ -151,7 +149,6 @@ export const mockDrivers: Driver[] = [
     status: 'actif',
     moto: 'mot-2',
     startedDaysAgo: 220,
-    managing_structure: STRUCTURE,
     documents: [d('drv-2', 'piece_identite', inDays(800)), d('drv-2', 'permis', inDays(1240)), d('drv-2', 'droit_taxi', inDays(115))],
   }),
   // Suspendu et non conforme : deux sujets distincts.
@@ -324,7 +321,7 @@ linkMotorcycles();
 // Projection publique, champ par champ (jamais de spread : aucun champ privé
 // ne doit passer). null pour un conducteur en attente ou archivé, que l'API
 // publique traite comme introuvable.
-export function toPublicProfile(item: Driver): PublicDriverProfile | null {
+export function toPublicProfile(item: Driver, settings: AppSettings = DEFAULT_MOCK_SETTINGS): PublicDriverProfile | null {
   if ((item.status !== 'actif' && item.status !== 'suspendu') || !item.zc_number) return null;
   return {
     zc_number: item.zc_number,
@@ -335,7 +332,8 @@ export function toPublicProfile(item: Driver): PublicDriverProfile | null {
     motorcycle: item.motorcycle
       ? { plate_number: item.motorcycle.plate_number, brand: item.motorcycle.brand, color: item.motorcycle.color }
       : null,
-    managing_structure: item.managing_structure,
+    // Paramètre global (AD5) : présent seulement s'il est renseigné.
+    managing_structure: settings.structure_name ? { name: settings.structure_name, contact: settings.structure_contact } : null,
   };
 }
 

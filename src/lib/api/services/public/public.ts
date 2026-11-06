@@ -2,6 +2,7 @@ import { publicHttp } from '@/lib/api/raw';
 import { isMockMode, mockError, mockNetworkError, mockResponse } from '@/lib/api/mock';
 import { normalizeZcNumber } from '@/lib/utils/format';
 import { findDriverByActiveToken, mockDrivers, toPublicProfile } from '@/mocks/drivers';
+import { MOCK_SETTINGS_COOKIE, parseMockSettings } from '@/mocks/settings';
 import type { ApiResponse } from '@/types/api';
 import type { Driver, PublicDriverProfile } from '@/types/driver';
 
@@ -10,8 +11,15 @@ export const MOCK_PUBLIC_TRIGGERS = { tooManyRequests: 'TROP', network: 'HORS-LI
 
 // Même réponse 404 pour un jeton inconnu, un QR révoqué, un conducteur en
 // attente ou archivé : la page publique ne doit donner aucun indice.
+// Mode fictif : la structure gestionnaire (AD5) est modifiée dans le navigateur
+// et transmise par cookie ; ce service s'exécute côté serveur (PU2).
+async function mockSettingsFromCookie() {
+  const { cookies } = await import('next/headers');
+  return parseMockSettings((await cookies()).get(MOCK_SETTINGS_COOKIE)?.value);
+}
+
 async function mockPublicProfile(driver: Driver | null | undefined, message: string): Promise<PublicDriverProfile> {
-  const profile = driver ? toPublicProfile(driver) : null;
+  const profile = driver ? toPublicProfile(driver, await mockSettingsFromCookie()) : null;
   return profile ? (await mockResponse(profile)).data.data : mockError(404, message);
 }
 

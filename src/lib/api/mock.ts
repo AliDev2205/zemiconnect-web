@@ -1,4 +1,5 @@
 import { AxiosError, AxiosHeaders, type AxiosResponse } from 'axios';
+import { getRoleHint } from '@/lib/auth/session';
 import type { ApiResponse, Paginated } from '@/types/api';
 
 // Mode fictif : actif quand NEXT_PUBLIC_API_MOCK=true. Lisible côté serveur et
@@ -67,6 +68,19 @@ export async function runMock<T>(operation: () => T): Promise<T> {
     if (error instanceof MockApiError) return mockError(error.status, error.message, error.errors);
     throw error;
   }
+}
+
+// Écriture sur une ressource MÉTIER (conducteur, moto, document, QR, agent).
+// Comme l'API, le mode fictif la refuse à l'administrateur (403) : il ne fait
+// que consulter. L'interface ne lui montre aucun bouton d'écriture, mais ce
+// refus vérifie que les écrans gèrent bien le cas.
+export async function runMockWrite<T>(operation: () => T): Promise<T> {
+  return runMock(() => {
+    if (getRoleHint() === 'admin') {
+      throw new MockApiError(403, "Action réservée aux gestionnaires : l'administrateur consulte sans modifier.");
+    }
+    return operation();
+  });
 }
 
 // Erreur réseau fictive (aucune réponse), comme une coupure de connexion.

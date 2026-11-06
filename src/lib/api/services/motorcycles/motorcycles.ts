@@ -1,5 +1,5 @@
 import { http } from '@/lib/api/http';
-import { isMockMode, runMock } from '@/lib/api/mock';
+import { isMockMode, runMock, runMockWrite } from '@/lib/api/mock';
 import { gestionStore } from '@/mocks/gestion';
 import type { ApiResponse, Paginated } from '@/types/api';
 import type { Assignment, Motorcycle, MotorcycleFilters, MotorcyclePayload } from '@/types/motorcycle';
@@ -27,19 +27,19 @@ export const motorcyclesService = {
   },
 
   create: async (payload: MotorcyclePayload): Promise<Motorcycle> => {
-    if (isMockMode()) return runMock(() => gestionStore.createMotorcycle(payload));
+    if (isMockMode()) return runMockWrite(() => gestionStore.createMotorcycle(payload));
     const { data } = await http.post<ApiResponse<Motorcycle>>('/motorcycles', payload);
     return data.data;
   },
 
   update: async (id: string, payload: MotorcyclePayload): Promise<Motorcycle> => {
-    if (isMockMode()) return runMock(() => gestionStore.updateMotorcycle(id, payload));
+    if (isMockMode()) return runMockWrite(() => gestionStore.updateMotorcycle(id, payload));
     const { data } = await http.put<ApiResponse<Motorcycle>>(`/motorcycles/${id}`, payload);
     return data.data;
   },
 
   archive: async (id: string): Promise<Motorcycle> => {
-    if (isMockMode()) return runMock(() => gestionStore.archiveMotorcycle(id));
+    if (isMockMode()) return runMockWrite(() => gestionStore.archiveMotorcycle(id));
     const { data } = await http.post<ApiResponse<Motorcycle>>(`/motorcycles/${id}/archive`);
     return data.data;
   },

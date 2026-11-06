@@ -35,6 +35,13 @@ export function proxy(request: NextRequest) {
     return mustChangePassword || !isRole(hint) ? NextResponse.next() : redirect(getHomeRouteForRole(role));
   }
 
+  // L'administration ne crée pas de dossier : cette adresse n'existe pas. Le
+  // code 404 est posé ici, avant tout rendu (la page, rendue en flux dans la
+  // coque, ne pourrait plus changer le code HTTP).
+  if (pathname === '/administration/conducteurs/nouveau') {
+    return NextResponse.rewrite(new URL('/page-introuvable', request.url), { status: 404 });
+  }
+
   const space = getSpaceFromPathname(pathname);
   if (space) {
     if (!role) return redirect(`/connexion?retour=${encodeURIComponent(pathname)}`);

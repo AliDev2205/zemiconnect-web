@@ -1,5 +1,5 @@
 import { http } from '@/lib/api/http';
-import { isMockMode, runMock } from '@/lib/api/mock';
+import { isMockMode, runMock, runMockWrite } from '@/lib/api/mock';
 import { AgentFiltersInput, AgentInput, agentsStore } from '@/mocks/agents';
 import type { ApiResponse, Paginated } from '@/types/api';
 import type { User } from '@/types/user';
@@ -31,32 +31,32 @@ export const agentsService = {
   },
 
   create: async (payload: AgentPayload): Promise<User> => {
-    if (isMockMode()) return runMock(() => agentsStore.create(payload));
+    if (isMockMode()) return runMockWrite(() => agentsStore.create(payload));
     const { data } = await http.post<ApiResponse<User>>('/agents', payload);
     return data.data;
   },
 
   update: async (id: string, payload: AgentPayload): Promise<User> => {
-    if (isMockMode()) return runMock(() => agentsStore.update(id, payload));
+    if (isMockMode()) return runMockWrite(() => agentsStore.update(id, payload));
     const { data } = await http.put<ApiResponse<User>>(`/agents/${id}`, payload);
     return data.data;
   },
 
   setStatus: async (id: string, status: 'actif' | 'desactive'): Promise<User> => {
-    if (isMockMode()) return runMock(() => agentsStore.setStatus(id, status));
+    if (isMockMode()) return runMockWrite(() => agentsStore.setStatus(id, status));
     const { data } = await http.patch<ApiResponse<User>>(`/agents/${id}/status`, { status });
     return data.data;
   },
 
   archive: async (id: string): Promise<User> => {
-    if (isMockMode()) return runMock(() => agentsStore.archive(id));
+    if (isMockMode()) return runMockWrite(() => agentsStore.archive(id));
     const { data } = await http.post<ApiResponse<User>>(`/agents/${id}/archive`);
     return data.data;
   },
 
   sendResetLink: async (id: string): Promise<void> => {
     if (isMockMode()) {
-      await runMock(() => agentsStore.sendResetLink(id));
+      await runMockWrite(() => agentsStore.sendResetLink(id));
       return;
     }
     await http.post(`/agents/${id}/reset-link`);

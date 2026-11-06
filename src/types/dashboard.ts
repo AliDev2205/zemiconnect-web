@@ -24,6 +24,8 @@ export interface DashboardStats {
   motorcycles_total: number;
   motorcycles_unassigned: number;
   agents_active: number;
+  // Comptes gestionnaires actifs (carte affichée dans l'administration, AD1).
+  managers_active: number;
   todo: {
     expired: TodoItem[];
     expiring: TodoItem[];
@@ -31,7 +33,11 @@ export interface DashboardStats {
   };
 }
 
+// Paramètres de l'administration (AD5). La structure gestionnaire s'affiche
+// sur le profil public (PU2) uniquement si elle est renseignée.
 export interface AppSettings {
-  public_domain: string;
+  structure_name: string | null;
+  structure_contact: string | null;
+  // Règle fixe, affichée en lecture seule : expiration dans les 30 jours.
   expiry_warning_days: number;
 }

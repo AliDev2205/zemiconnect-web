@@ -28,8 +28,6 @@ export interface Driver {
   // Moto actuelle et début de l'affectation en cours.
   motorcycle: Motorcycle | null;
   assignment_started_at: string | null;
-  // Structure gestionnaire (association, coopérative…), facultative.
-  managing_structure: string | null;
   // Documents ACTUELS du conducteur (pièce d'identité, permis, droit de taxi).
   // L'assurance est portée par la moto. L'historique est à part (documentsService.history).
   documents: Document[];
@@ -84,6 +82,6 @@ export interface PublicDriverProfile {
   photo_url: string | null;
   status: PublicDriverStatus;
   motorcycle: { plate_number: string; brand: string | null; color: string | null } | null;
-  // Structure qui gère le conducteur, si elle est renseignée.
-  managing_structure: string | null;
+  // Structure gestionnaire (paramètre AD5), seulement si elle est renseignée.
+  managing_structure: { name: string; contact: string | null } | null;
 }

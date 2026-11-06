@@ -17,7 +17,7 @@ function matchesDriver(log: LogEntry, term: string | undefined): boolean {
 
 /*
  * Endpoints supposés (lecture seule) :
- *   GET /logs?kind&actor&action&driver&start_date&end_date&page&per_page
+ *   GET /logs?kind&actor&action&role&result&driver&start_date&end_date&page&per_page
  *   GET /logs/actors?kind     auteurs possibles, pour le filtre « Utilisateur »
  */
 export const logsService = {
@@ -34,6 +34,8 @@ export const logsService = {
             (!filters.driver_id || log.driver_id === filters.driver_id) &&
             (!filters.actor || log.actor_name === filters.actor) &&
             (!filters.action || log.action === filters.action) &&
+            (!filters.role || log.actor_role === filters.role) &&
+            (!filters.result || log.login_result === filters.result) &&
             (!filters.start_date || log.created_at.slice(0, 10) >= filters.start_date) &&
             (!filters.end_date || log.created_at.slice(0, 10) <= filters.end_date) &&
             matchesDriver(log, filters.driver) &&

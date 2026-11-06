@@ -1,8 +1,6 @@
-import type { AppSettings } from '@/types/dashboard';
 import type { AuditAction, LogEntry, LogKind } from '@/types/log';
 import { atDaysAgo } from './compliance';
 import { mockDrivers } from './drivers';
-import { MOCK_DOMAIN } from './users';
 
 let sequence = 0;
 
@@ -101,7 +99,27 @@ function seedLogs(): LogEntry[] {
         created_at: atDaysAgo(index + 1, 7 + index),
       }),
     ),
-    makeLog({ action: 'auth.login', actor_name: 'Kofi DOSSOU', actor_role: 'admin', resource_type: null, ip_address: '102.64.10.2', created_at: atDaysAgo(1, 8) }),
+    // Journal des connexions (onglet « Connexions » de l'administration).
+    ...([
+      ['kofi.dossou@zemiconnect.exemple', 'Kofi DOSSOU', 'admin', 'reussie', '102.64.10.2', 1, 8],
+      ['aicha.toko@zemiconnect.exemple', 'Aïcha TOKO', 'gestionnaire', 'reussie', '102.64.10.21', 1, 9],
+      ['inconnu@exemple.com', null, null, 'echouee', '41.85.12.7', 2, 22],
+      ['bachirou.sanni@zemiconnect.exemple', 'Bachirou SANNI', 'agent', 'reussie', '102.64.10.40', 2, 7],
+      ['bloque@zemiconnect.exemple', null, null, 'bloquee', '41.85.12.7', 3, 23],
+      ['aicha.toko@zemiconnect.exemple', 'Aïcha TOKO', 'gestionnaire', 'echouee', '102.64.10.21', 4, 8],
+    ] as const).map(([email, name, role, result, ip, days, hour]) =>
+      makeLog({
+        action: 'auth.login',
+        actor_name: name,
+        actor_role: role,
+        resource_type: null,
+        ip_address: ip,
+        login_email: email,
+        login_result: result,
+        user_agent: role === 'agent' ? 'Chrome 141 · Android' : 'Firefox 144 · Windows',
+        created_at: atDaysAgo(days, hour),
+      }),
+    ),
   );
   // Libellés complets pour les consultations.
   logs.forEach((log) => {
@@ -122,7 +140,3 @@ export function pushLog(entry: Partial<LogEntry> & { action: AuditAction }): Log
   return log;
 }
 
-export const mockSettings: AppSettings = {
-  public_domain: MOCK_DOMAIN,
-  expiry_warning_days: 30,
-};

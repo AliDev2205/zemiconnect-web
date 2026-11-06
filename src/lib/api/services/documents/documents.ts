@@ -1,5 +1,5 @@
 import { http } from '@/lib/api/http';
-import { isMockMode, runMock } from '@/lib/api/mock';
+import { isMockMode, runMock, runMockWrite } from '@/lib/api/mock';
 import { gestionStore } from '@/mocks/gestion';
 import type { ApiResponse } from '@/types/api';
 import type { Document, DocumentType, FileLink } from '@/types/document';
@@ -27,7 +27,7 @@ const ownerPath = (owner: DocumentOwner) => `/${owner.type === 'driver' ? 'drive
 export const documentsService = {
   // Ajout ou renouvellement : le document actuel du même type passe dans l'historique.
   upload: async (owner: DocumentOwner, payload: DocumentPayload): Promise<Document> => {
-    if (isMockMode()) return runMock(() => gestionStore.addDocument(owner, payload));
+    if (isMockMode()) return runMockWrite(() => gestionStore.addDocument(owner, payload));
     const form = new FormData();
     form.append('type', payload.type);
     form.append('number', payload.number);

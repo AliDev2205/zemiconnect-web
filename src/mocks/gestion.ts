@@ -169,7 +169,6 @@ export const gestionStore = {
       compliance: 'non_conforme',
       motorcycle: null,
       assignment_started_at: null,
-      managing_structure: null,
       documents: [],
       validated_at: null,
       archived_at: null,
@@ -414,6 +413,7 @@ export const gestionStore = {
       motorcycles_total: mockMotorcycles.filter((moto) => !moto.archived_at).length,
       motorcycles_unassigned: mockMotorcycles.filter((moto) => !moto.archived_at && !moto.driver_id).length,
       agents_active: mockUsers.filter((user) => user.role === 'agent' && user.account_status === 'actif').length,
+      managers_active: mockUsers.filter((user) => user.role === 'gestionnaire' && user.account_status === 'actif').length,
       todo: {
         expired: live.flatMap((driver) => todoFor(driver, 'expire')).sort(byDate),
         expiring: live.flatMap((driver) => todoFor(driver, 'expire_bientot')).sort(byDate),
@@ -443,5 +443,6 @@ export const EMPTY_DASHBOARD: DashboardStats = {
   motorcycles_total: 0,
   motorcycles_unassigned: 0,
   agents_active: 0,
+  managers_active: 0,
   todo: { expired: [], expiring: [], pending: [] },
 };

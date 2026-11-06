@@ -1,5 +1,5 @@
 import { http } from '@/lib/api/http';
-import { isMockMode, paginate, runMock } from '@/lib/api/mock';
+import { isMockMode, paginate, runMock, runMockWrite } from '@/lib/api/mock';
 import { gestionStore, isEmptyRegistryDemo } from '@/mocks/gestion';
 import type { ApiResponse, Paginated } from '@/types/api';
 import type { Driver, DriverFilters, DriverIdentityPayload, DuplicateMatch } from '@/types/driver';
@@ -62,13 +62,13 @@ export const driversService = {
   },
 
   create: async (payload: DriverIdentityPayload, paperForm: File | null = null): Promise<Driver> => {
-    if (isMockMode()) return runMock(() => gestionStore.createDriver(payload, paperForm));
+    if (isMockMode()) return runMockWrite(() => gestionStore.createDriver(payload, paperForm));
     const { data } = await http.post<ApiResponse<Driver>>('/drivers', identityForm(payload, paperForm));
     return data.data;
   },
 
   update: async (id: string, payload: DriverIdentityPayload, paperForm: File | null = null): Promise<Driver> => {
-    if (isMockMode()) return runMock(() => gestionStore.updateDriver(id, payload, paperForm));
+    if (isMockMode()) return runMockWrite(() => gestionStore.updateDriver(id, payload, paperForm));
     const { data } = await http.post<ApiResponse<Driver>>(`/drivers/${id}?_method=PUT`, identityForm(payload, paperForm));
     return data.data;
   },
@@ -76,7 +76,7 @@ export const driversService = {
   // Photo déjà recadrée au carré (JPEG).
   uploadPhoto: async (id: string, photo: Blob): Promise<Driver> => {
     // Mode fictif : l'image reste dans le navigateur (URL locale).
-    if (isMockMode()) return runMock(() => gestionStore.setPhoto(id, URL.createObjectURL(photo)));
+    if (isMockMode()) return runMockWrite(() => gestionStore.setPhoto(id, URL.createObjectURL(photo)));
     const form = new FormData();
     form.append('photo', photo, 'photo.jpg');
     const { data } = await http.post<ApiResponse<Driver>>(`/drivers/${id}/photo`, form);
@@ -84,7 +84,7 @@ export const driversService = {
   },
 
   assign: async (id: string, payload: AssignmentPayload): Promise<Driver> => {
-    if (isMockMode()) return runMock(() => gestionStore.assign(id, payload));
+    if (isMockMode()) return runMockWrite(() => gestionStore.assign(id, payload));
     const { data } = await http.post<ApiResponse<Driver>>(`/drivers/${id}/assignment`, payload);
     return data.data;
   },
@@ -97,19 +97,19 @@ export const driversService = {
 
   // 422 { errors: { activation: [...] } } si un élément manque.
   validate: async (id: string): Promise<Driver> => {
-    if (isMockMode()) return runMock(() => gestionStore.validate(id));
+    if (isMockMode()) return runMockWrite(() => gestionStore.validate(id));
     const { data } = await http.post<ApiResponse<Driver>>(`/drivers/${id}/validate`);
     return data.data;
   },
 
   changeStatus: async (id: string, payload: StatusPayload): Promise<Driver> => {
-    if (isMockMode()) return runMock(() => gestionStore.setStatus(id, payload.status, payload.reason));
+    if (isMockMode()) return runMockWrite(() => gestionStore.setStatus(id, payload.status, payload.reason));
     const { data } = await http.patch<ApiResponse<Driver>>(`/drivers/${id}/status`, payload);
     return data.data;
   },
 
   archive: async (id: string, reason: string): Promise<Driver> => {
-    if (isMockMode()) return runMock(() => gestionStore.archive(id, reason));
+    if (isMockMode()) return runMockWrite(() => gestionStore.archive(id, reason));
     const { data } = await http.post<ApiResponse<Driver>>(`/drivers/${id}/archive`, { reason });
     return data.data;
   },
