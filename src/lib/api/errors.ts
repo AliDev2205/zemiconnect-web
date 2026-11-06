@@ -75,6 +75,12 @@ export function toApiError(error: unknown): ApiError {
   return { status: null, message: 'Une erreur inattendue est survenue.' };
 }
 
+// Erreur de formulaire : les 422 vont sous les champs (applyApiErrorsToForm),
+// le reste dans un bandeau. Renvoie le message du bandeau, ou null.
+export function formErrorBanner<T extends FieldValues>(error: unknown, setError: UseFormSetError<T>): string | null {
+  return applyApiErrorsToForm(error, setError) ? null : toApiError(error).message;
+}
+
 // Reporte les erreurs 422 de Laravel sur les champs React Hook Form.
 // Les clés Laravel en notation pointée (documents.0.number) correspondent aux
 // chemins RHF. Renvoie true si au moins un champ a été marqué.

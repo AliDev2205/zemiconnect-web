@@ -1,14 +1,14 @@
 import { http } from '@/lib/api/http';
-import { isMockMode, mockResponse } from '@/lib/api/mock';
-import { mockDashboard } from '@/mocks/logs';
+import { isMockMode, runMock } from '@/lib/api/mock';
+import { EMPTY_DASHBOARD, gestionStore, isEmptyRegistryDemo } from '@/mocks/gestion';
 import type { ApiResponse } from '@/types/api';
 import type { DashboardStats } from '@/types/dashboard';
 
+// GET /dashboard : compteurs et listes « À traiter » de l'espace gestion.
 export const dashboardService = {
   stats: async (): Promise<DashboardStats> => {
-    const { data } = isMockMode()
-      ? await mockResponse(mockDashboard)
-      : await http.get<ApiResponse<DashboardStats>>('/dashboard');
+    if (isMockMode()) return runMock(() => (isEmptyRegistryDemo() ? EMPTY_DASHBOARD : gestionStore.dashboard()));
+    const { data } = await http.get<ApiResponse<DashboardStats>>('/dashboard');
     return data.data;
   },
 };

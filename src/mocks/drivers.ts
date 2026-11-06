@@ -1,43 +1,50 @@
 import type { AgentDriverView } from '@/types/agentDriver';
-import type { Document } from '@/types/document';
+import type { Document, DocumentType } from '@/types/document';
 import type { Driver, PublicDriverProfile } from '@/types/driver';
-import type { Motorcycle } from '@/types/motorcycle';
+import type { Assignment, Motorcycle } from '@/types/motorcycle';
 import type { QrCode } from '@/types/qr';
 import { normalizeZcNumber } from '@/lib/utils/format';
+import { atDaysAgo, computeCompliance, computeValidity, inDays } from './compliance';
 import { MOCK_DOMAIN } from './users';
 
-// Données fictives. Les dates d'expiration à null sont volontaires : un
-// document peut ne pas expirer, on n'en invente jamais. Les validités et la
-// conformité sont posées à la main, comme si l'API les avait calculées
-// (« expire bientôt » = dans les 30 jours, au 5 novembre 2026).
+/*
+ * Données fictives, en mémoire. Les dates sont RELATIVES au jour courant
+ * (inDays) pour que les états « expire bientôt » ou « expiré » restent vrais.
+ * Les validités et la conformité ne sont pas posées à la main : elles sont
+ * calculées par mocks/compliance.ts, comme l'API le ferait. Un document
+ * absent est « manquant » ; une date d'expiration nulle n'est jamais inventée.
+ * Les mutations (mocks/gestion.ts) modifient ces tableaux jusqu'au
+ * rechargement de la page.
+ */
 
-const NUMBER_PREFIX: Record<Document['type'], string> = { piece_identite: 'CIP', permis: 'PC', droit_taxi: 'DT-PKU', assurance: 'POL' };
+const NUMBER_PREFIX: Record<DocumentType, string> = { piece_identite: 'CIP', permis: 'PC', droit_taxi: 'DT-PKU', assurance: 'POL' };
 
 // Numéro fictif stable, dérivé de l'identifiant (ex. PC-2024-418302).
-function fakeNumber(type: Document['type'], id: string): string {
+function fakeNumber(type: DocumentType, id: string): string {
   const digits = [...id].reduce((sum, char, index) => (sum * 31 + char.charCodeAt(0) * (index + 1)) % 1000000, 7);
   return `${NUMBER_PREFIX[type]}-2024-${String(digits).padStart(6, '0')}`;
 }
 
-function doc(
+export function makeDocument(
   id: string,
-  type: Document['type'],
-  ownerType: Document['owner_type'],
-  ownerId: string,
+  type: DocumentType,
+  owner: { type: Document['owner_type']; id: string },
   expiresAt: string | null,
-  validity: Document['validity'],
+  extra: Partial<Document> = {},
 ): Document {
   return {
     id,
     type,
-    owner_type: ownerType,
-    owner_id: ownerId,
-    number: validity === 'manquant' ? null : fakeNumber(type, id),
-    issued_at: validity === 'manquant' ? null : '2024-03-15',
+    owner_type: owner.type,
+    owner_id: owner.id,
+    number: fakeNumber(type, id),
+    issued_at: inDays(-600),
     expires_at: expiresAt,
-    validity,
-    file_url: null,
-    created_at: '2026-03-01T09:00:00Z',
+    validity: computeValidity(expiresAt),
+    has_file: true,
+    superseded_at: null,
+    created_at: atDaysAgo(240),
+    ...extra,
   };
 }
 
@@ -49,8 +56,7 @@ function moto(
   color: string,
   year: number | null,
   chassis: string | null,
-  driver: [string, string] | null,
-  insurance: [string | null, Document['validity']],
+  insuranceExpiry: string | null | 'aucune',
 ): Motorcycle {
   return {
     id,
@@ -60,43 +66,62 @@ function moto(
     color,
     year,
     chassis_number: chassis,
-    driver_id: driver?.[0] ?? null,
-    driver_name: driver?.[1] ?? null,
-    documents: [doc(`doc-${id}-a`, 'assurance', 'motorcycle', id, insurance[0], insurance[1])],
-    created_at: '2026-03-01T09:00:00Z',
+    driver_id: null,
+    driver_name: null,
+    documents: insuranceExpiry === 'aucune' ? [] : [makeDocument(`doc-${id}-a`, 'assurance', { type: 'motorcycle', id }, insuranceExpiry)],
+    archived_at: null,
+    created_at: atDaysAgo(300),
   };
 }
 
 export const mockMotorcycles: Motorcycle[] = [
-  moto('mot-1', 'BB 4521 RB', 'Bajaj', 'Boxer BM 150', 'Rouge', 2021, 'MD2A21AY5MW894102', ['drv-1', 'Moussa ALASSANE'], ['2027-01-15', 'valide']),
-  moto('mot-2', 'BB 7310 RB', 'Haojue', 'HJ 125', 'Noir', 2019, 'LC6PCJK69K0012345', ['drv-2', 'Ibrahim SALIFOU'], ['2026-11-12', 'expire_bientot']),
-  moto('mot-3', 'BB 1188 RB', 'TVS', 'Star HLX', 'Bleu', 2018, null, ['drv-3', 'Rachidi BIO'], ['2026-08-31', 'expire']),
-  moto('mot-4', 'BB 9042 RB', 'Bajaj', 'Boxer BM 100', 'Rouge', null, null, null, [null, 'manquant']),
-  moto('mot-5', 'BB 3307 RB', 'Haojue', 'HJ 110', 'Bleu', 2022, 'LC6PCJB12N0098761', ['drv-6', 'Kassim ORÉ'], ['2027-06-30', 'valide']),
-  moto('mot-6', 'BB 5590 RB', 'Bajaj', 'Boxer BM 125', 'Vert', 2020, 'MD2A18AZ3LW551230', ['drv-8', 'Yacoubou BANI'], [null, 'valide']),
+  moto('mot-1', 'BB 4521 RB', 'Bajaj', 'Boxer BM 150', 'Rouge', 2021, 'MD2A21AY5MW894102', inDays(70)),
+  moto('mot-2', 'BB 7310 RB', 'Haojue', 'HJ 125', 'Noir', 2019, 'LC6PCJK69K0012345', inDays(7)),
+  moto('mot-3', 'BB 1188 RB', 'TVS', 'Star HLX', 'Bleu', 2018, null, inDays(-66)),
+  // Sans conducteur : choix possibles à l'affectation.
+  moto('mot-4', 'BB 9042 RB', 'Bajaj', 'Boxer BM 100', 'Rouge', null, null, 'aucune'),
+  moto('mot-5', 'BB 3307 RB', 'Haojue', 'HJ 110', 'Bleu', 2022, 'LC6PCJB12N0098761', inDays(236)),
+  moto('mot-6', 'BB 5590 RB', 'Bajaj', 'Boxer BM 125', 'Vert', 2020, 'MD2A18AZ3LW551230', null),
+  moto('mot-7', 'BB 6618 RB', 'TVS', 'HLX 125', 'Noir', 2023, 'TVS2023-1187', inDays(150)),
+  moto('mot-8', 'BB 7710 RB', 'TVS', 'HLX 125', 'Rouge', 2023, 'TVS2023-8841', inDays(12)),
+  // Démonstration : affichée libre, mais affectée entre-temps par un autre gestionnaire (voir MOCK_RACE_MOTORCYCLE).
+  moto('mot-9', 'BB 1234 RB', 'Haojue', 'HJ 125', 'Bleu', 2021, null, inDays(200)),
 ];
 
-const motorcycle = (id: string) => mockMotorcycles.find((item) => item.id === id) ?? null;
+type Seed = Pick<Driver, 'id' | 'first_name' | 'last_name' | 'status'> & Partial<Driver> & { moto?: string; startedDaysAgo?: number };
 
-type DriverSeed = Omit<Driver, 'created_at' | 'updated_at' | 'managing_structure' | 'address' | 'birth_date' | 'driver_identifier'> &
-  Partial<Pick<Driver, 'managing_structure' | 'address' | 'birth_date' | 'driver_identifier'>>;
-
-function driver(seed: DriverSeed): Driver {
+function driver(seed: Seed): Driver {
+  const { moto: motoId, startedDaysAgo = 200, ...rest } = seed;
   return {
-    managing_structure: null,
+    zc_number: null,
+    phone: null,
     address: null,
     birth_date: null,
     driver_identifier: null,
-    created_at: '2026-03-01T09:00:00Z',
-    updated_at: '2026-10-12T09:00:00Z',
-    ...seed,
+    photo_url: null,
+    has_paper_form: false,
+    compliance: 'non_conforme',
+    motorcycle: null,
+    assignment_started_at: motoId ? atDaysAgo(startedDaysAgo) : null,
+    managing_structure: null,
+    documents: [],
+    validated_at: rest.status === 'en_attente' ? null : atDaysAgo(startedDaysAgo),
+    archived_at: null,
+    created_at: atDaysAgo(startedDaysAgo + 2),
+    updated_at: atDaysAgo(20),
+    ...rest,
+    // Rattachement à la moto, résolu plus bas (linkMotorcycles).
+    ...(motoId ? { motorcycle: { id: motoId } as Motorcycle } : {}),
   };
 }
+
+const d = (driverId: string, type: DocumentType, expiresAt: string | null, extra?: Partial<Document>) =>
+  makeDocument(`doc-${driverId}-${type}`, type, { type: 'driver', id: driverId }, expiresAt, extra);
 
 const STRUCTURE = 'Coopérative des zémidjans de Parakou-Centre (fictive)';
 
 export const mockDrivers: Driver[] = [
-  // Conforme ; permis sans date d'expiration, ce qui n'est pas bloquant.
+  // Actif, conforme ; permis sans date d'expiration (non bloquant).
   driver({
     id: 'drv-1',
     zc_number: 'ZC-482917',
@@ -106,19 +131,15 @@ export const mockDrivers: Driver[] = [
     address: 'Quartier Titirou, Parakou',
     birth_date: '1984-05-14',
     driver_identifier: 'CIP-229-48190',
-    // Photo fictive locale (public/mocks/), pour illustrer next/image.
     photo_url: '/mocks/moussa-alassane.jpg',
+    has_paper_form: true,
     status: 'actif',
-    compliance: 'conforme',
-    motorcycle: motorcycle('mot-1'),
+    moto: 'mot-1',
+    startedDaysAgo: 240,
     managing_structure: STRUCTURE,
-    documents: [
-      doc('doc-d1-i', 'piece_identite', 'driver', 'drv-1', '2031-05-20', 'valide'),
-      doc('doc-d1-p', 'permis', 'driver', 'drv-1', null, 'valide'),
-      doc('doc-d1-t', 'droit_taxi', 'driver', 'drv-1', '2027-03-31', 'valide'),
-    ],
+    documents: [d('drv-1', 'piece_identite', inDays(1660)), d('drv-1', 'permis', null), d('drv-1', 'droit_taxi', inDays(146))],
   }),
-  // Expire bientôt : assurance de la moto au 12/11/2026.
+  // Actif, expire bientôt : assurance de la moto dans 7 jours.
   driver({
     id: 'drv-2',
     zc_number: 'ZC-305611',
@@ -127,63 +148,46 @@ export const mockDrivers: Driver[] = [
     phone: '+229 01 95 22 11 08',
     address: 'Quartier Banikanni, Parakou',
     birth_date: '1990-02-03',
-    photo_url: null,
     status: 'actif',
-    compliance: 'expire_bientot',
-    motorcycle: motorcycle('mot-2'),
+    moto: 'mot-2',
+    startedDaysAgo: 220,
     managing_structure: STRUCTURE,
-    documents: [
-      doc('doc-d2-i', 'piece_identite', 'driver', 'drv-2', '2029-01-10', 'valide'),
-      doc('doc-d2-p', 'permis', 'driver', 'drv-2', '2030-04-01', 'valide'),
-      doc('doc-d2-t', 'droit_taxi', 'driver', 'drv-2', '2027-02-28', 'valide'),
-    ],
+    documents: [d('drv-2', 'piece_identite', inDays(800)), d('drv-2', 'permis', inDays(1240)), d('drv-2', 'droit_taxi', inDays(115))],
   }),
-  // Suspendu et non conforme.
+  // Suspendu et non conforme : deux sujets distincts.
   driver({
     id: 'drv-3',
     zc_number: 'ZC-771204',
     first_name: 'Rachidi',
     last_name: 'BIO',
-    phone: null,
-    photo_url: null,
     status: 'suspendu',
-    compliance: 'non_conforme',
-    motorcycle: motorcycle('mot-3'),
-    documents: [
-      doc('doc-d3-i', 'piece_identite', 'driver', 'drv-3', '2028-07-02', 'valide'),
-      doc('doc-d3-p', 'permis', 'driver', 'drv-3', null, 'manquant'),
-      doc('doc-d3-t', 'droit_taxi', 'driver', 'drv-3', '2026-06-30', 'expire'),
-    ],
+    moto: 'mot-3',
+    startedDaysAgo: 210,
+    documents: [d('drv-3', 'piece_identite', inDays(600)), d('drv-3', 'droit_taxi', inDays(-128))],
   }),
+  // En attente, INCOMPLET : ni photo, ni permis, ni moto.
   driver({
     id: 'drv-4',
-    zc_number: 'ZC-120958',
     first_name: 'Saka',
     last_name: 'GOUNOU',
     phone: '+229 01 94 40 50 60',
-    photo_url: null,
+    address: 'Quartier Guema, Parakou',
+    birth_date: '1997-07-30',
     status: 'en_attente',
-    compliance: 'non_conforme',
-    motorcycle: null,
-    documents: [
-      doc('doc-d4-i', 'piece_identite', 'driver', 'drv-4', '2030-02-14', 'valide'),
-      doc('doc-d4-p', 'permis', 'driver', 'drv-4', null, 'manquant'),
-      doc('doc-d4-t', 'droit_taxi', 'driver', 'drv-4', null, 'manquant'),
-    ],
+    startedDaysAgo: 8,
+    documents: [d('drv-4', 'piece_identite', inDays(1200))],
   }),
   driver({
     id: 'drv-5',
     zc_number: 'ZC-664430',
     first_name: 'Issa',
     last_name: 'YAROU',
-    phone: null,
-    photo_url: null,
     status: 'archive',
-    compliance: 'non_conforme',
-    motorcycle: null,
-    documents: [],
+    startedDaysAgo: 230,
+    archived_at: atDaysAgo(120),
+    documents: [d('drv-5', 'piece_identite', inDays(300)), d('drv-5', 'permis', inDays(900))],
   }),
-  // Actif, non conforme : droit de taxi manquant (absent de la liste).
+  // Actif, non conforme : droit de taxi manquant.
   driver({
     id: 'drv-6',
     zc_number: 'ZC-559013',
@@ -192,14 +196,10 @@ export const mockDrivers: Driver[] = [
     phone: '+229 01 97 31 20 44',
     address: 'Quartier Zongo, Parakou',
     birth_date: '1995-09-21',
-    photo_url: null,
     status: 'actif',
-    compliance: 'non_conforme',
-    motorcycle: motorcycle('mot-5'),
-    documents: [
-      doc('doc-d6-i', 'piece_identite', 'driver', 'drv-6', '2032-01-15', 'valide'),
-      doc('doc-d6-p', 'permis', 'driver', 'drv-6', '2029-09-01', 'valide'),
-    ],
+    moto: 'mot-5',
+    startedDaysAgo: 180,
+    documents: [d('drv-6', 'piece_identite', inDays(1900)), d('drv-6', 'permis', inDays(1030))],
   }),
   // Actif, sans moto : l'assurance de la moto ne peut pas être fournie.
   driver({
@@ -208,19 +208,12 @@ export const mockDrivers: Driver[] = [
     first_name: 'Gildas',
     last_name: 'KOUAGOU',
     phone: '+229 01 93 66 18 02',
-    address: null,
     birth_date: '1988-12-02',
-    photo_url: null,
     status: 'actif',
-    compliance: 'non_conforme',
-    motorcycle: null,
-    documents: [
-      doc('doc-d7-i', 'piece_identite', 'driver', 'drv-7', '2030-06-30', 'valide'),
-      doc('doc-d7-p', 'permis', 'driver', 'drv-7', '2031-02-28', 'valide'),
-      doc('doc-d7-t', 'droit_taxi', 'driver', 'drv-7', '2027-01-31', 'valide'),
-    ],
+    startedDaysAgo: 160,
+    documents: [d('drv-7', 'piece_identite', inDays(1330)), d('drv-7', 'permis', inDays(1575)), d('drv-7', 'droit_taxi', inDays(85))],
   }),
-  // Conforme, documents SANS date d'expiration : ils restent valides.
+  // Actif, conforme, documents SANS date d'expiration.
   driver({
     id: 'drv-8',
     zc_number: 'ZC-217745',
@@ -230,48 +223,109 @@ export const mockDrivers: Driver[] = [
     address: 'Quartier Albarika, Parakou',
     birth_date: '1979-03-08',
     driver_identifier: 'REG-PKU-0217',
-    photo_url: null,
     status: 'actif',
-    compliance: 'conforme',
-    motorcycle: motorcycle('mot-6'),
-    documents: [
-      doc('doc-d8-i', 'piece_identite', 'driver', 'drv-8', null, 'valide'),
-      doc('doc-d8-p', 'permis', 'driver', 'drv-8', null, 'valide'),
-      doc('doc-d8-t', 'droit_taxi', 'driver', 'drv-8', null, 'valide'),
-    ],
+    moto: 'mot-6',
+    startedDaysAgo: 150,
+    documents: [d('drv-8', 'piece_identite', null), d('drv-8', 'permis', null), d('drv-8', 'droit_taxi', null)],
+  }),
+  // En attente, COMPLET : prêt à être validé (démonstration de la validation).
+  driver({
+    id: 'drv-9',
+    first_name: 'Fousséni',
+    last_name: 'TANKO',
+    phone: '+229 01 97 02 14 78',
+    address: 'Quartier Dépôt, Parakou',
+    birth_date: '1992-11-19',
+    photo_url: '/mocks/photo-fictive.png',
+    status: 'en_attente',
+    moto: 'mot-7',
+    startedDaysAgo: 3,
+    documents: [d('drv-9', 'piece_identite', inDays(2100)), d('drv-9', 'permis', inDays(1400)), d('drv-9', 'droit_taxi', inDays(320))],
   }),
 ];
 
-function qr(id: string, driverId: string, token: string, issuedAt: string, revokedAt: string | null = null): QrCode {
+export const mockAssignments: Assignment[] = [];
+
+// Documents remplacés (renouvellements) : l'historique, hors documents actuels.
+export const mockDocumentHistory: Document[] = [
+  d('drv-1', 'droit_taxi', inDays(-219), { id: 'doc-drv-1-droit_taxi-old', number: 'DT-PKU-2023-000412', issued_at: inDays(-584), superseded_at: atDaysAgo(220) }),
+];
+
+// Conformité recalculée (mode fictif) à partir des documents actuels du
+// conducteur et de l'assurance de sa moto actuelle.
+export function refreshCompliance(item: Driver): void {
+  item.documents.forEach((document) => (document.validity = computeValidity(document.expires_at)));
+  item.motorcycle?.documents.forEach((document) => (document.validity = computeValidity(document.expires_at)));
+  item.compliance = computeCompliance([...item.documents, ...(item.motorcycle?.documents ?? [])]);
+}
+
+// Lie conducteurs et motos, crée les affectations en cours, puis calcule la conformité.
+function linkMotorcycles() {
+  for (const item of mockDrivers) {
+    const motoId = item.motorcycle?.id;
+    const found = motoId ? mockMotorcycles.find((candidate) => candidate.id === motoId) : undefined;
+    item.motorcycle = found ?? null;
+    if (found) {
+      found.driver_id = item.id;
+      found.driver_name = `${item.first_name} ${item.last_name}`;
+      mockAssignments.push({
+        id: `asg-${item.id}`,
+        driver_id: item.id,
+        driver_name: found.driver_name,
+        motorcycle_id: found.id,
+        plate_number: found.plate_number,
+        started_at: item.assignment_started_at ?? item.created_at,
+        ended_at: null,
+        reason: 'Première affectation',
+      });
+    }
+  }
+  // Affectation passée de Moussa, clôturée (historique).
+  mockAssignments.push({
+    id: 'asg-drv-1-old',
+    driver_id: 'drv-1',
+    driver_name: 'Moussa ALASSANE',
+    motorcycle_id: 'mot-4',
+    plate_number: 'BB 9042 RB',
+    started_at: atDaysAgo(420),
+    ended_at: atDaysAgo(240),
+    reason: 'Première affectation',
+  });
+  mockDrivers.forEach(refreshCompliance);
+}
+
+function qr(id: string, driverId: string, token: string, issuedDaysAgo: number, revokedDaysAgo: number | null = null, reason: string | null = null): QrCode {
   return {
     id,
     driver_id: driverId,
     token,
     public_url: `https://${MOCK_DOMAIN}/v/${token}`,
-    status: revokedAt ? 'revoque' : 'actif',
-    issued_at: issuedAt,
-    revoked_at: revokedAt,
+    status: revokedDaysAgo === null ? 'actif' : 'revoque',
+    issued_at: atDaysAgo(issuedDaysAgo),
+    revoked_at: revokedDaysAgo === null ? null : atDaysAgo(revokedDaysAgo),
+    revoke_reason: reason,
   };
 }
 
 export const mockQrCodes: QrCode[] = [
-  qr('qr-1', 'drv-1', 'demo-moussa', '2026-03-02T09:00:00Z'),
-  qr('qr-2', 'drv-2', 'demo-ibrahim', '2026-03-05T09:00:00Z'),
-  qr('qr-3', 'drv-3', 'demo-rachidi', '2026-03-11T09:00:00Z'),
-  // QR encore actif d'un conducteur archivé : la page publique répond comme
-  // pour un QR inconnu (aucun indice, aucune donnée personnelle).
-  qr('qr-5', 'drv-5', 'demo-archive', '2026-03-21T09:00:00Z'),
-  qr('qr-6', 'drv-6', 'demo-kassim', '2026-04-02T09:00:00Z'),
-  qr('qr-7', 'drv-7', 'demo-sans-moto', '2026-04-10T09:00:00Z'),
-  qr('qr-8', 'drv-8', 'demo-sans-date', '2026-04-12T09:00:00Z'),
-  qr('qr-1-old', 'drv-1', 'demo-revoque', '2026-03-01T09:00:00Z', '2026-03-02T08:59:00Z'),
+  qr('qr-1', 'drv-1', 'demo-moussa', 239),
+  qr('qr-2', 'drv-2', 'demo-ibrahim', 220),
+  qr('qr-3', 'drv-3', 'demo-rachidi', 210),
+  // QR d'un conducteur archivé : révoqué à l'archivage.
+  qr('qr-5', 'drv-5', 'demo-archive', 230, 120, 'Dossier archivé'),
+  qr('qr-6', 'drv-6', 'demo-kassim', 180),
+  qr('qr-7', 'drv-7', 'demo-sans-moto', 160),
+  qr('qr-8', 'drv-8', 'demo-sans-date', 150),
+  qr('qr-1-old', 'drv-1', 'demo-revoque', 240, 239, 'Badge réimprimé après une erreur de photo.'),
 ];
+
+linkMotorcycles();
 
 // Projection publique, champ par champ (jamais de spread : aucun champ privé
 // ne doit passer). null pour un conducteur en attente ou archivé, que l'API
 // publique traite comme introuvable.
 export function toPublicProfile(item: Driver): PublicDriverProfile | null {
-  if (item.status !== 'actif' && item.status !== 'suspendu') return null;
+  if ((item.status !== 'actif' && item.status !== 'suspendu') || !item.zc_number) return null;
   return {
     zc_number: item.zc_number,
     first_name: item.first_name,
@@ -285,9 +339,9 @@ export function toPublicProfile(item: Driver): PublicDriverProfile | null {
   };
 }
 
-// Projection agent (AG3), champ par champ : documents en texte, sans URL de
-// fichier. L'assurance vient de la moto ACTUELLE. `consulted_at` simule
-// l'horodatage que l'API pose en enregistrant la consultation.
+// Projection agent (AG3), champ par champ : documents en texte, sans fichier.
+// L'assurance vient de la moto ACTUELLE. `consulted_at` simule l'horodatage
+// que l'API pose en enregistrant la consultation.
 export function toAgentView(item: Driver): AgentDriverView {
   const documents = [...item.documents, ...(item.motorcycle?.documents ?? [])].map((document) => ({
     type: document.type,
@@ -297,7 +351,7 @@ export function toAgentView(item: Driver): AgentDriverView {
     validity: document.validity,
   }));
   return {
-    zc_number: item.zc_number,
+    zc_number: item.zc_number ?? '—',
     first_name: item.first_name,
     last_name: item.last_name,
     photo_url: item.photo_url,

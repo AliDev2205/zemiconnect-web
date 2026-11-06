@@ -34,7 +34,7 @@ export const publicService = {
         return mockError(429, 'Too Many Attempts.', undefined, { 'retry-after': '120' });
       }
       if (normalized === MOCK_PUBLIC_TRIGGERS.network) return mockNetworkError();
-      const driver = mockDrivers.find((item) => normalizeZcNumber(item.zc_number) === normalized);
+      const driver = mockDrivers.find((item) => normalizeZcNumber(item.zc_number ?? '') === normalized);
       return mockPublicProfile(driver, 'Numéro introuvable.');
     }
     const { data } = await publicHttp.get<ApiResponse<PublicDriverProfile>>('/public/drivers', { params: { numero: normalized } });

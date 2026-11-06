@@ -9,4 +9,9 @@ export interface QrCode {
   status: QrStatus;
   issued_at: string;
   revoked_at: string | null;
+  // Motif saisi à la révocation (ou « Dossier archivé », « Régénération »).
+  revoke_reason: string | null;
 }
+
+// Fichiers du QR actif produits par l'API (et le badge PDF).
+export type QrFileFormat = 'png' | 'svg' | 'pdf';

@@ -43,7 +43,7 @@ export const agentDriversService = {
       if (needle === 'HORS-LIGNE') return mockNetworkError();
       const driver = mockDrivers.find(
         (item) =>
-          normalizeZcNumber(item.zc_number) === needle ||
+          normalizeZcNumber(item.zc_number ?? '') === needle ||
           (item.motorcycle && normalizeZcNumber(item.motorcycle.plate_number) === needle),
       );
       return mockControl(driver, 'Aucun conducteur ne correspond.');

@@ -2,6 +2,8 @@
 // dans le navigateur pour que le faux /auth/me le renvoie après un rechargement.
 // Sans intérêt hors mode fictif (la vraie session est le cookie Sanctum).
 
+import { mockUsers } from './users';
+
 const KEY = 'zc_mock_session';
 
 export interface MockSession {
@@ -17,6 +19,13 @@ export function readMockSession(): MockSession | null {
   } catch {
     return null;
   }
+}
+
+// Auteur des entrées du journal fictif : l'utilisateur connecté, à défaut la
+// gestionnaire de démonstration.
+export function mockActor(): { name: string; role: string } {
+  const user = mockUsers.find((candidate) => candidate.id === readMockSession()?.userId) ?? mockUsers.find((candidate) => candidate.role === 'gestionnaire');
+  return { name: user ? `${user.first_name} ${user.last_name}` : 'Gestionnaire', role: user?.role ?? 'gestionnaire' };
 }
 
 export function writeMockSession(session: MockSession | null): void {

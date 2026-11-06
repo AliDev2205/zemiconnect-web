@@ -15,9 +15,12 @@ function wait(ms: number): Promise<void> {
 
 // Réponse fictive de même forme qu'une réponse axios de l'API : les services
 // la déballent exactement comme la vraie (`const { data } = await …; return data.data`).
+// La donnée est COPIÉE, comme après un passage par le réseau : le magasin
+// fictif modifie ses objets sur place, et React Query ne verrait aucun
+// changement s'il recevait deux fois la même référence.
 export async function mockResponse<T>(payload: T, message = 'OK'): Promise<{ data: ApiResponse<T> }> {
   await wait(MOCK_DELAY_MS);
-  return { data: { status: 'success', message, data: payload } };
+  return { data: { status: 'success', message, data: structuredClone(payload) } };
 }
 
 // Erreur fictive de même forme qu'une erreur axios : toApiError la traite comme une vraie.
@@ -41,6 +44,29 @@ export async function mockError(
     data: { status: 'error', message, errors, ...extra },
   };
   throw new AxiosError(message, String(status), config, null, response);
+}
+
+// Refus métier levé par le magasin fictif (mocks/gestion.ts) ; runMock le
+// transforme en erreur axios, comme une vraie réponse 4xx de l'API.
+export class MockApiError extends Error {
+  constructor(
+    public status: number,
+    message: string,
+    public errors?: Record<string, string[]>,
+  ) {
+    super(message);
+  }
+}
+
+// Exécute une opération du magasin fictif et renvoie la même forme qu'un
+// appel réel : la donnée déballée, ou une erreur axios (422, 404, 409…).
+export async function runMock<T>(operation: () => T): Promise<T> {
+  try {
+    return (await mockResponse(operation())).data.data;
+  } catch (error) {
+    if (error instanceof MockApiError) return mockError(error.status, error.message, error.errors);
+    throw error;
+  }
 }
 
 // Erreur réseau fictive (aucune réponse), comme une coupure de connexion.
