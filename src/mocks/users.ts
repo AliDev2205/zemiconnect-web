@@ -97,7 +97,7 @@ export const MOCK_ROLE_PERMISSIONS: Record<Role, Permission[]> = {
     'agents.manage',
     'logs.view',
   ],
-  agent: ['controls.perform'],
+  agent: ['agent.drivers.view'],
 };
 
 export function mockMeForRole(role: Role): Me {

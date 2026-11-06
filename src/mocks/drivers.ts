@@ -1,4 +1,4 @@
-import type { DriverControl } from '@/types/control';
+import type { AgentDriverView } from '@/types/agentDriver';
 import type { Document } from '@/types/document';
 import type { Driver, PublicDriverProfile } from '@/types/driver';
 import type { Motorcycle } from '@/types/motorcycle';
@@ -288,7 +288,7 @@ export function toPublicProfile(item: Driver): PublicDriverProfile | null {
 // Projection agent (AG3), champ par champ : documents en texte, sans URL de
 // fichier. L'assurance vient de la moto ACTUELLE. `consulted_at` simule
 // l'horodatage que l'API pose en enregistrant la consultation.
-export function toControlView(item: Driver): DriverControl {
+export function toAgentView(item: Driver): AgentDriverView {
   const documents = [...item.documents, ...(item.motorcycle?.documents ?? [])].map((document) => ({
     type: document.type,
     number: document.number,

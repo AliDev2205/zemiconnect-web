@@ -1,10 +1,10 @@
 import type { DocumentType, DocumentValidity } from './document';
 import type { ComplianceStatus, DriverStatus } from './driver';
 
-// Vue agent (AG3) : réponse de GET /controls/qr/{token} et /controls/search.
+// Vue agent (AG3) : réponse de GET /agent/drivers/qr/{token} et /agent/drivers/search?q=.
 // Documents en TEXTE seulement : ce type ne contient volontairement aucune URL
 // de fichier ni identifiant interne de document.
-export interface ControlDocument {
+export interface AgentDriverDocument {
   type: DocumentType;
   number: string | null;
   issued_at: string | null;
@@ -14,7 +14,7 @@ export interface ControlDocument {
   validity: DocumentValidity;
 }
 
-export interface ControlMotorcycle {
+export interface AgentDriverMotorcycle {
   plate_number: string;
   brand: string | null;
   model: string | null;
@@ -23,7 +23,7 @@ export interface ControlMotorcycle {
   chassis_number: string | null;
 }
 
-export interface DriverControl {
+export interface AgentDriverView {
   zc_number: string;
   first_name: string;
   last_name: string;
@@ -36,9 +36,9 @@ export interface DriverControl {
   status: DriverStatus;
   // Calculée par l'API sur le permis, le droit de taxi et l'assurance de la moto actuelle.
   compliance: ComplianceStatus;
-  motorcycle: ControlMotorcycle | null;
+  motorcycle: AgentDriverMotorcycle | null;
   // Documents fournis ; un type absent de la liste est affiché « Manquant ».
-  documents: ControlDocument[];
+  documents: AgentDriverDocument[];
   // Horodatage de la consultation, enregistrée par l'API elle-même.
   consulted_at: string;
 }

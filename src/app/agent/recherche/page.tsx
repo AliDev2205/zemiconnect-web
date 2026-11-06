@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
-import DriverControlScreen from '@/features/agent/DriverControlScreen';
+import AgentDriverScreen from '@/features/agent/AgentDriverScreen';
 import { normalizeZcNumber } from '@/lib/utils/format';
 
 export const metadata: Metadata = { title: 'Fiche de consultation', robots: { index: false, follow: false } };
@@ -15,5 +15,5 @@ export default async function ControlSearchPage({ searchParams }: { searchParams
   const params = await searchParams;
   const query = normalizeZcNumber(first(params.q) ?? first(params.numero) ?? '');
   if (!query) redirect('/agent');
-  return <DriverControlScreen key={query} source={{ kind: 'search', query }} />;
+  return <AgentDriverScreen key={query} source={{ kind: 'search', query }} />;
 }

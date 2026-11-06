@@ -30,7 +30,7 @@ export const dashboardKeys = {
 export const settingsKeys = {
   all: ['settings'] as const,
 };
-export const controlsKeys = {
-  byToken: (token: string) => ['controls', 'token', token] as const,
-  search: (query: string) => ['controls', 'search', query] as const,
+export const agentDriversKeys = {
+  byToken: (token: string) => ['agent-drivers', 'token', token] as const,
+  search: (query: string) => ['agent-drivers', 'search', query] as const,
 };

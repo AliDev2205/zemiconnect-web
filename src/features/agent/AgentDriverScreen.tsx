@@ -9,11 +9,11 @@ import Skeleton from '@/components/ui/Skeleton';
 import StatusBadge from '@/components/ui/StatusBadge';
 import ValidityPill from '@/components/ui/ValidityPill';
 import { useMe } from '@/hooks/queries/useAuth';
-import { useControlByToken, useControlSearch } from '@/hooks/queries/useControls';
+import { useAgentDriverByToken, useAgentDriverSearch } from '@/hooks/queries/useAgentDrivers';
 import { getHomeRouteForRole } from '@/lib/constants';
 import { formatBeninDateTime, formatDate } from '@/lib/utils/format';
 import { DOCUMENT_TYPE_LABELS } from '@/lib/utils/labels';
-import type { ControlDocument, DriverControl } from '@/types/control';
+import type { AgentDriverDocument, AgentDriverView } from '@/types/agentDriver';
 import AgentState, { agentStateFromError } from './AgentState';
 import { buildVerdictSentence, DOCUMENT_ORDER, documentLine } from './verdict';
 
@@ -23,9 +23,9 @@ const MOTORCYCLE_DOC_LABEL = 'Assurance de la moto';
 
 // AG3 : fiche de consultation (« résultat du contrôle »). Une source : jeton
 // QR (/agent/conducteur/[token]) ou recherche exacte (/agent/recherche?q=).
-export default function DriverControlScreen({ source }: { source: Source }) {
-  const byToken = useControlByToken(source.kind === 'token' ? source.token : '');
-  const bySearch = useControlSearch(source.kind === 'search' ? source.query : '');
+export default function AgentDriverScreen({ source }: { source: Source }) {
+  const byToken = useAgentDriverByToken(source.kind === 'token' ? source.token : '');
+  const bySearch = useAgentDriverSearch(source.kind === 'search' ? source.query : '');
   const query = source.kind === 'token' ? byToken : bySearch;
   const me = useMe();
 
@@ -55,7 +55,7 @@ export default function DriverControlScreen({ source }: { source: Source }) {
   );
 }
 
-function ControlContent({ control }: { control: DriverControl }) {
+function ControlContent({ control }: { control: AgentDriverView }) {
   const fullName = `${control.first_name} ${control.last_name}`;
   const moto = control.motorcycle;
 
@@ -163,7 +163,7 @@ function ControlContent({ control }: { control: DriverControl }) {
   );
 }
 
-function DocumentRow({ document }: { document: ControlDocument }) {
+function DocumentRow({ document }: { document: AgentDriverDocument }) {
   const label = document.type === 'assurance' ? MOTORCYCLE_DOC_LABEL : DOCUMENT_TYPE_LABELS[document.type];
   const missing = document.validity === 'manquant';
   return (

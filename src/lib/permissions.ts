@@ -15,7 +15,7 @@ export const PERMISSIONS = [
   'managers.manage',
   'logs.view',
   'settings.manage',
-  'controls.perform',
+  'agent.drivers.view',
   'dashboard.view',
 ] as const;
 

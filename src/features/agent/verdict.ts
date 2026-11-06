@@ -1,6 +1,6 @@
 import { COMPLIANCE_LABELS, DRIVER_STATUS_LABELS } from '@/lib/utils/labels';
 import { formatDate } from '@/lib/utils/format';
-import type { ControlDocument, DriverControl } from '@/types/control';
+import type { AgentDriverDocument, AgentDriverView } from '@/types/agentDriver';
 import type { DocumentType, DocumentValidity } from '@/types/document';
 
 // Documents pris en compte pour la conformité. La pièce d'identité n'en fait
@@ -18,7 +18,7 @@ const IN_SENTENCE: Record<(typeof COMPLIANCE_DOCUMENTS)[number], { label: string
 };
 
 // Ligne d'un type de document : celui renvoyé par l'API, sinon « Manquant ».
-export function documentLine(control: DriverControl, type: DocumentType): ControlDocument {
+export function documentLine(control: AgentDriverView, type: DocumentType): AgentDriverDocument {
   return (
     control.documents.find((document) => document.type === type) ?? {
       type,
@@ -30,7 +30,7 @@ export function documentLine(control: DriverControl, type: DocumentType): Contro
   );
 }
 
-function describe(document: ControlDocument, hasMotorcycle: boolean): string | null {
+function describe(document: AgentDriverDocument, hasMotorcycle: boolean): string | null {
   const { label, feminine } = IN_SENTENCE[document.type as keyof typeof IN_SENTENCE];
   const e = feminine ? 'e' : '';
   const validity: DocumentValidity = document.validity;
@@ -56,7 +56,7 @@ function describe(document: ControlDocument, hasMotorcycle: boolean): string | n
  * La conformité elle-même (et le seuil des 30 jours) vient de l'API : le front
  * ne la recalcule pas, il nomme seulement les documents en cause.
  */
-export function buildVerdictSentence(control: DriverControl): string {
+export function buildVerdictSentence(control: AgentDriverView): string {
   const head = `${DRIVER_STATUS_LABELS[control.status]} · ${COMPLIANCE_LABELS[control.compliance]}`;
   const hasMotorcycle = control.motorcycle !== null;
 

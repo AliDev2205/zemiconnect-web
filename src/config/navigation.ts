@@ -46,7 +46,7 @@ export const NAVIGATION: Record<Space, NavItem[]> = {
   ],
   agent: [
     { label: 'Accueil', icon: Home, route: '/agent', exact: true },
-    { label: 'Rechercher', icon: Search, route: '/agent/recherche', permission: 'controls.perform' },
+    { label: 'Rechercher', icon: Search, route: '/agent/recherche', permission: 'agent.drivers.view' },
     { label: 'Mon profil', icon: UserCircle, route: '/agent/profil' },
   ],
 };

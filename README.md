@@ -136,7 +136,7 @@ Recherche (`/agent/recherche?q=`) : numéro ou immatriculation, par exemple `ZC-
 - **Toasts** : store minimal par module (comme HealthBook), aucun store global.
 - **Pas de devtools React Query** ni d'autre dépendance non utilisée. Dépendances ajoutées : axios, @tanstack/react-query, react-hook-form, zod, @hookform/resolvers, lucide-react, clsx.
 - **Police** : Inter via `next/font/google` (demandé). Le DESIGN.md des maquettes cite Manrope/Public Sans.
-- **Endpoints** supposés (`/auth/me`, `/drivers`, `/public/drivers/qr/{token}`, `/controls/search`…) : à aligner sur l'API quand elle existera, dans les seuls fichiers de `lib/api/services/`.
+- **Endpoints** supposés (`/auth/me`, `/drivers`, `/public/drivers/qr/{token}`, `/agent/drivers/search`…) : à aligner sur l'API quand elle existera, dans les seuls fichiers de `lib/api/services/`.
 - Le numéro ZemiConnect n'a aucune validation de format. Les dates d'expiration absentes restent `null`.
 
 ## Lot 1 : espace public et authentification
