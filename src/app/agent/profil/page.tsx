@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
-import PagePlaceholder from '@/components/layout/PagePlaceholder';
+import AgentProfileScreen from '@/features/agent/AgentProfileScreen';
 
 export const metadata: Metadata = { title: 'Mon profil' };
 
-export default function Page() {
-  return <PagePlaceholder title="Mon profil" code="AG5" />;
+// AG5.
+export default function AgentProfilePage() {
+  return <AgentProfileScreen />;
 }

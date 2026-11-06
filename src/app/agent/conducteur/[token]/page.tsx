@@ -1,10 +1,10 @@
 import type { Metadata } from 'next';
-import PagePlaceholder from '@/components/layout/PagePlaceholder';
+import DriverControlScreen from '@/features/agent/DriverControlScreen';
 
-export const metadata: Metadata = { title: 'Fiche de contrôle' };
+export const metadata: Metadata = { title: 'Fiche de consultation', robots: { index: false, follow: false } };
 
-// AG3 par QR : la fiche complète passera par useDriverControlByToken (session agent).
-export default async function Page({ params }: { params: Promise<{ token: string }> }) {
-  await params;
-  return <PagePlaceholder title="Fiche de contrôle" code="AG3" back={{ href: '/agent', label: 'Accueil' }} />;
+// AG3 par QR. Rendu côté client avec la session agent (cookie Sanctum).
+export default async function ControlByTokenPage({ params }: { params: Promise<{ token: string }> }) {
+  const { token } = await params;
+  return <DriverControlScreen source={{ kind: 'token', token }} />;
 }
