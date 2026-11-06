@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
-import PagePlaceholder from '@/components/layout/PagePlaceholder';
+import DashboardScreen from '@/features/dashboard/DashboardScreen';
 
 export const metadata: Metadata = { title: 'Tableau de bord' };
 
+// GE1.
 export default function Page() {
-  return <PagePlaceholder title="Tableau de bord" code="GE1" />;
+  return <DashboardScreen basePath="/gestion" />;
 }
