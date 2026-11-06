@@ -65,7 +65,8 @@ export const PasswordInput = forwardRef<HTMLInputElement, Omit<TextInputProps, '
           <button
             type="button"
             onClick={() => setVisible((value) => !value)}
-            className="ml-2 shrink-0 text-muted hover:text-foreground"
+            // Cible tactile sur toute la hauteur du champ (44 à 48 px), pas seulement l'icône.
+            className="-my-px -mr-3 flex aspect-square h-[calc(100%+2px)] shrink-0 items-center justify-center text-muted hover:text-foreground"
             aria-label={visible ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
           >
             {visible ? <EyeOff size={18} /> : <Eye size={18} />}

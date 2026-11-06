@@ -1,7 +1,7 @@
 import { Archive, Ban, CheckCircle2, Clock } from 'lucide-react';
 import { DRIVER_STATUS_LABELS } from '@/lib/utils/labels';
 import type { DriverStatus } from '@/types/driver';
-import Badge, { BadgeTone } from './Badge';
+import Badge, { BADGE_ICON_SIZE, BadgeSize, BadgeTone } from './Badge';
 
 const config: Record<DriverStatus, { tone: BadgeTone; Icon: typeof CheckCircle2 }> = {
   actif: { tone: 'success', Icon: CheckCircle2 },
@@ -10,11 +10,17 @@ const config: Record<DriverStatus, { tone: BadgeTone; Icon: typeof CheckCircle2 
   archive: { tone: 'neutral-light', Icon: Archive },
 };
 
+interface Props {
+  status: DriverStatus;
+  size?: BadgeSize;
+  className?: string;
+}
+
 // Statut du conducteur : badge PLEIN. Toujours affiché à côté du ComplianceBadge.
-export default function StatusBadge({ status, className }: { status: DriverStatus; className?: string }) {
+export default function StatusBadge({ status, size = 'md', className }: Props) {
   const { tone, Icon } = config[status];
   return (
-    <Badge tone={tone} appearance="solid" icon={<Icon size={14} />} className={className}>
+    <Badge tone={tone} appearance="solid" size={size} icon={<Icon size={BADGE_ICON_SIZE[size]} />} className={className}>
       {DRIVER_STATUS_LABELS[status]}
     </Badge>
   );
