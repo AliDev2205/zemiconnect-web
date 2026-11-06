@@ -9,15 +9,16 @@ interface Props {
 }
 
 // Coque commune gestion / administration : barre latérale + barre supérieure.
-// Conçue pour un écran d'ordinateur (maquettes en 1440 px).
+// Conçue pour l'ordinateur (maquettes en 1440 px) ; sous 768 px, la barre
+// latérale s'ouvre depuis le bouton « Menu » de la barre supérieure.
 export default function AppLayout({ space, children }: Props) {
   return (
     <AuthGuard space={space}>
-      <div className="flex h-screen min-w-[1024px] overflow-hidden bg-background">
-        <AppSidebar space={space} />
+      <div className="flex h-screen overflow-hidden bg-background">
+        <AppSidebar space={space} className="hidden md:flex" />
         <div className="flex min-w-0 flex-1 flex-col">
-          <AppTopBar />
-          <main className="flex-1 overflow-y-auto px-8 py-6">
+          <AppTopBar space={space} />
+          <main className="flex-1 overflow-y-auto px-4 py-5 md:px-8 md:py-6">
             <div className="mx-auto w-full max-w-[1200px]">{children}</div>
           </main>
         </div>

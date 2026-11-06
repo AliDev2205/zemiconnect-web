@@ -59,6 +59,10 @@ interface DataTableProps<T> {
   // Filtres supplémentaires (Select, DateField…) placés dans l'en-tête.
   toolbar?: React.ReactNode;
   onRowClick?: (row: T) => void;
+  // Sous 768 px, chaque ligne devient une carte rendue par cette fonction.
+  renderCard?: (row: T) => React.ReactNode;
+  // État vide personnalisé (action « Effacer les filtres »…).
+  empty?: React.ReactNode;
 }
 
 const alignClass = (align: Column<unknown>['align']) =>
@@ -83,6 +87,8 @@ export default function DataTable<T>({
   isSearch,
   toolbar,
   onRowClick,
+  renderCard,
+  empty,
 }: DataTableProps<T>) {
   const cell = compact ? 'px-4 py-2.5' : 'px-5 py-3.5';
   const hasToolbar = isHead || isFilterTabs || isSearch || toolbar;
@@ -110,7 +116,32 @@ export default function DataTable<T>({
         </div>
       )}
 
-      <div className="overflow-x-auto">
+      {renderCard && (
+        <ul className="divide-y divide-border md:hidden">
+          {isLoading
+            ? Array.from({ length: 3 }).map((_, index) => (
+                <li key={index} className="flex flex-col gap-2 p-4">
+                  <Skeleton className="h-4 w-1/2" />
+                  <Skeleton className="h-3.5 w-3/4" />
+                </li>
+              ))
+            : data.length === 0
+              ? <li>{empty ?? <EmptyState title={emptyTitle} message={emptyMessage} />}</li>
+              : data.map((row, rowIdx) => (
+                  <li key={getRowKey ? getRowKey(row, rowIdx) : rowIdx}>
+                    {onRowClick ? (
+                      <button type="button" onClick={() => onRowClick(row)} className="block w-full p-4 text-left hover:bg-secondary">
+                        {renderCard(row)}
+                      </button>
+                    ) : (
+                      <div className="p-4">{renderCard(row)}</div>
+                    )}
+                  </li>
+                ))}
+        </ul>
+      )}
+
+      <div className={clsx('overflow-x-auto', renderCard && 'hidden md:block')}>
         <table className="w-full border-collapse text-left text-sm">
           <thead>
             <tr className="border-b border-border bg-background text-xs font-semibold tracking-wide whitespace-nowrap text-muted uppercase">
@@ -138,7 +169,7 @@ export default function DataTable<T>({
             ) : data.length === 0 ? (
               <tr>
                 <td colSpan={columns.length}>
-                  <EmptyState title={emptyTitle} message={emptyMessage} />
+                  {empty ?? <EmptyState title={emptyTitle} message={emptyMessage} />}
                 </td>
               </tr>
             ) : (

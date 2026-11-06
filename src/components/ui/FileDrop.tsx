@@ -3,6 +3,7 @@
 import React, { useId, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { FileText, UploadCloud, X } from 'lucide-react';
+import { ACCEPTED_FILE_LABEL, ACCEPTED_FILE_TYPES, fileAccept, validateFile } from '@/lib/files';
 import Field from './Field';
 
 interface FileDropProps {
@@ -10,9 +11,8 @@ interface FileDropProps {
   required?: boolean;
   helperText?: string;
   error?: string;
-  accept?: string;
-  // Taille maximale indicative ; la limite réelle est vérifiée par l'API.
-  maxSizeMb?: number;
+  // Types MIME acceptés (lib/files.ts). Contrôle de confort : l'API revérifie.
+  types?: readonly string[];
   value: File | null;
   onChange: (file: File | null) => void;
   disabled?: boolean;
@@ -25,8 +25,7 @@ export default function FileDrop({
   required,
   helperText,
   error,
-  accept = 'image/jpeg,image/png,application/pdf',
-  maxSizeMb = 5,
+  types = ACCEPTED_FILE_TYPES,
   value,
   onChange,
   disabled,
@@ -39,8 +38,9 @@ export default function FileDrop({
 
   function pick(file: File | undefined) {
     if (!file) return;
-    if (file.size > maxSizeMb * 1024 * 1024) {
-      setLocalError(`Fichier trop volumineux (${maxSizeMb} Mo maximum).`);
+    const problem = validateFile(file, types);
+    if (problem) {
+      setLocalError(problem);
       return;
     }
     setLocalError(null);
@@ -52,7 +52,7 @@ export default function FileDrop({
       id={id}
       label={label}
       required={required}
-      helperText={helperText ?? `JPG, PNG ou PDF · ${maxSizeMb} Mo maximum`}
+      helperText={helperText ?? ACCEPTED_FILE_LABEL}
       error={error ?? localError ?? undefined}
       className={className}
     >
@@ -100,7 +100,7 @@ export default function FileDrop({
             ref={inputRef}
             id={id}
             type="file"
-            accept={accept}
+            accept={fileAccept(types)}
             className="sr-only"
             disabled={disabled}
             onChange={(event) => {

@@ -15,7 +15,7 @@ const linkIdle = 'border-transparent text-white/75 hover:bg-white/10 hover:text-
 const linkActive = 'border-white bg-white/15 text-white';
 
 // Barre latérale 240 px bleu pétrole des espaces gestion et administration.
-export default function AppSidebar({ space }: { space: Exclude<Space, 'agent'> }) {
+export default function AppSidebar({ space, className, onNavigate }: { space: Exclude<Space, 'agent'>; className?: string; onNavigate?: () => void }) {
   const pathname = usePathname();
   const { data: me } = useMe();
   const logout = useLogout();
@@ -23,7 +23,7 @@ export default function AppSidebar({ space }: { space: Exclude<Space, 'agent'> }
   const profileRoute = PROFILE_ROUTE[space];
 
   return (
-    <aside className="flex h-full w-sidebar shrink-0 flex-col bg-primary">
+    <aside className={clsx('h-full w-sidebar shrink-0 flex-col bg-primary', className ?? 'flex')} onClick={(event) => (event.target as HTMLElement).closest('a') && onNavigate?.()}>
       <div className="px-5 pt-6 pb-6">
         <Link href={items[0]?.route ?? '/'} aria-label="Tableau de bord">
           <Logo onDark />
