@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { SearchX } from 'lucide-react';
+import { CheckCircle2, Lock, SearchX, XCircle } from 'lucide-react';
 import PageHeader from '@/components/layout/PageHeader';
 import Badge from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
@@ -20,14 +20,30 @@ import { useLogActors, useLogs } from '@/hooks/queries/useLogs';
 import { toApiError } from '@/lib/api/errors';
 import { formatDateTime } from '@/lib/utils/format';
 import { AUDIT_ACTION_LABELS, AUDIT_ACTION_NAMES, DOCUMENT_FULL_LABELS } from '@/lib/utils/labels';
-import type { AuditAction, LogEntry, LogFilters, LogKind } from '@/types/log';
+import { ROLE_LABELS } from '@/lib/constants';
+import type { AuditAction, LogEntry, LogFilters, LogKind, LoginResult } from '@/types/log';
 
 interface Props {
   // Racine de l'espace (/gestion ou /administration), pour les liens vers les fiches.
   basePath: string;
   // Troisième onglet « Connexions » : utilisé par l'administration (lot 4).
   withConnections?: boolean;
+  // Administration (AD4) : toutes les actions de tous les comptes, filtre « Rôle »
+  // et mention « Vue de consultation ».
+  allAccounts?: boolean;
 }
+
+const ROLE_OPTIONS = [
+  { value: 'admin', label: 'Administrateur' },
+  { value: 'gestionnaire', label: 'Gestionnaire' },
+  { value: 'agent', label: 'Agent' },
+];
+
+const RESULTS: Record<LoginResult, { label: string; tone: 'success' | 'danger' | 'warning'; Icon: typeof CheckCircle2 }> = {
+  reussie: { label: 'Réussie', tone: 'success', Icon: CheckCircle2 },
+  echouee: { label: 'Échouée', tone: 'danger', Icon: XCircle },
+  bloquee: { label: 'Compte bloqué', tone: 'warning', Icon: Lock },
+};
 
 const TABS: { value: LogKind; label: string }[] = [
   { value: 'audit', label: "Journal d'audit" },
@@ -41,10 +57,10 @@ const ACTIONS_BY_KIND: Record<LogKind, AuditAction[]> = {
   connexion: ['auth.login'],
 };
 
-type Filters = Pick<LogFilters, 'actor' | 'action' | 'driver' | 'start_date' | 'end_date'>;
+type Filters = Pick<LogFilters, 'actor' | 'action' | 'driver' | 'start_date' | 'end_date' | 'role' | 'result'>;
 
 // GE8 : journaux, en LECTURE SEULE dans tous les espaces (aucune action d'écriture).
-export default function LogsScreen({ basePath, withConnections = false }: Props) {
+export default function LogsScreen({ basePath, withConnections = false, allAccounts = false }: Props) {
   const [kind, setKind] = useState<LogKind>('audit');
   const [filters, setFilters] = useState<Filters>({});
   const [driverSearch, setDriverSearch] = useState('');
@@ -117,14 +133,34 @@ export default function LogsScreen({ basePath, withConnections = false }: Props)
             { key: 'driver', title: 'Conducteur', render: objectLink },
             { key: 'channel', title: 'Canal', render: (log) => <Badge tone="primary">{log.action === 'consultation.qr' ? 'QR' : 'Recherche'}</Badge> },
           ]
-        : [date, actor, { key: 'role', title: 'Rôle', render: (log) => log.actor_role ?? '—' }, ip];
+        : [
+            date,
+            { key: 'email', title: 'Email saisi', render: (log) => <span className="break-all">{log.login_email ?? '—'}</span> },
+            { key: 'user', title: 'Utilisateur', render: (log) => log.actor_name ?? <span className="text-muted italic">Inconnu</span> },
+            { key: 'role', title: 'Rôle', render: (log) => (log.actor_role ? (ROLE_LABELS[log.actor_role as keyof typeof ROLE_LABELS] ?? log.actor_role) : '—') },
+            {
+              key: 'result',
+              title: 'Résultat',
+              render: (log) => {
+                if (!log.login_result) return '—';
+                const { label, tone, Icon } = RESULTS[log.login_result];
+                return (
+                  <Badge tone={tone} icon={<Icon size={14} />}>
+                    {label}
+                  </Badge>
+                );
+              },
+            },
+            ip,
+            { key: 'agent', title: 'Navigateur', render: (log) => <span className="text-xs text-muted">{log.user_agent ?? '—'}</span> },
+          ];
 
   return (
     <div className="flex flex-col gap-5">
-      <PageHeader title="Journaux" subtitle="Consultation seule : les journaux ne sont jamais modifiables." />
+      <PageHeader title="Journaux" subtitle={allAccounts ? 'Vue de consultation' : 'Consultation seule : les journaux ne sont jamais modifiables.'} />
       <Tabs tabs={tabs} value={kind} onChange={changeKind} ariaLabel="Journaux" />
 
-      <section aria-label="Filtres" className="grid gap-3 rounded-card border border-border bg-surface p-4 md:grid-cols-2 xl:grid-cols-5">
+      <section aria-label="Filtres" className="grid gap-3 rounded-card border border-border bg-surface p-4 md:grid-cols-2 xl:grid-cols-6">
         <DateField label="Du" value={filters.start_date ?? ''} max={filters.end_date} onChange={(event) => set({ start_date: event.target.value || undefined })} />
         <DateField label="Au" value={filters.end_date ?? ''} min={filters.start_date} onChange={(event) => set({ end_date: event.target.value || undefined })} />
         <Select
@@ -134,15 +170,27 @@ export default function LogsScreen({ basePath, withConnections = false }: Props)
           value={filters.actor ?? ''}
           onChange={(event) => set({ actor: event.target.value || undefined })}
         />
+        {allAccounts && (
+          <Select label="Rôle" placeholder="Tous" options={ROLE_OPTIONS} value={filters.role ?? ''} onChange={(event) => set({ role: (event.target.value || undefined) as Filters['role'] })} />
+        )}
+        {kind === 'connexion' ? (
+          <Select
+            label="Résultat"
+            placeholder="Tous"
+            options={(Object.keys(RESULTS) as LoginResult[]).map((value) => ({ value, label: RESULTS[value].label }))}
+            value={filters.result ?? ''}
+            onChange={(event) => set({ result: (event.target.value || undefined) as LoginResult | undefined })}
+          />
+        ) : (
         <Select
           label={kind === 'consultation' ? 'Canal' : "Type d'action"}
           placeholder="Tous"
           options={ACTIONS_BY_KIND[kind].map((action) => ({ value: action, label: kind === 'consultation' ? (action === 'consultation.qr' ? 'QR' : 'Recherche') : AUDIT_ACTION_NAMES[action] }))}
           value={filters.action ?? ''}
           onChange={(event) => set({ action: (event.target.value || undefined) as AuditAction | undefined })}
-          disabled={kind === 'connexion'}
         />
-        <SearchInput label="Conducteur" value={driverSearch} onChange={setDriverSearch} placeholder="Nom ou numéro" inputSize="md" />
+        )}
+        {kind !== 'connexion' && <SearchInput label="Conducteur" value={driverSearch} onChange={setDriverSearch} placeholder="Nom ou numéro" inputSize="md" />}
       </section>
 
       {logs.isError ? (
@@ -160,12 +208,11 @@ export default function LogsScreen({ basePath, withConnections = false }: Props)
           empty={
             <EmptyState
               icon={<SearchX size={24} />}
-              title={hasFilters ? 'Aucune entrée ne correspond' : 'Journal vide'}
-              message={hasFilters ? 'Modifiez les filtres.' : undefined}
+              title={hasFilters ? 'Aucune entrée pour ces filtres' : 'Journal vide'}
               action={
                 hasFilters && (
                   <Button variant="outline" onClick={() => (setFilters({}), setDriverSearch(''))}>
-                    Effacer les filtres
+                    Réinitialiser les filtres
                   </Button>
                 )
               }

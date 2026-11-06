@@ -3,7 +3,7 @@ import { LogsScreen } from '@/features/logs';
 
 export const metadata: Metadata = { title: 'Journaux' };
 
-// Même écran que la gestion ; l'onglet « Connexions » sera branché au lot 4.
+// AD4 : GE8 avec l'onglet « Connexions », toutes les actions de tous les comptes.
 export default function Page() {
-  return <LogsScreen basePath="/administration" />;
+  return <LogsScreen basePath="/administration" withConnections allAccounts />;
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { AlertTriangle, Bike, ChevronRight, Clock, FileWarning, History, Plus, ShieldCheck, UserPlus, Users } from 'lucide-react';
+import { AlertTriangle, Bike, ChevronRight, Clock, FileWarning, History, Plus, ShieldCheck, UserPlus, Users, UsersRound } from 'lucide-react';
 import PageHeader from '@/components/layout/PageHeader';
 import { buttonClasses } from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
@@ -22,12 +22,16 @@ interface Props {
   readOnly?: boolean;
   // Racine des liens (/gestion ou /administration).
   basePath: string;
+  // AD1 : carte « Gestionnaires actifs » en plus.
+  withManagers?: boolean;
 }
 
 const TODO_LIMIT = 5;
 
 // GE1 : tableau de bord. Compteurs, « À traiter », dernières actions.
-export default function DashboardScreen({ readOnly = false, basePath }: Props) {
+export default function DashboardScreen({ readOnly = false, basePath, withManagers = false }: Props) {
+  // Administration : « Vue de consultation » sous le titre.
+  const subtitle = readOnly ? 'Vue de consultation' : 'Registre des conducteurs de taxi-moto de Parakou';
   const stats = useDashboard();
   const logs = useLogs({ kind: 'audit', per_page: 10 });
   const driversPath = `${basePath}/conducteurs`;
@@ -42,7 +46,7 @@ export default function DashboardScreen({ readOnly = false, basePath }: Props) {
   if (stats.isError) {
     return (
       <div className="flex flex-col gap-5">
-        <PageHeader title="Tableau de bord" />
+        <PageHeader title="Tableau de bord" subtitle={subtitle} />
         <Card padded={false}>
           <ErrorState message={toApiError(stats.error).message} onRetry={() => stats.refetch()} />
         </Card>
@@ -54,7 +58,7 @@ export default function DashboardScreen({ readOnly = false, basePath }: Props) {
   if (stats.data && stats.data.drivers_total === 0) {
     return (
       <div className="flex flex-col gap-5">
-        <PageHeader title="Tableau de bord" />
+        <PageHeader title="Tableau de bord" subtitle={subtitle} />
         <Card padded={false}>
           <EmptyState
             icon={<UserPlus size={24} />}
@@ -78,9 +82,9 @@ export default function DashboardScreen({ readOnly = false, basePath }: Props) {
 
   return (
     <div className="flex flex-col gap-6">
-      <PageHeader title="Tableau de bord" subtitle="Registre des conducteurs de taxi-moto de Parakou" actions={newDriver} />
+      <PageHeader title="Tableau de bord" subtitle={subtitle} actions={newDriver} />
 
-      <section aria-label="Compteurs" className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <section aria-label="Compteurs" className={withManagers ? 'grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5' : 'grid gap-4 sm:grid-cols-2 xl:grid-cols-4'}>
         <CounterCard title="Conducteurs par statut" icon={<Users size={18} />} loading={!data} href={driversPath}>
           {data && <Breakdown items={(Object.keys(DRIVER_STATUS_LABELS) as DriverStatus[]).map((key) => [DRIVER_STATUS_LABELS[key], data.drivers_by_status[key], `${driversPath}?statut=${key}`])} />}
         </CounterCard>
@@ -104,6 +108,11 @@ export default function DashboardScreen({ readOnly = false, basePath }: Props) {
         <CounterCard title="Agents actifs" icon={<ShieldCheck size={18} />} loading={!data}>
           {data && <BigNumber value={data.agents_active} />}
         </CounterCard>
+        {withManagers && (
+          <CounterCard title="Gestionnaires actifs" icon={<UsersRound size={18} />} loading={!data} href={`${basePath}/gestionnaires`}>
+            {data && <BigNumber value={data.managers_active} />}
+          </CounterCard>
+        )}
       </section>
 
       <section aria-labelledby="a-traiter" className="flex flex-col gap-3">

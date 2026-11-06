@@ -29,7 +29,6 @@ export default function IdentityTab({ driver, readOnly, basePath }: Props) {
     ['Adresse', driver.address ?? '—'],
     ['Identifiant du conducteur', driver.driver_identifier ?? 'Non renseigné'],
     ['Fiche papier', driver.has_paper_form ? 'Scan enregistré' : 'Aucun scan'],
-    ['Structure gestionnaire', driver.managing_structure ?? 'Non renseignée'],
     ['Enregistré le', formatDateTime(driver.created_at)],
     ['Validé le', driver.validated_at ? formatDateTime(driver.validated_at) : 'Pas encore validé'],
   ];

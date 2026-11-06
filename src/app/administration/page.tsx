@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
-import PagePlaceholder from '@/components/layout/PagePlaceholder';
+import DashboardScreen from '@/features/dashboard/DashboardScreen';
 
 export const metadata: Metadata = { title: 'Tableau de bord' };
 
+// AD1 : GE1 en lecture seule, plus la carte « Gestionnaires actifs ».
 export default function Page() {
-  return <PagePlaceholder title="Tableau de bord" code="AD1" />;
+  return <DashboardScreen readOnly withManagers basePath="/administration" />;
 }

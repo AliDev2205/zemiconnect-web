@@ -13,6 +13,7 @@ import Skeleton from '@/components/ui/Skeleton';
 import PasswordCard from '@/features/auth/PasswordCard';
 import { useLogout, useMe, useUpdateProfile } from '@/hooks/queries/useAuth';
 import { applyApiErrorsToForm, toApiError } from '@/lib/api/errors';
+import { ROLE_LABELS } from '@/lib/constants';
 import type { User } from '@/types/user';
 
 const schema = z.object({
@@ -108,6 +109,9 @@ function ProfileForm({ user }: { user: User }) {
             helperText={`L'email ne peut pas être modifié ici. ${EMAIL_CONTACT[user.role]}`}
             className="[&_input]:text-muted"
           />
+          {/* Rôle du compte, en lecture seule (AD6, GE9). */}
+          <TextInput label="Rôle" inputSize="lg" value={ROLE_LABELS[user.role]} readOnly className="[&_input]:text-muted" />
+
           <Button type="submit" size="lg" fullWidth isLoading={update.isPending} leftIcon={<Save size={20} />}>
             Enregistrer
           </Button>

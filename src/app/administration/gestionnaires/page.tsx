@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
-import PagePlaceholder from '@/components/layout/PagePlaceholder';
+import ManagerListScreen from '@/features/managers/ManagerListScreen';
 
 export const metadata: Metadata = { title: 'Gestionnaires' };
 
+// AD2 : le seul écran de l'administration où l'on écrit.
 export default function Page() {
-  return <PagePlaceholder title="Gestionnaires" subtitle="Comptes des gestionnaires du registre" />;
+  return <ManagerListScreen />;
 }

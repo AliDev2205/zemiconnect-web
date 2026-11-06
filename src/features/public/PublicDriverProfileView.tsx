@@ -99,7 +99,8 @@ export default function PublicDriverProfileView({ profile, verifiedAt, agentHref
           <p className="flex items-start gap-2 text-sm text-muted">
             <Building2 size={16} className="mt-0.5 shrink-0" aria-hidden />
             <span>
-              Structure gestionnaire : <span className="font-semibold text-foreground">{profile.managing_structure}</span>
+              Structure gestionnaire : <span className="font-semibold text-foreground">{profile.managing_structure.name}</span>
+              {profile.managing_structure.contact && <span> · {profile.managing_structure.contact}</span>}
             </span>
           </p>
         )}
