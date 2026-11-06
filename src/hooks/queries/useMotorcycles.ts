@@ -1,6 +1,6 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { motorcyclesService } from '@/lib/api/services/motorcycles/motorcycles';
-import { dashboardKeys, motorcyclesKeys } from '@/lib/query/keys';
+import { dashboardKeys, driversKeys, logsKeys, motorcyclesKeys } from '@/lib/query/keys';
 import type { MotorcycleFilters, MotorcyclePayload } from '@/types/motorcycle';
 
 export function useMotorcycles(filters: MotorcycleFilters = {}, enabled = true) {
@@ -20,11 +20,27 @@ export function useMotorcycle(id: string) {
   });
 }
 
-export function useCreateMotorcycle() {
+export function useMotorcycleAssignments(id: string) {
+  return useQuery({ queryKey: [...motorcyclesKeys.detail(id), 'assignments'], queryFn: () => motorcyclesService.assignments(id), enabled: !!id });
+}
+
+// Une moto est vue depuis la fiche de son conducteur : tout est rafraîchi.
+function useInvalidateMotorcycles() {
   const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (payload: MotorcyclePayload) => motorcyclesService.create(payload),
-    meta: { toast: false },
-    onSuccess: () => Promise.all([motorcyclesKeys.all, dashboardKeys.stats].map((queryKey) => queryClient.invalidateQueries({ queryKey }))),
-  });
+  return () => Promise.all([motorcyclesKeys.all, driversKeys.all, dashboardKeys.stats, logsKeys.all].map((queryKey) => queryClient.invalidateQueries({ queryKey })));
+}
+
+export function useCreateMotorcycle() {
+  const invalidate = useInvalidateMotorcycles();
+  return useMutation({ mutationFn: (payload: MotorcyclePayload) => motorcyclesService.create(payload), meta: { toast: false }, onSuccess: invalidate });
+}
+
+export function useUpdateMotorcycle(id: string) {
+  const invalidate = useInvalidateMotorcycles();
+  return useMutation({ mutationFn: (payload: MotorcyclePayload) => motorcyclesService.update(id, payload), meta: { toast: false }, onSuccess: invalidate });
+}
+
+export function useArchiveMotorcycle(id: string) {
+  const invalidate = useInvalidateMotorcycles();
+  return useMutation({ mutationFn: () => motorcyclesService.archive(id), meta: { toast: false }, onSuccess: invalidate });
 }

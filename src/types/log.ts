@@ -13,6 +13,14 @@ export type AuditAction =
   | 'document.renewed'
   | 'assignment.changed'
   | 'motorcycle.created'
+  | 'motorcycle.updated'
+  | 'motorcycle.archived'
+  | 'agent.created'
+  | 'agent.updated'
+  | 'agent.deactivated'
+  | 'agent.reactivated'
+  | 'agent.archived'
+  | 'agent.reset_link_sent'
   | 'qr.generated'
   | 'qr.regenerated'
   | 'qr.revoked'
@@ -26,7 +34,7 @@ export interface LogEntry {
   action: AuditAction;
   actor_name: string | null;
   actor_role: string | null;
-  resource_type: 'driver' | 'motorcycle' | 'qr_code' | 'document' | null;
+  resource_type: 'driver' | 'motorcycle' | 'qr_code' | 'document' | 'agent' | null;
   // Identifiant et libellé de l'objet (lien vers sa fiche).
   resource_id: string | null;
   resource_label: string | null;
@@ -48,6 +56,11 @@ export interface LogFilters {
   kind?: LogKind;
   search?: string;
   driver_id?: string;
+  // Nom de l'utilisateur auteur de l'action (journaux GE8).
+  actor?: string;
+  action?: AuditAction;
+  // Conducteur concerné : nom ou numéro (recherche).
+  driver?: string;
   start_date?: string;
   end_date?: string;
 }

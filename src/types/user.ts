@@ -16,6 +16,10 @@ export interface User {
   must_change_password: boolean;
   last_login_at: string | null;
   created_at: string;
+  // Agents de contrôle : matricule et structure de rattachement (police
+  // municipale, syndicat…). Absents pour les autres rôles.
+  matricule?: string | null;
+  structure?: string | null;
 }
 
 // Réponse de GET /auth/me : l'utilisateur et ses permissions effectives.

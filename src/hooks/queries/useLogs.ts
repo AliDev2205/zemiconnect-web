@@ -10,3 +10,12 @@ export function useLogs(filters: LogFilters = {}) {
     placeholderData: keepPreviousData,
   });
 }
+
+// Auteurs possibles d'un journal, pour le filtre « Utilisateur ».
+export function useLogActors(kind?: LogFilters['kind']) {
+  return useQuery({
+    queryKey: [...logsKeys.all, 'actors', kind ?? 'tous'],
+    queryFn: () => logsService.actors(kind),
+    staleTime: 5 * 60 * 1000,
+  });
+}

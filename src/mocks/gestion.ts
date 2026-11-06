@@ -208,8 +208,8 @@ export const gestionStore = {
     const needle = normalizeZcNumber(filters.search ?? '');
     const rows = mockMotorcycles.filter(
       (moto) =>
-        !moto.archived_at &&
-        (!filters.unassigned || !moto.driver_id) &&
+        // Le choix d'une moto à affecter exclut les motos archivées ; la liste GE5 les montre.
+        (!filters.unassigned || (!moto.driver_id && !moto.archived_at)) &&
         (!needle || [moto.plate_number, moto.brand ?? '', moto.model ?? '', moto.driver_name ?? ''].some((field) => normalizeZcNumber(field).includes(needle))),
     );
     return paginate(rows, filters.page, filters.per_page ?? 10);
@@ -223,6 +223,43 @@ export const gestionStore = {
     mockMotorcycles.unshift(moto);
     pushLog({ ...mockActorEntry(), action: 'motorcycle.created', resource_type: 'motorcycle', resource_id: moto.id, resource_label: moto.plate_number });
     return moto;
+  },
+
+  getMotorcycle: findMotorcycle,
+
+  updateMotorcycle(id: string, payload: MotorcyclePayload): Motorcycle {
+    const moto = findMotorcycle(id);
+    if (moto.archived_at) throw new MockApiError(409, 'Cette moto est archivée : elle ne peut plus être modifiée.');
+    if (mockMotorcycles.some((other) => other.id !== id && normalizeZcNumber(other.plate_number) === normalizeZcNumber(payload.plate_number))) {
+      throw new MockApiError(422, 'Cette immatriculation existe déjà.', { plate_number: ['Cette immatriculation existe déjà.'] });
+    }
+    const old: Record<string, unknown> = {};
+    const next: Record<string, unknown> = {};
+    (Object.keys(payload) as (keyof MotorcyclePayload)[]).forEach((key) => {
+      if ((moto[key] ?? null) !== (payload[key] ?? null)) {
+        old[key] = moto[key];
+        next[key] = payload[key];
+      }
+    });
+    Object.assign(moto, payload);
+    // Les affectations gardent l'immatriculation à jour.
+    mockAssignments.filter((item) => item.motorcycle_id === id).forEach((item) => (item.plate_number = moto.plate_number));
+    if (Object.keys(next).length > 0) pushLog({ ...mockActorEntry(), action: 'motorcycle.updated', resource_type: 'motorcycle', resource_id: id, resource_label: moto.plate_number, old_values: old, new_values: next });
+    return moto;
+  },
+
+  // Archivage (pas de suppression) : refusé tant que la moto est affectée.
+  archiveMotorcycle(id: string): Motorcycle {
+    const moto = findMotorcycle(id);
+    if (moto.driver_id) throw new MockApiError(409, "Changez d'abord la moto du conducteur.");
+    moto.archived_at = now();
+    pushLog({ ...mockActorEntry(), action: 'motorcycle.archived', resource_type: 'motorcycle', resource_id: id, resource_label: moto.plate_number });
+    return moto;
+  },
+
+  motorcycleAssignments(id: string): Assignment[] {
+    findMotorcycle(id);
+    return mockAssignments.filter((item) => item.motorcycle_id === id).sort((a, b) => b.started_at.localeCompare(a.started_at));
   },
 
   // Affecte une moto SANS conducteur ; l'affectation en cours est clôturée.
